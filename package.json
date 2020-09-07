@@ -1,0 +1,20 @@
+{
+	"name": "ts-svgmanager",
+	"version": "1.0.0",
+	"description": "A Typescript SVG Manager",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/coastalwhite/ts-svgmanager.git"
+	},
+	"author": "Gijs Burghoorn",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/coastalwhite/ts-svgmanager/issues"
+	},
+	"homepage": "https://github.com/coastalwhite/ts-svgmanager#readme",
+	"dependencies": {
+		"object-hash": "^2.0.3"
+	}
+}
