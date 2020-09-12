@@ -17,6 +17,11 @@ export default class V2D {
 		return this._y;
 	}
 
+	// this ?= v
+	public equals(v: V2D): boolean {
+		return this.x() === v.x() && this.y() === v.y();
+	}
+
 	// Add with v
 	public add(v: V2D): V2D {
 		return new V2D(this.x() + v.x(), this.y() + v.y());
@@ -78,11 +83,6 @@ export default class V2D {
 	// Angle between vectors
 	public angle(v: V2D): number {
 		return Math.acos(this.dot(v) / (v.length() * this.length()));
-	}
-
-	// this ?= v
-	public equals(v: V2D): boolean {
-		return this.x() === v.x() && this.y() === v.y();
 	}
 
 	public middle(v: V2D): V2D {

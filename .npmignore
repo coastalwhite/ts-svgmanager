@@ -1,2 +1,6 @@
 tsconfig.json
 src
+.vscode
+tests
+docs
+.prettierrc.toml
