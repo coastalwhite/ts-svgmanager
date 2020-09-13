@@ -70,6 +70,110 @@
 				<p>A Typescript SVG Manager library</p>
 				<p>Provides classes used to manage interactive SVG&#39;s in the HTML DOM, minimize definitions
 				and make controlling the SVG elements from JS/TS as easy and reliable as possible.</p>
+				<a href="#why-use-svgmanager" id="why-use-svgmanager" style="color: inherit; text-decoration: none;">
+					<h1>Why use SVGManager</h1>
+				</a>
+				<p>SVGManager creates a resourceful way to handle interactive SVG containers. A example of resourcefulness is automatically detecting similar shapes and only doing rendering calculations once. Furthermore, SVGManager provides a easy way to deal with mentions of figures within a SVG container, so that you can come back and adjust them.</p>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h1>Examples</h1>
+				</a>
+				<a href="#simple-circle" id="simple-circle" style="color: inherit; text-decoration: none;">
+					<h2>Simple Circle</h2>
+				</a>
+				<p>Here we are going to draw a simple circle to the DOM using the manager.<br>The HTML looks like this:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></code></pre>
+				<p>The JS/TS looks like this:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, circle }
+
+<span class="hljs-comment">// Initialize the SVGManager</span>
+<span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager();
+manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+
+<span class="hljs-comment">// Render a circle with a radius of 25 at (50, 50)</span>
+manager.render(circle(<span class="hljs-number">25</span>), <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">50</span>, <span class="hljs-number">50</span>))</code></pre>
+				<a href="#drawing-a-pentagon" id="drawing-a-pentagon" style="color: inherit; text-decoration: none;">
+					<h2>Drawing a Pentagon</h2>
+				</a>
+				<p>Here we are going to draw a Pentagom to the DOM using the manager.<br>The HTML looks like this:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></code></pre>
+				<p>The JS/TS looks like this:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, SVGNode, SVGData }
+
+<span class="hljs-comment">// Initialize the SVGManager</span>
+<span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
+manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+
+<span class="hljs-keyword">const</span> gradient = <span class="hljs-string">&#x27;linear-gradient(0deg, rgb(72, 60, 102) 0%, rgb(136, 169, 197) 100%)&#x27;</span>
+
+<span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
+manager.render(
+    <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;d&#x27;</span>,
+            <span class="hljs-keyword">new</span> PathData()
+            .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
+            .closePath()
+        .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;stroke-width&#x27;</span>, <span class="hljs-string">&#x27;1px&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, gradient)
+, <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>))</code></pre>
+				<a href="#drawing-a-moving-pentagon" id="drawing-a-moving-pentagon" style="color: inherit; text-decoration: none;">
+					<h2>Drawing a Moving Pentagon</h2>
+				</a>
+				<p>Here we are going to draw a Pentagom to the DOM using the manager.<br>The HTML looks like this:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></code></pre>
+				<p>The JS/TS looks like this:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, SVGNode, PathData }
+
+<span class="hljs-comment">// Initialize the SVGManager</span>
+<span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
+manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+
+<span class="hljs-keyword">const</span> gradient = <span class="hljs-string">&#x27;linear-gradient(0deg, rgb(72, 60, 102) 0%, rgb(136, 169, 197) 100%)&#x27;</span>
+
+<span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
+manager.renderNamed(
+    <span class="hljs-string">&#x27;pentagon&#x27;</span>,
+    <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;d&#x27;</span>,
+            <span class="hljs-keyword">new</span> PathData()
+            .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
+            .closePath()
+        .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;stroke-width&#x27;</span>, <span class="hljs-string">&#x27;1px&#x27;</span>)
+        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, gradient)
+, <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>))
+
+<span class="hljs-keyword">let</span> time = <span class="hljs-number">0</span>
+<span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> x = <span class="hljs-built_in">Math</span>.cos(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>;
+    <span class="hljs-keyword">const</span> y = <span class="hljs-built_in">Math</span>.sin(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>;
+
+    manager.moveNamed(<span class="hljs-string">&#x27;pentagon&#x27;</span>, <span class="hljs-keyword">new</span> V2D(x, y))
+
+    time += (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">1000</span>)
+}, <span class="hljs-number">1</span>)</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -92,9 +196,6 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/_v2d_.html">&quot;<wbr>V2D&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/_viewbox_.html">&quot;<wbr>View<wbr>Box&quot;</a>
 					</li>
 				</ul>
 			</nav>
