@@ -105,7 +105,7 @@ manager.render(circle(<span class="hljs-number">25</span>), <span class="hljs-ke
     <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></code></pre>
 				<p>The JS/TS looks like this:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, SVGNode, SVGData }
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, SVGNode, PathData }
 
 <span class="hljs-comment">// Initialize the SVGManager</span>
 <span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
@@ -120,9 +120,9 @@ manager.render(
             <span class="hljs-keyword">new</span> PathData()
             .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
             .closePath()
         .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
@@ -155,9 +155,9 @@ manager.renderNamed(
             <span class="hljs-keyword">new</span> PathData()
             .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)),
+            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
             .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
             .closePath()
         .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)

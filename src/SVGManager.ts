@@ -94,7 +94,8 @@ export default class SVGManager {
     }
 
     /**
-     * Initializes the SVGManager to DOM within the container with id *rootId*
+     * Initializes the SVGManager to DOM within the container with id *rootId*\
+     * It returns itself, for easy programming
      *
      * # Note
      * This svg has some default styling:
@@ -103,7 +104,7 @@ export default class SVGManager {
      * - height of 500px
      * @param rootId The parent id
      */
-    public init(rootId: string) {
+    public init(rootId: string): SVGManager {
         let rootElement = document.getElementById(rootId)
 
         this._rootElement = rootElement
@@ -119,13 +120,16 @@ export default class SVGManager {
             .toHTML()
 
         this._svgElement = this._rootElement.appendChild(svgElement)
+
+        return this
     }
 
     /**
-     * Adds vector to the position of minimum of the viewBox
+     * Adds vector to the position of minimum of the viewBox\
+     * It returns itself, for easy programming
      * @param v vector to be added
      */
-    public moveViewBox(v: V2D) {
+    public moveViewBox(v: V2D): SVGManager {
         const viewBox = this.get('viewBox').split(' ')
 
         const minX = parseInt(viewBox[0]) + v.x()
@@ -134,6 +138,60 @@ export default class SVGManager {
         const height = parseInt(viewBox[3])
 
         this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
+
+        return this
+    }
+
+    /**
+     * Sets vector to the position of minimum of the viewBox\
+     * It returns itself, for easy programming
+     * @param v vector to be added
+     */
+    public setViewBoxLocation(v: V2D): SVGManager {
+        const viewBox = this.get('viewBox').split(' ')
+
+        const minX = v.x()
+        const minY = v.y()
+        const width = parseInt(viewBox[2])
+        const height = parseInt(viewBox[3])
+
+        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
+
+        return this
+    }
+
+    /**
+     * Sets the width of the viewBox\
+     * It returns itself, for easy programming
+     * @param width new width of the viewBox
+     */
+    public setViewBoxWidth(width: number): SVGManager {
+        const viewBox = this.get('viewBox').split(' ')
+
+        const minX = parseInt(viewBox[0])
+        const minY = parseInt(viewBox[1])
+        const height = parseInt(viewBox[3])
+
+        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
+
+        return this
+    }
+
+    /**
+     * Sets the height of the viewBox\
+     * It returns itself, for easy programming
+     * @param height new height of the viewBox
+     */
+    public setViewBoxHeight(height: number): SVGManager {
+        const viewBox = this.get('viewBox').split(' ')
+
+        const minX = parseInt(viewBox[0])
+        const minY = parseInt(viewBox[1])
+        const width = parseInt(viewBox[2])
+
+        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
+
+        return this
     }
 
     /**

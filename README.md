@@ -53,7 +53,7 @@ The HTML looks like this:
 The JS/TS looks like this:
 
 ```typescript
-import { V2D, SVGManager, SVGNode, SVGData }
+import { V2D, SVGManager, SVGNode, PathData }
 
 // Initialize the SVGManager
 const manager = new SVGManager()
@@ -68,9 +68,9 @@ manager.render(
             new PathData()
             .moveTo(new V2D(100, 100))
             .lineTo(new V2D(300, 100))
-            .lineTo(new V2D(400, 300)),
+            .lineTo(new V2D(400, 300))
             .lineTo(new V2D(200, 400))
-            .lineTo(new V2D(400, 300)),
+            .lineTo(new V2D(400, 300))
             .lineTo(new V2D(200, 400))
             .closePath()
         .set('stroke', '#ccc')
@@ -111,9 +111,9 @@ manager.renderNamed(
             new PathData()
             .moveTo(new V2D(100, 100))
             .lineTo(new V2D(300, 100))
-            .lineTo(new V2D(400, 300)),
+            .lineTo(new V2D(400, 300))
             .lineTo(new V2D(200, 400))
-            .lineTo(new V2D(400, 300)),
+            .lineTo(new V2D(400, 300))
             .lineTo(new V2D(200, 400))
             .closePath()
         .set('stroke', '#ccc')

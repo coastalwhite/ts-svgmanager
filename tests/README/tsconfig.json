@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": ["es5", "es6", "dom"],
+        "target": "ES5",
+        "rootDir": "src",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true
+    }
+}
