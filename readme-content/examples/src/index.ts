@@ -128,7 +128,47 @@ function example4() {
     })
 }
 
+function example5() {
+    // Initialize the SVGManager
+    const manager = new SVGManager()
+    manager.init('svg-root').setViewBoxWidth(500).setViewBoxHeight(500)
+
+    SVGNode.fromFile('./svg/gradient.svg').then((gradient: SVGNode) => {
+        // Render a pentagon with a gradient at (0,0)
+        const gradientId = manager.ensureDefinition(gradient)
+        manager.renderNamed(
+            'pentagon',
+            new SVGNode('path')
+                .set(
+                    'd',
+                    new PathData()
+                        .moveTo(-100, -175)
+                        .lineTo(100, -175)
+                        .lineTo(200, 125)
+                        .lineTo(0, 200)
+                        .lineTo(-200, 125)
+                        .closePath()
+                        .toString(),
+                )
+                .set('stroke', '#ccc')
+                .set('stroke-width', '1px')
+                .set('fill', `url(#${manager.mentionDefinition(gradientId)})`),
+            new V2D(0, 0),
+        )
+    })
+
+    const svg = document.getElementById(manager.id())
+    svg.addEventListener('mousemove', (ev: MouseEvent) => {
+        const location = new V2D(
+            ev.clientX - svg.clientLeft,
+            ev.clientY - svg.clientTop,
+        )
+        manager.moveNamed('pentagon', location)
+    })
+}
+
 example1()
 example2()
 example3()
 example4()
+example5()
