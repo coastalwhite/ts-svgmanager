@@ -7,7 +7,7 @@
     "scripts": {
         "test": "mocha -r ts-node/register -r jsdom-global/register tests/**/*.test.ts",
         "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
-        "docs": "typedoc --out docs src"
+        "docs": "typedoc --out docs src; echo '' > ./docs/.nojekyll"
     },
     "repository": {
         "type": "git",

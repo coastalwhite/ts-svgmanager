@@ -6,3 +6,4 @@ docs
 README.md
 readme-content
 .prettierrc.toml
+.nojekyll
