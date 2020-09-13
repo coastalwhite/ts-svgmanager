@@ -226,8 +226,7 @@ manager.init('svg-root').setViewBoxWidth(500).setViewBoxHeight(500)
 SVGNode.fromFile('gradient.svg').then((gradient: SVGNode) => {
     // Render a pentagon with a gradient at (0,0)
     const gradientId = manager.ensureDefinition(gradient)
-    manager.renderNamed(
-        'pentagon',
+    manager.render(
         new SVGNode('path')
             .set(
                 'd',
