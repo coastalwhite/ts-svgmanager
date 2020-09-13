@@ -1,6 +1,8 @@
 import V2D from './V2D'
 import SVGNode from './SVGNode'
 
+import { v4 as uuidv4 } from 'uuid'
+
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'
 
@@ -13,23 +15,28 @@ const DEFAULT_VIEWBOX = '0 0 100 100'
  * and make controlling it from JS/TS as easy and reliable as possible.
  */
 export default class SVGManager {
+    private _managerid: string
+
     private _rootElement: HTMLElement
     private _svgElement: SVGElement
     private _defintions: string[]
     private _names: string[]
-    //private _viewBox: ViewBox;
 
     private defsElement(): SVGDefsElement {
         let defs = this._svgElement.getElementsByTagName('defs')
         return defs[0]
     }
 
+    private prefixManagerId(str: string): string {
+        return this._managerid + '-' + str
+    }
+
     private toDefId(elementId: string): string {
-        return DEFINITION_PREFIX + elementId
+        return this.prefixManagerId(DEFINITION_PREFIX + elementId)
     }
 
     private getName(name: string): string {
-        return NAME_PREFIX + name
+        return this.prefixManagerId(NAME_PREFIX + name)
     }
 
     private doesDefExist(elementId: string): boolean {
@@ -80,6 +87,8 @@ export default class SVGManager {
      * Constructs a empty SVGManager object
      */
     public constructor() {
+        this._managerid = uuidv4()
+
         this._defintions = []
         this._names = []
     }
@@ -105,6 +114,7 @@ export default class SVGManager {
             .set('viewBox', DEFAULT_VIEWBOX)
             .set('width', DEFAULT_SVG_WIDTH)
             .set('height', DEFAULT_SVG_HEIGHT)
+            .set('id', this._managerid)
             .append(new SVGNode('defs'))
             .toHTML()
 
@@ -255,7 +265,7 @@ export default class SVGManager {
      * If named item does not exist, it will throw a error.
      */
     public fetchNamedLocation(name: string): V2D {
-        const elem = this._svgElement.getElementById(this.getName(name))
+        const elem = document.getElementById(this.getName(name))
 
         if (elem === null) throw new Error('Named item does not exist')
 
@@ -347,5 +357,12 @@ export default class SVGManager {
         this._svgElement.setAttribute(attr, value)
 
         return this
+    }
+
+    /**
+     * Returns the unique identifier connected to this SVGManager
+     */
+    public id(): string {
+        return this._managerid
     }
 }

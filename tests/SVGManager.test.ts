@@ -8,7 +8,8 @@ document.body.innerHTML = '<div id="root"></div>'
 let root = document.getElementById('root')
 
 describe('SVG Manager', function () {
-    let manager = new SVGManager()
+    const manager = new SVGManager()
+    const manager_id = manager.id()
     manager.init('root')
 
     describe('Basic Setup and Settings', function () {
@@ -18,7 +19,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -32,7 +33,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -44,7 +45,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="500px">
+                <svg viewBox="0 0 100 100" width="700px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -56,7 +57,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="300px">
+                <svg viewBox="0 0 100 100" width="700px" height="300px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -68,7 +69,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="300px">
+                <svg viewBox="0 0 100 100" width="500px" height="300px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -80,7 +81,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -94,7 +95,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -106,7 +107,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="10 10 100 100" width="500px" height="500px">
+                <svg viewBox="10 10 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -118,7 +119,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="4 6 100 100" width="500px" height="500px">
+                <svg viewBox="4 6 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -130,7 +131,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="-6 -4 100 100" width="500px" height="500px">
+                <svg viewBox="-6 -4 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -142,7 +143,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -156,7 +157,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -168,7 +169,7 @@ describe('SVG Manager', function () {
             assert.notEqual(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -180,7 +181,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -194,7 +195,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
                     <defs>
                     </defs>
                 </svg>
@@ -226,7 +227,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attribute="test_value" id="named-test_render" x="0" y="0">
+                <a attribute="test_value" id="${manager_id}-named-test_render" x="0" y="0">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -247,7 +248,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attribute="test_value 1" id="named-test_render" x="7" y="24">
+                <a attribute="test_value 1" id="${manager_id}-named-test_render" x="7" y="24">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -269,7 +270,7 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
@@ -292,11 +293,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -321,11 +322,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -334,15 +335,15 @@ describe('SVG Manager', function () {
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `<defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
-                    <b test="value" id="figure-${hash_2}">
+                    <b test="value" id="${manager_id}-figure-${hash_2}">
                         text value
                     </b>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6"></use>
-                <use href="#figure-${hash_2}" x="2" y="10"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
+                <use href="#${manager_id}-figure-${hash_2}" x="2" y="10"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -368,11 +369,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -381,12 +382,12 @@ describe('SVG Manager', function () {
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `<defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6"></use>
-                <use href="#figure-${hash}" x="2" y="10"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
+                <use href="#${manager_id}-figure-${hash}" x="2" y="10"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -406,11 +407,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -430,11 +431,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -444,7 +445,7 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
@@ -467,11 +468,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -481,11 +482,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="10" y="30" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="10" y="30" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -505,11 +506,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="5" y="6" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -523,11 +524,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="10" y="30" id="named-test_item"></use>
+                <use href="#${manager_id}-figure-${hash}" x="10" y="30" id="${manager_id}-named-test_item"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -551,7 +552,7 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
@@ -564,11 +565,11 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attribute="test_value" id="figure-${hash}">
+                    <a attribute="test_value" id="${manager_id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
-                <use href="#figure-${hash}" x="23" y="55"></use>
+                <use href="#${manager_id}-figure-${hash}" x="23" y="55"></use>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
