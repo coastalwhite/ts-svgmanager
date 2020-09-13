@@ -77,27 +77,27 @@ export default class SVGManager {
     }
 
     /**
-     * Constructs a empty SVGManager object within the container with id *rootId*
-     * @param rootId The parent id
+     * Constructs a empty SVGManager object
      */
-    public constructor(rootId: string) {
-        let rootElement = document.getElementById(rootId)
-
-        this._rootElement = rootElement
+    public constructor() {
         this._defintions = []
         this._names = []
     }
 
     /**
-     * Initializes the SVGManager to DOM
+     * Initializes the SVGManager to DOM within the container with id *rootId*
      *
      * # Note
      * This svg has some default styling:
      * - viewBox of '0 0 100 100'
      * - width of 500px
      * - height of 500px
+     * @param rootId The parent id
      */
-    public init() {
+    public init(rootId: string) {
+        let rootElement = document.getElementById(rootId)
+
+        this._rootElement = rootElement
         this._defintions = []
         this._names = []
 
@@ -255,7 +255,7 @@ export default class SVGManager {
      * If named item does not exist, it will throw a error.
      */
     public fetchNamedLocation(name: string): V2D {
-        const elem = document.getElementById(this.getName(name))
+        const elem = this._svgElement.getElementById(this.getName(name))
 
         if (elem === null) throw new Error('Named item does not exist')
 

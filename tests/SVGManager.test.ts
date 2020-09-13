@@ -8,8 +8,8 @@ document.body.innerHTML = '<div id="root"></div>'
 let root = document.getElementById('root')
 
 describe('SVG Manager', function () {
-    let manager = new SVGManager('root')
-    manager.init()
+    let manager = new SVGManager()
+    manager.init('root')
 
     describe('Basic Setup and Settings', function () {
         it('Should be that initialization adds a def tag', function () {
@@ -205,7 +205,7 @@ describe('SVG Manager', function () {
 
             assert.equal(root.innerHTML, ``.replace(/  |\r\n|\n|\r/gm, ''))
 
-            manager.init()
+            manager.init('root')
         })
     })
 
