@@ -90,8 +90,7 @@ const gradient = new SVGNode('linearGradient')
 
 // Render a pentagon with a gradient at (0,0)
 const gradientId = manager.ensureDefinition(gradient)
-manager.renderNamed(
-    'pentagon',
+manager.render(
     new SVGNode('path')
         .set(
             'd',
@@ -200,7 +199,7 @@ setInterval(() => {
 
 ## Loading from a file
 
-Here we are going to draw a Pentagom to the DOM using the manager.
+Here we are going to draw a Pentagon to the DOM using the manager.
 
 ### Code
 
