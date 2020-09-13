@@ -1,3 +1,6 @@
+/**
+ * A JS Class representing the HTML-Path D attribute
+ */
 export default class PathData {
     private _inner: string
 
@@ -5,41 +8,89 @@ export default class PathData {
         this._inner = ''
     }
 
+    /**
+     * Appends a move to a certain point to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public moveTo(x: number, y: number): PathData {
         this._inner += ` M ${x} ${y}`
         return this
     }
 
+    /**
+     * Appends a line to a certain point to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public lineTo(x: number, y: number): PathData {
         this._inner += ` L ${x} ${y}`
         return this
     }
 
+    /**
+     * Appends a horizontal line to a certain x-value to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public horizontalLineTo(x: number): PathData {
         this._inner += ` H ${x}`
         return this
     }
 
+    /**
+     * Appends a vertical line to a certain y-value to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public verticalLineTo(y: number): PathData {
         this._inner += ` V ${y}`
         return this
     }
 
+    /**
+     * Appends a line to a certain point relative to where the last action ended to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public lineRelativeTo(x: number, y: number): PathData {
         this._inner += ` l ${x} ${y}`
         return this
     }
 
+    /**
+     * Appends a horizontal line to a certain x-value relative to where the last action ended to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public horizontalLineRelativeTo(x: number): PathData {
         this._inner += ` h ${x}`
         return this
     }
 
+    /**
+     * Appends a vertical line to a certain y-value relative to where the last action ended to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public verticalLineRelativeTo(y: number): PathData {
         this._inner += ` v ${y}`
         return this
     }
 
+    /**
+     * Appends a curve to a certain point to the PathData, using control point 1 & 2
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public curveTo(
         endX: number,
         endY: number,
@@ -52,6 +103,12 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a curve to a certain point relative to where the last action ended to the PathData, using control point 1 & 2
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public curveRelativeTo(
         endX: number,
         endY: number,
@@ -64,6 +121,12 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a smooth curve (following a normal curve) to a certain point to the PathData, using control point 2
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public smoothCurveTo(
         endX: number,
         endY: number,
@@ -76,6 +139,13 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a smooth curve (following a normal curve) to a certain point
+     * relative to where the last action ended to the PathData, using control point 2
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public smoothCurveRelativeTo(
         endX: number,
         endY: number,
@@ -86,6 +156,13 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a quadratic curve to a certain point
+     * to the PathData, using control point 1
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public quadraticCurveTo(
         endX: number,
         endY: number,
@@ -96,6 +173,13 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a quadratic curve to a certain point
+     * relative to where the last action ended to the PathData, using control point 1
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public quadraticCurveRelativeTo(
         endX: number,
         endY: number,
@@ -106,16 +190,38 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends a quadratic curve (following a quadratic curve) to a certain point
+     * to the PathData,
+     * smoothing out the curve using the previous quadratic curve
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public quadraticStringTo(x: number, y: number): PathData {
         this._inner += ` T ${x} ${y}`
         return this
     }
 
+    /**
+     * Appends a quadratic curve (following a quadratic curve) to a certain point
+     * relative to where the last action ended to the PathData,
+     * smoothing out the curve using the previous quadratic curve
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
+     */
     public quadraticStringRelativeTo(x: number, y: number): PathData {
         this._inner += ` t ${x} ${y}`
         return this
     }
 
+    /**
+     * Appends an arc to a certain point to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Arcs)
+     */
     public arcTo(
         x: number,
         y: number,
@@ -131,6 +237,12 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Appends an arc to a certain point relative to where the last action ended to the PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Arcs)
+     */
     public arcRelativeTo(
         x: number,
         y: number,
@@ -146,6 +258,12 @@ export default class PathData {
         return this
     }
 
+    /**
+     * Closes a PathData
+     *
+     * # Note / Arguments
+     * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
+     */
     public closePath(): PathData {
         this._inner += ` Z`
         return this

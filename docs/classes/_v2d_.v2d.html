@@ -56,7 +56,7 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_v2d_.html">&quot;v2d&quot;</a>
+					<a href="../modules/_v2d_.html">&quot;V2D&quot;</a>
 				</li>
 				<li>
 					<a href="_v2d_.v2d.html">V2D</a>
@@ -69,6 +69,16 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<a href="#v2d" id="v2d" style="color: inherit; text-decoration: none;">
+							<h1>V2D</h1>
+						</a>
+						<p>A 2 Dimensional Vector</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -131,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L5">v2d.ts:5</a></li>
+									<li>Defined in V2D.ts:7</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -156,7 +166,7 @@
 					<div class="tsd-signature tsd-kind-icon">_x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L4">v2d.ts:4</a></li>
+							<li>Defined in V2D.ts:6</li>
 						</ul>
 					</aside>
 				</section>
@@ -166,7 +176,7 @@
 					<div class="tsd-signature tsd-kind-icon">_y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L5">v2d.ts:5</a></li>
+							<li>Defined in V2D.ts:7</li>
 						</ul>
 					</aside>
 				</section>
@@ -183,9 +193,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L58">v2d.ts:58</a></li>
+									<li>Defined in V2D.ts:153</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a absoluted version of current vector<br>V2D(x,y).abs() maps to V2D(|x|,|y|)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-2</span>,<span class="hljs-number">3</span>);
+
+x.abs(); <span class="hljs-comment">// Will equal V2D(2,3)!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="_v2d_.v2d.html" class="tsd-signature-type">V2D</a></h4>
 						</li>
 					</ul>
@@ -200,9 +222,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L26">v2d.ts:26</a></li>
+									<li>Defined in V2D.ts:55</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a vector is the vector <em>v</em> added from current vector<br>V2D(x,y).add(V2D(p,q)) maps to V2D(x+p,y+q)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);
+
+x.add(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)); <span class="hljs-comment">// Will equal V2D(4,6)!</span>
+x.add(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-1</span>,<span class="hljs-number">-2</span>)); <span class="hljs-comment">// Will equal V2D(1,1)!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -223,9 +258,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L84">v2d.ts:84</a></li>
+									<li>Defined in V2D.ts:215</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the angle between vector <em>v</em> and current vector<br>V2D(x,y).angle(V2D(p,q)) maps to angle(V2D(x,y),V2D(p,q))</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>);
+
+x.angle(x); <span class="hljs-comment">// Will equal 0!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -246,9 +293,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L41">v2d.ts:41</a></li>
+									<li>Defined in V2D.ts:109</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Calculates the dot-product between current vector and vector <em>v</em> and returns the result<br>V2D(x,y).dot(V2D(p,q)) maps to x<em>p+y</em>q</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>);
+
+x.dot(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)); <span class="hljs-comment">// Will equal 25!</span>
+x.dot(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">4</span>,<span class="hljs-number">-3</span>)); <span class="hljs-comment">// Will equal 0!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -269,9 +329,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L92">v2d.ts:92</a></li>
+									<li>Defined in V2D.ts:249</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the tangent of current vector<br>V2D(x,y).dydx() maps to y/x</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">4</span>);
+
+x.dydx(); <span class="hljs-comment">// Will equal 2!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -286,9 +358,19 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L21">v2d.ts:21</a></li>
+									<li>Defined in V2D.ts:37</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks whether a vector is equal to this vector</p>
+									<p>```typescript
+									let x = new V2D(2,3);</p>
+								</div>
+								<p>x.equals(new V2D(2,3)); // Will equal true!
+								x.equals(new V2D(1,2)); // Will equal false!</p>
+								<pre><code></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -309,9 +391,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L53">v2d.ts:53</a></li>
+									<li>Defined in V2D.ts:136</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a invert version of current vector<br>V2D(x,y).invert() maps to V2D(y,x)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);
+
+x.invert(); <span class="hljs-comment">// Will equal V2D(3,2)!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="_v2d_.v2d.html" class="tsd-signature-type">V2D</a></h4>
 						</li>
 					</ul>
@@ -326,9 +420,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L79">v2d.ts:79</a></li>
+									<li>Defined in V2D.ts:198</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the length of the vector<br>V2D(x,y).length() maps to |V2D(x,y)|</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>);
+
+x.length(); <span class="hljs-comment">// Will equal 5!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -343,9 +449,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L88">v2d.ts:88</a></li>
+									<li>Defined in V2D.ts:232</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the middle between vector <em>v</em> and current vector<br>V2D(x,y).middle(V2D(p,q)) maps to V2D(x,y).add(V2D(p,q)).sca(0.5)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>);
+
+x.middle(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">5</span>,<span class="hljs-number">8</span>)); <span class="hljs-comment">// Will equal V2D(4,6)!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -366,9 +484,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L66">v2d.ts:66</a></li>
+									<li>Defined in V2D.ts:173</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a rounded version of current vector to the closest <em>sk</em><br>V2D(x,y).round(sk) maps to V2D(round(x, sk),round(y, sk))</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>);
+
+x.round(<span class="hljs-number">10</span>); <span class="hljs-comment">// Will equal V2D(0,10)!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -389,9 +519,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L36">v2d.ts:36</a></li>
+									<li>Defined in V2D.ts:91</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a scaled current vector with factor <em>s</em><br>V2D(x,y).sca(s) maps to V2D(s<em>x,s</em>y)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);
+
+x.sca(<span class="hljs-number">2</span>); <span class="hljs-comment">// Will equal V2D(4,6)!</span>
+x.sca(<span class="hljs-number">0.5</span>); <span class="hljs-comment">// Will equal V2D(1,1.5)!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -412,9 +555,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L31">v2d.ts:31</a></li>
+									<li>Defined in V2D.ts:73</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a vector is the vector <em>v</em> subtracted from current vector<br>V2D(x,y).sub(V2D(p,q)) maps to V2D(x-p,y-q)</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);
+
+x.sub(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)); <span class="hljs-comment">// Will equal V2D(0,0)!</span>
+x.sub(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-1</span>,<span class="hljs-number">-2</span>)); <span class="hljs-comment">// Will equal V2D(3,5)!</span></code></pre>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -435,9 +591,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L45">v2d.ts:45</a></li>
+									<li>Defined in V2D.ts:116</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the stringified vector</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
@@ -452,9 +613,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L12">v2d.ts:12</a></li>
+									<li>Defined in V2D.ts:17</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the x value</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -469,9 +635,24 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L96">v2d.ts:96</a></li>
+									<li>Defined in V2D.ts:268</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the sign of current vector&#39;s x</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-13</span>,<span class="hljs-number">0</span>).xSign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-5</span>,<span class="hljs-number">2</span>).xSign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-5</span>,<span class="hljs-number">0</span>).xSign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>,<span class="hljs-number">2</span>).xSign(); <span class="hljs-comment">// Will equal 0!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">3</span>,<span class="hljs-number">0</span>).xSign(); <span class="hljs-comment">// Will equal 1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">33</span>,<span class="hljs-number">0</span>).xSign(); <span class="hljs-comment">// Will equal 1!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -486,9 +667,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L16">v2d.ts:16</a></li>
+									<li>Defined in V2D.ts:24</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the y value</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -503,9 +689,24 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/a799fd6/src/v2d.ts#L99">v2d.ts:99</a></li>
+									<li>Defined in V2D.ts:287</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the sign of current vector&#39;s y</p>
+								</div>
+								<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+									<h1>Note</h1>
+								</a>
+								<p>Does not mutate <em>this</em> vector</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>,<span class="hljs-number">-13</span>).ySign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">-5</span>).ySign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>,<span class="hljs-number">-5</span>).ySign(); <span class="hljs-comment">// Will equal -1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>).ySign(); <span class="hljs-comment">// Will equal 0!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>,<span class="hljs-number">3</span>).ySign(); <span class="hljs-comment">// Will equal 1!</span>
+<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>,<span class="hljs-number">33</span>).ySign(); <span class="hljs-comment">// Will equal 1!</span></code></pre>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -531,7 +732,7 @@
 						<a href="../modules/_shapes_.html">&quot;<wbr>Shapes&quot;</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_v2d_.html">&quot;v2d&quot;</a>
+						<a href="../modules/_v2d_.html">&quot;<wbr>V2D&quot;</a>
 					</li>
 				</ul>
 			</nav>
