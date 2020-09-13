@@ -42,7 +42,7 @@ manager.render(circle(25), new V2D(50, 50))
 
 ### Outcome
 
-![alt text](https://github.com/coastalwhite/ts-svgmanager/readme-content/figures/circle.png)
+![alt text](https://raw.githubusercontent.com/coastalwhite/ts-svgmanager/master/readme-content/figures/circle.png)
 
 ## Drawing a Pentagon
 
@@ -91,7 +91,7 @@ manager.render(
 
 ### Outcome
 
-![alt text](https://github.com/coastalwhite/ts-svgmanager/readme-content/figures/pentagon.png)
+![alt text](https://raw.githubusercontent.com/coastalwhite/ts-svgmanager/master/readme-content/figures/pentagon.png)
 
 ## Drawing a Moving Pentagon
 
@@ -151,4 +151,4 @@ setInterval(() => {
 
 ### Outcome
 
-![alt text](https://github.com/coastalwhite/ts-svgmanager/readme-content/figures/moving-pentagon.gif)
+![alt text](https://raw.githubusercontent.com/coastalwhite/ts-svgmanager/master/readme-content/figures/moving-pentagon.gif)
