@@ -9,6 +9,9 @@
     "scripts": {
         "build": "webpack"
     },
+    "dependencies": {
+        "ts-svgmanager": "1.0.3"
+    },
     "devDependencies": {
         "ts-loader": "^8.0.2",
         "typescript": "^3.9.7",

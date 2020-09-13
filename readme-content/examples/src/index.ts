@@ -1,4 +1,4 @@
-import { V2D, SVGManager, SVGNode, PathData, circle } from '../../../dist'
+import { V2D, SVGManager, SVGNode, PathData, circle } from 'ts-svgmanager'
 
 function example1() {
     // Initialize the SVGManager

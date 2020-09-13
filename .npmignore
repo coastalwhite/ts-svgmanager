@@ -3,6 +3,6 @@ src
 .vscode
 tests
 docs
-.prettierrc.toml
 README.md
-README
+readme-content
+.prettierrc.toml
