@@ -130,26 +130,46 @@ manager.render(circle(<span class="hljs-number">25</span>), <span class="hljs-ke
 
 <span class="hljs-comment">// Initialize the SVGManager</span>
 <span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
-manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>).setViewBoxWidth(<span class="hljs-number">500</span>).setViewBoxHeight(<span class="hljs-number">500</span>)
 
-<span class="hljs-keyword">const</span> gradient = <span class="hljs-string">&#x27;linear-gradient(0deg, rgb(72, 60, 102) 0%, rgb(136, 169, 197) 100%)&#x27;</span>
+<span class="hljs-keyword">const</span> gradient = <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;linearGradient&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;spreadMethod&#x27;</span>, <span class="hljs-string">&#x27;pad&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;x1&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;y1&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;x2&#x27;</span>, <span class="hljs-string">&#x27;87%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;y2&#x27;</span>, <span class="hljs-string">&#x27;111%&#x27;</span>)
+    .append(
+        <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;stop&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;offset&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;style&#x27;</span>, <span class="hljs-string">&#x27;stop-color:rgb(72, 60, 102);stop-opacity:1;&#x27;</span>),
+    )
+    .append(
+        <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;stop&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;offset&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;style&#x27;</span>, <span class="hljs-string">&#x27;stop-color:rgb(136, 169, 197);stop-opacity:1;&#x27;</span>),
+    )
 
 <span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
-manager.render(
+<span class="hljs-keyword">const</span> gradientId = manager.ensureDefinition(gradient)
+manager.renderNamed(
+    <span class="hljs-string">&#x27;pentagon&#x27;</span>,
     <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
-        .set(<span class="hljs-string">&#x27;d&#x27;</span>,
+        .set(
+            <span class="hljs-string">&#x27;d&#x27;</span>,
             <span class="hljs-keyword">new</span> PathData()
-            .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .closePath()
+                .moveTo(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+                .lineTo(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>)
+                .lineTo(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)
+                .lineTo(<span class="hljs-number">200</span>, <span class="hljs-number">475</span>)
+                .lineTo(<span class="hljs-number">0</span>, <span class="hljs-number">300</span>)
+                .closePath()
+                .toString(),
+        )
         .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
         .set(<span class="hljs-string">&#x27;stroke-width&#x27;</span>, <span class="hljs-string">&#x27;1px&#x27;</span>)
-        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, gradient)
-, <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>))</code></pre>
+        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, <span class="hljs-string">`url(#<span class="hljs-subst">${manager.mentionDefinition(gradientId)}</span>)`</span>),
+    <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
+)</code></pre>
 				<a href="#outcome-1" id="outcome-1" style="color: inherit; text-decoration: none;">
 					<h3>Outcome</h3>
 				</a>
@@ -176,41 +196,129 @@ manager.render(
 
 <span class="hljs-comment">// Initialize the SVGManager</span>
 <span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
-manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+manager
+    .init(<span class="hljs-string">&#x27;svg-root&#x27;</span>)
+    .setViewBoxWidth(<span class="hljs-number">600</span>)
+    .setViewBoxHeight(<span class="hljs-number">600</span>)
+    .setViewBoxLocation(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">-50</span>, <span class="hljs-number">-50</span>))
 
-<span class="hljs-keyword">const</span> gradient = <span class="hljs-string">&#x27;linear-gradient(0deg, rgb(72, 60, 102) 0%, rgb(136, 169, 197) 100%)&#x27;</span>
+<span class="hljs-keyword">const</span> gradient = <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;linearGradient&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;spreadMethod&#x27;</span>, <span class="hljs-string">&#x27;pad&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;x1&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;y1&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;x2&#x27;</span>, <span class="hljs-string">&#x27;87%&#x27;</span>)
+    .set(<span class="hljs-string">&#x27;y2&#x27;</span>, <span class="hljs-string">&#x27;111%&#x27;</span>)
+    .append(
+        <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;stop&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;offset&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;style&#x27;</span>, <span class="hljs-string">&#x27;stop-color:rgb(72, 60, 102);stop-opacity:1;&#x27;</span>),
+    )
+    .append(
+        <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;stop&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;offset&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;style&#x27;</span>, <span class="hljs-string">&#x27;stop-color:rgb(136, 169, 197);stop-opacity:1;&#x27;</span>),
+    )
 
 <span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
+<span class="hljs-keyword">const</span> gradientId = manager.ensureDefinition(gradient)
 manager.renderNamed(
     <span class="hljs-string">&#x27;pentagon&#x27;</span>,
     <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
-        .set(<span class="hljs-string">&#x27;d&#x27;</span>,
+        .set(
+            <span class="hljs-string">&#x27;d&#x27;</span>,
             <span class="hljs-keyword">new</span> PathData()
-            .moveTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>))
-            .lineTo(<span class="hljs-keyword">new</span> V2D(<span class="hljs-number">200</span>, <span class="hljs-number">400</span>))
-            .closePath()
+                .moveTo(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+                .lineTo(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>)
+                .lineTo(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)
+                .lineTo(<span class="hljs-number">200</span>, <span class="hljs-number">475</span>)
+                .lineTo(<span class="hljs-number">0</span>, <span class="hljs-number">300</span>)
+                .closePath()
+                .toString(),
+        )
         .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
         .set(<span class="hljs-string">&#x27;stroke-width&#x27;</span>, <span class="hljs-string">&#x27;1px&#x27;</span>)
-        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, gradient)
-, <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>))
+        .set(<span class="hljs-string">&#x27;fill&#x27;</span>, <span class="hljs-string">`url(#<span class="hljs-subst">${manager.mentionDefinition(gradientId)}</span>)`</span>),
+    <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
+)
 
 <span class="hljs-keyword">let</span> time = <span class="hljs-number">0</span>
 <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {
-    <span class="hljs-keyword">const</span> x = <span class="hljs-built_in">Math</span>.cos(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>;
-    <span class="hljs-keyword">const</span> y = <span class="hljs-built_in">Math</span>.sin(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>;
+    <span class="hljs-keyword">const</span> x = <span class="hljs-built_in">Math</span>.cos(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>
+    <span class="hljs-keyword">const</span> y = <span class="hljs-built_in">Math</span>.sin(time) * <span class="hljs-number">30</span> - <span class="hljs-number">15</span>
 
     manager.moveNamed(<span class="hljs-string">&#x27;pentagon&#x27;</span>, <span class="hljs-keyword">new</span> V2D(x, y))
 
-    time += (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">1000</span>)
+    time += (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">1000</span>
 }, <span class="hljs-number">1</span>)</code></pre>
 				<a href="#outcome-2" id="outcome-2" style="color: inherit; text-decoration: none;">
 					<h3>Outcome</h3>
 				</a>
 				<img src="https://raw.githubusercontent.com/coastalwhite/ts-svgmanager/master/readme-content/figures/moving-pentagon.gif" alt="moving-pentagon" width="200"/>
+				<a href="#loading-from-a-file" id="loading-from-a-file" style="color: inherit; text-decoration: none;">
+					<h2>Loading from a file</h2>
+				</a>
+				<p>Here we are going to draw a Pentagom to the DOM using the manager.</p>
+				<a href="#code-3" id="code-3" style="color: inherit; text-decoration: none;">
+					<h3>Code</h3>
+				</a>
+				<a href="#html-3" id="html-3" style="color: inherit; text-decoration: none;">
+					<h4>HTML</h4>
+				</a>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- ... Rest of DOM ... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></code></pre>
+				<a href="#jsts-3" id="jsts-3" style="color: inherit; text-decoration: none;">
+					<h4>JS/TS</h4>
+				</a>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { V2D, SVGManager, SVGNode, PathData }
+
+<span class="hljs-comment">// Initialize the SVGManager</span>
+<span class="hljs-keyword">const</span> manager = <span class="hljs-keyword">new</span> SVGManager()
+manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>).setViewBoxWidth(<span class="hljs-number">500</span>).setViewBoxHeight(<span class="hljs-number">500</span>)
+
+SVGNode.fromFile(<span class="hljs-string">&#x27;gradient.svg&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">gradient: SVGNode</span>) =&gt;</span> {
+    <span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
+    <span class="hljs-keyword">const</span> gradientId = manager.ensureDefinition(gradient)
+    manager.renderNamed(
+        <span class="hljs-string">&#x27;pentagon&#x27;</span>,
+        <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
+            .set(
+                <span class="hljs-string">&#x27;d&#x27;</span>,
+                <span class="hljs-keyword">new</span> PathData()
+                    .moveTo(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+                    .lineTo(<span class="hljs-number">300</span>, <span class="hljs-number">100</span>)
+                    .lineTo(<span class="hljs-number">400</span>, <span class="hljs-number">300</span>)
+                    .lineTo(<span class="hljs-number">200</span>, <span class="hljs-number">475</span>)
+                    .lineTo(<span class="hljs-number">0</span>, <span class="hljs-number">300</span>)
+                    .closePath()
+                    .toString(),
+            )
+            .set(<span class="hljs-string">&#x27;stroke&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;stroke-width&#x27;</span>, <span class="hljs-string">&#x27;1px&#x27;</span>)
+            .set(<span class="hljs-string">&#x27;fill&#x27;</span>, <span class="hljs-string">`url(#<span class="hljs-subst">${manager.mentionDefinition(gradientId)}</span>)`</span>),
+        <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
+    )
+})</code></pre>
+				<a href="#gradiantsvg" id="gradiantsvg" style="color: inherit; text-decoration: none;">
+					<h4>gradiant.svg</h4>
+				</a>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">linearGradient</span>
+    <span class="hljs-attr">spreadMethod</span>=<span class="hljs-string">&quot;pad&quot;</span>
+    <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;gradient&quot;</span>
+    <span class="hljs-attr">x1</span>=<span class="hljs-string">&quot;0%&quot;</span>
+    <span class="hljs-attr">y1</span>=<span class="hljs-string">&quot;0%&quot;</span>
+    <span class="hljs-attr">x2</span>=<span class="hljs-string">&quot;87%&quot;</span>
+    <span class="hljs-attr">y2</span>=<span class="hljs-string">&quot;111%&quot;</span>
+&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">stop</span> <span class="hljs-attr">offset</span>=<span class="hljs-string">&quot;0%&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;stop-color:rgb(72, 60, 102);stop-opacity:1;&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">stop</span> <span class="hljs-attr">offset</span>=<span class="hljs-string">&quot;100%&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;stop-color:rgb(136, 169, 197);stop-opacity:1;&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">linearGradient</span>&gt;</span></code></pre>
+				<a href="#outcome-3" id="outcome-3" style="color: inherit; text-decoration: none;">
+					<h3>Outcome</h3>
+				</a>
+				<img src="https://raw.githubusercontent.com/coastalwhite/ts-svgmanager/master/readme-content/figures/pentagon.png" alt="pentagon" width="200"/>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

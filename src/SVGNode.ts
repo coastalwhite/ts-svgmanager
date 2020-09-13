@@ -121,4 +121,54 @@ export default class SVGNode {
 
         return md5.end() as string
     }
+
+    /**
+     * Converts a HTML element into a SVGNode element
+     * @param element HTML element
+     */
+    public static fromHTMLElement(element: HTMLElement): SVGNode {
+        let node = new SVGNode(element.tagName)
+
+        Array.from(element.attributes).forEach((attribute: Attr) => {
+            node = node.set(attribute.name, attribute.value)
+        })
+
+        Array.from(element.children).forEach((child: HTMLElement) => {
+            node = node.append(SVGNode.fromHTMLElement(child))
+        })
+
+        if (element.innerText != undefined)
+            node = node.setText(element.innerText)
+
+        return node
+    }
+
+    private static async fetchHTML(url: string): Promise<string> {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest()
+            xhr.open('get', url, true)
+            xhr.onload = function () {
+                var status = xhr.status
+                if (status == 200) {
+                    resolve(xhr.responseText)
+                } else {
+                    reject(status)
+                }
+            }
+            xhr.send()
+        })
+    }
+
+    /**
+     * Load a SVGNode from a file
+     */
+    public static async fromFile(filePath: string): Promise<SVGNode> {
+        const svgString = await SVGNode.fetchHTML(filePath)
+
+        const parser = new DOMParser()
+        const head = parser.parseFromString(svgString, 'image/svg+xml')
+            .firstChild as HTMLElement
+
+        return SVGNode.fromHTMLElement(head)
+    }
 }
