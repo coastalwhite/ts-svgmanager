@@ -423,4 +423,13 @@ export default class SVGManager {
     public id(): string {
         return this._managerid
     }
+
+    /**
+     * Returns the DOM-id of a definition\
+     * Used with e.g. linear gradients
+     * @param elementId manager id of the element
+     */
+    public mentionDefinition(elementId: string): string {
+        return this.toDefId(elementId)
+    }
 }

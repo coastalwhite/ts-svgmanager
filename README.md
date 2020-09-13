@@ -13,8 +13,11 @@ SVGManager creates a resourceful way to handle interactive SVG containers. A exa
 
 ## Simple Circle
 
-Here we are going to draw a simple circle to the DOM using the manager.\
-The HTML looks like this:
+Here we are going to draw a simple circle to the DOM using the manager.
+
+### Code
+
+#### HTML
 
 ```html
 <body>
@@ -24,7 +27,7 @@ The HTML looks like this:
 </body>
 ```
 
-The JS/TS looks like this:
+#### JS/TS
 
 ```typescript
 import { V2D, SVGManager, circle }
@@ -37,10 +40,17 @@ manager.init('svg-root')
 manager.render(circle(25), new V2D(50, 50))
 ```
 
+### Outcome
+
+![alt text](./README/figures/circle.png)
+
 ## Drawing a Pentagon
 
-Here we are going to draw a Pentagom to the DOM using the manager.\
-The HTML looks like this:
+Here we are going to draw a Pentagom to the DOM using the manager.
+
+### Code
+
+#### HTML
 
 ```html
 <body>
@@ -50,7 +60,7 @@ The HTML looks like this:
 </body>
 ```
 
-The JS/TS looks like this:
+#### JS/TS
 
 ```typescript
 import { V2D, SVGManager, SVGNode, PathData }
@@ -79,10 +89,17 @@ manager.render(
 , new V2D(0, 0))
 ```
 
+### Outcome
+
+![alt text](./README/figures/pentagon.png)
+
 ## Drawing a Moving Pentagon
 
-Here we are going to draw a Pentagom to the DOM using the manager.\
-The HTML looks like this:
+Here we are going to draw a Pentagom to the DOM using the manager.
+
+### Code
+
+#### HTML
 
 ```html
 <body>
@@ -92,7 +109,7 @@ The HTML looks like this:
 </body>
 ```
 
-The JS/TS looks like this:
+#### JS/TS
 
 ```typescript
 import { V2D, SVGManager, SVGNode, PathData }
@@ -131,3 +148,7 @@ setInterval(() => {
     time += (2 * Math.PI / 1000)
 }, 1)
 ```
+
+### Outcome
+
+![alt text](./README/figures/moving-pentagon.gif)
