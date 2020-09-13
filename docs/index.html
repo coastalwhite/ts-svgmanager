@@ -151,8 +151,7 @@ manager.init(<span class="hljs-string">&#x27;svg-root&#x27;</span>).setViewBoxWi
 
 <span class="hljs-comment">// Render a pentagon with a gradient at (0,0)</span>
 <span class="hljs-keyword">const</span> gradientId = manager.ensureDefinition(gradient)
-manager.renderNamed(
-    <span class="hljs-string">&#x27;pentagon&#x27;</span>,
+manager.render(
     <span class="hljs-keyword">new</span> SVGNode(<span class="hljs-string">&#x27;path&#x27;</span>)
         .set(
             <span class="hljs-string">&#x27;d&#x27;</span>,
@@ -257,7 +256,7 @@ manager.renderNamed(
 				<a href="#loading-from-a-file" id="loading-from-a-file" style="color: inherit; text-decoration: none;">
 					<h2>Loading from a file</h2>
 				</a>
-				<p>Here we are going to draw a Pentagom to the DOM using the manager.</p>
+				<p>Here we are going to draw a Pentagon to the DOM using the manager.</p>
 				<a href="#code-3" id="code-3" style="color: inherit; text-decoration: none;">
 					<h3>Code</h3>
 				</a>
