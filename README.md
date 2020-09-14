@@ -7,6 +7,20 @@ and make controlling the SVG elements from JS/TS as easy and reliable as possibl
 
 Look at the [Docs](https://coastalwhite.github.io/ts-svgmanager/) for detailed information
 
+# Installation
+
+Install the package using npm:
+
+```
+npm i ts-svgmanager
+```
+
+Install the typescript types:
+
+```
+npm i --save-dev @types/ts-svgmanager
+```
+
 # Why use SVGManager
 
 SVGManager creates a resourceful way to handle interactive SVG containers. A example of resourcefulness is automatically detecting similar shapes and only doing rendering calculations once. Furthermore, SVGManager provides a easy way to deal with mentions of figures within a SVG container, so that you can come back and adjust them.
