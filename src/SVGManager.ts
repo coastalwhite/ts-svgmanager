@@ -10,7 +10,7 @@ import {
     SVGTag,
     SVGViewBox,
 } from './definitions'
-import { parseSVGViewBox } from './Parser'
+import { htmlParseSVGNode, parseSVGViewBox } from './Parser'
 
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'
@@ -67,17 +67,10 @@ export default class SVGManager {
         return elementId
     }
 
-    private addFigure(
-        elementId: string,
-        position: V2D,
+    private addEventsToElem(
+        elem: SVGElement,
         events: EventDefinition[],
-    ) {
-        const elem = new SVGNode(SVGTag.Use)
-            .set(SVGAttr.Href, '#' + elementId)
-            .set(SVGAttr.X, position.x().toString())
-            .set(SVGAttr.Y, position.y().toString())
-            .toHTML()
-
+    ): SVGElement {
         // Group all events together by type
         const groupedEvents = events.reduce((r, a) => {
             r[a.eventType] = r[a.eventType] || []
@@ -94,20 +87,45 @@ export default class SVGManager {
             }),
         )
 
+        return elem
+    }
+
+    private addFigure(
+        elementId: string,
+        position: V2D,
+        events: EventDefinition[],
+    ) {
+        const elem = this.addEventsToElem(
+            new SVGNode(SVGTag.Use)
+                .set(SVGAttr.Href, '#' + elementId)
+                .set(SVGAttr.X, position.x().toString())
+                .set(SVGAttr.Y, position.y().toString())
+                .toHTML(),
+            events,
+        )
+
         this._svgElement.appendChild(elem)
     }
 
-    private addNamedFigure(name: string, elementId: string, position: V2D) {
+    private addNamedFigure(
+        name: string,
+        elementId: string,
+        position: V2D,
+        events: EventDefinition[],
+    ) {
         if (this.doesNameExist(name)) throw new Error('Name already exists!')
 
-        this._svgElement.appendChild(
+        const elem = this.addEventsToElem(
             new SVGNode(SVGTag.Use)
                 .set(SVGAttr.Href, '#' + elementId)
                 .set(SVGAttr.X, position.x().toString())
                 .set(SVGAttr.Y, position.y().toString())
                 .set(SVGAttr.Id, this.getName(name))
                 .toHTML(),
+            events,
         )
+
+        this._svgElement.appendChild(elem)
 
         this._names.push(name)
     }
@@ -233,7 +251,12 @@ export default class SVGManager {
             this.addDefintion(element)
         }
 
-        this.addNamedFigure(name, this.toDefId(elementId), position)
+        this.addNamedFigure(
+            name,
+            this.toDefId(elementId),
+            position,
+            element.getEvents(),
+        )
     }
 
     /**
@@ -255,7 +278,7 @@ export default class SVGManager {
         if (!this.doesDefExist(elementId))
             throw new Error("Tried to render an Id that doesn't exist")
 
-        this.addNamedFigure(name, this.toDefId(elementId), position)
+        this.addNamedFigure(name, this.toDefId(elementId), position, [])
     }
 
     /**
@@ -397,6 +420,35 @@ export default class SVGManager {
      */
     get id(): string {
         return this._managerid
+    }
+
+    /**
+     * Adjusts an attribute of a named item
+     * @param name Name of named item
+     * @param attr Attribute to adjust
+     * @param value Value to adjust to
+     */
+    public adjustNamedAttr(
+        name: string,
+        attr: SVGAttr,
+        value: string,
+    ): SVGManager {
+        const namedItem = document.getElementById(this.getName(name))
+        if (namedItem === null) return
+        const defId = namedItem.getAttribute('href').substr(1)
+        const elem = document.getElementById(defId)
+        if (elem === null) return
+        const defNode = htmlParseSVGNode(elem)
+        const newDefId = this.ensureDefinition(defNode.set(attr, value))
+        namedItem.setAttribute(SVGAttr.Href, '#' + this.toDefId(newDefId))
+    }
+
+    /**
+     * Returns the DOM-id of a named item
+     * @param name name of named item
+     */
+    public mentionNamedItem(name: string): string {
+        return this.getName(name)
     }
 
     /**

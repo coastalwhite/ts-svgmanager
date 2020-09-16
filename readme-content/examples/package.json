@@ -7,7 +7,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "build": "webpack"
+        "build": "cd ../../; tsc; cd readme-content/examples; webpack"
     },
     "dependencies": {
         "ts-svgmanager": "1.0.3"

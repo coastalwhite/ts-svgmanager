@@ -162,10 +162,18 @@ function example5() {
         .setDimensions(new V2D(500, 500))
         .setPosition(new V2D(-50, -50))
 
-    fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
-        // Render a pentagon with a gradient at (0,0)
-        const gradientId = manager.ensureDefinition(gradient)
-        manager.render(
+    Promise.all([
+        fetchSVGNode('./svg/gradient.svg'),
+        fetchSVGNode('./svg/gradient2.svg'),
+    ]).then((gradients: SVGNode[]) => {
+        const gradient1Id = manager.ensureDefinition(gradients[0]),
+            gradient2Id = manager.ensureDefinition(gradients[1])
+
+        const gradient1URL = `url(#${manager.mentionDefinition(gradient1Id)})`,
+            gradient2URL = `url(#${manager.mentionDefinition(gradient2Id)})`
+
+        manager.renderNamed(
+            'pentagon',
             new SVGNode(SVGTag.Path)
                 .set(
                     SVGAttr.D,
@@ -180,13 +188,22 @@ function example5() {
                 )
                 .set(SVGAttr.Stroke, '#ccc')
                 .set(SVGAttr.StrokeWidth, '1px')
-                .set(
-                    SVGAttr.Fill,
-                    `url(#${manager.mentionDefinition(gradientId)})`,
-                )
-                .addEvent(SVGEvent.Click, (e) => {
-                    alert('hi!')
+                .set(SVGAttr.Fill, gradient1URL)
+                .addEvent(SVGEvent.MouseEnter, (e) => {
+                    manager.adjustNamedAttr(
+                        'pentagon',
+                        SVGAttr.Fill,
+                        gradient2URL,
+                    )
+                })
+                .addEvent(SVGEvent.MouseLeave, (e) => {
+                    manager.adjustNamedAttr(
+                        'pentagon',
+                        SVGAttr.Fill,
+                        gradient1URL,
+                    )
                 }),
+
             new V2D(0, 0),
         )
     })

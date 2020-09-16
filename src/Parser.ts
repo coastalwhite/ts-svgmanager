@@ -99,4 +99,5 @@ export {
     stringToSVGNode as parseSVGNode,
     syncLoadSVGNode as fetchSVGNodeSync,
     asyncLoadSVGNode as fetchSVGNode,
+    htmlToSVGNode as htmlParseSVGNode,
 }

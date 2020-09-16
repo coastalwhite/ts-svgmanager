@@ -118,6 +118,9 @@ export default class SVGNode {
      * Returns the hashstring of SVGNode
      */
     public toHash(): string {
+        const id = this._attributes.get(SVGAttr.Id)
+        this.set(SVGAttr.Id, '')
+
         let md5 = new Md5()
 
         md5.appendStr('tag' + this._tag)
@@ -138,6 +141,10 @@ export default class SVGNode {
             .map((child) => child.toHash())
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((childHash) => md5.appendStr('child' + childHash))
+
+        if (id !== undefined) {
+            this.set(SVGAttr.Id, id)
+        }
 
         return md5.end() as string
     }
