@@ -1127,7 +1127,7 @@ enum Attributes {
     /**
      * [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox)
      */
-    ViewBox = 'viewbox',
+    ViewBox = 'viewBox',
 
     /**
      * [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewTarget)
