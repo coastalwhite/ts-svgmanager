@@ -1,8 +1,16 @@
 import V2D from './V2D'
-import SVGNode, { EventDefinition } from './SVGNode'
+import SVGNode from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
-import { SVGAttr, SVGTag } from './definitions'
+import {
+    EventDefinition,
+    EventFunc,
+    SVGAttr,
+    SVGEvent,
+    SVGTag,
+    SVGViewBox,
+} from './definitions'
+import { parseSVGViewBox } from './Parser'
 
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'
@@ -70,14 +78,16 @@ export default class SVGManager {
             .set(SVGAttr.Y, position.y().toString())
             .toHTML()
 
+        // Group all events together by type
         const groupedEvents = events.reduce((r, a) => {
             r[a.eventType] = r[a.eventType] || []
             r[a.eventType].push(a)
             return r
         }, Object.create(null))
 
+        // Add all event listeners to the HTML elements
         Object.keys(groupedEvents).forEach((ev) =>
-            elem.addEventListener((ev as string).substr(2), (e: Event) => {
+            elem.addEventListener((ev as string).substr(2), (e) => {
                 groupedEvents[ev].forEach((eventCall: EventDefinition) => {
                     eventCall.func(e)
                 })
@@ -144,89 +154,17 @@ export default class SVGManager {
     }
 
     /**
-     * Adds vector to the position of minimum of the viewBox\
-     * It returns itself, for easy programming
-     * @param v vector to be added
+     * Fetches the ViewBox from root SVG
      */
-    public moveViewBox(v: V2D): SVGManager {
-        const viewBox = this.get('viewBox').split(' ')
-
-        const minX = parseInt(viewBox[0]) + v.x()
-        const minY = parseInt(viewBox[1]) + v.y()
-        const width = parseInt(viewBox[2])
-        const height = parseInt(viewBox[3])
-
-        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
-
-        return this
+    get viewBox(): SVGViewBox {
+        return parseSVGViewBox(this._svgElement.getAttribute('viewBox'))
     }
 
     /**
-     * Sets vector to the position of minimum of the viewBox\
-     * It returns itself, for easy programming
-     * @param v vector to be added
+     * Sets the ViewBox to the root SVG
      */
-    public setViewBoxLocation(v: V2D): SVGManager {
-        const viewBox = this.get('viewBox').split(' ')
-
-        const minX = v.x()
-        const minY = v.y()
-        const width = parseInt(viewBox[2])
-        const height = parseInt(viewBox[3])
-
-        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
-
-        return this
-    }
-
-    /**
-     * Sets the width of the viewBox\
-     * It returns itself, for easy programming
-     * @param width new width of the viewBox
-     */
-    public setViewBoxWidth(width: number): SVGManager {
-        const viewBox = this.get('viewBox').split(' ')
-
-        const minX = parseInt(viewBox[0])
-        const minY = parseInt(viewBox[1])
-        const height = parseInt(viewBox[3])
-
-        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
-
-        return this
-    }
-
-    /**
-     * Sets the height of the viewBox\
-     * It returns itself, for easy programming
-     * @param height new height of the viewBox
-     */
-    public setViewBoxHeight(height: number): SVGManager {
-        const viewBox = this.get('viewBox').split(' ')
-
-        const minX = parseInt(viewBox[0])
-        const minY = parseInt(viewBox[1])
-        const width = parseInt(viewBox[2])
-
-        this.set('viewBox', `${minX} ${minY} ${width} ${height}`)
-
-        return this
-    }
-
-    /**
-     * Sets the width of the SVG root
-     * @param width new width
-     */
-    public setWidth(width: number) {
-        this.set('width', width + 'px')
-    }
-
-    /**
-     * Sets the height of the SVG root
-     * @param height new height
-     */
-    public setHeight(height: number) {
-        this.set('height', height + 'px')
+    set viewBox(vb: SVGViewBox) {
+        this._svgElement.setAttribute('viewBox', vb.toString())
     }
 
     /**
@@ -368,6 +306,16 @@ export default class SVGManager {
     }
 
     /**
+     * Mutates the SVGManager to add an event.
+     * Multiple functions can be set for the same event.
+     * Then, it returns itself, for easy programming.
+     */
+    public addEvent(event: SVGEvent, func: EventFunc): SVGManager {
+        this._svgElement.addEventListener(event.substr(2), func)
+        return this
+    }
+
+    /**
      * Removes a named figure from the DOM\
      * If named item does not exist, it will not do anything.
      */
@@ -414,14 +362,22 @@ export default class SVGManager {
         this._svgElement.innerHTML = ''
         this._defintions = []
         this._names = []
+
         this._svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
+
+        // Remove event listeners
+        const svgClone = this._svgElement.cloneNode(true)
+        this._svgElement = this._rootElement.replaceChild(
+            svgClone,
+            this._svgElement,
+        )
     }
 
     /**
      * Fetch an attribute value from root SVG element
      * @param attr Attribute name
      */
-    public get(attr: string): string {
+    public get(attr: SVGAttr): string {
         return this._svgElement.getAttribute(attr) || ''
     }
 
@@ -430,7 +386,7 @@ export default class SVGManager {
      * @param attr Attribute name
      * @param value Set value
      */
-    public set(attr: string, value: string): SVGManager {
+    public set(attr: SVGAttr, value: string): SVGManager {
         this._svgElement.setAttribute(attr, value)
 
         return this
@@ -439,7 +395,7 @@ export default class SVGManager {
     /**
      * Returns the unique identifier connected to this SVGManager
      */
-    public id(): string {
+    get id(): string {
         return this._managerid
     }
 

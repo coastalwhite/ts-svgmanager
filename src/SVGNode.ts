@@ -1,16 +1,12 @@
 import { Md5 } from 'ts-md5/dist/md5'
-import { SVGAttr, SVGEvent, SVGTag } from './definitions'
+import {
+    EventDefinition,
+    EventFunc,
+    SVGAttr,
+    SVGEvent,
+    SVGTag,
+} from './definitions'
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
-
-interface Hashable {
-    [key: string]: string
-}
-
-type EventFunc = (e: Event) => void
-export interface EventDefinition {
-    eventType: SVGEvent
-    func: EventFunc
-}
 
 /**
  * A JS Representation of a HTML-Node.
