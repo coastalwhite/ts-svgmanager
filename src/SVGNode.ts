@@ -1,8 +1,15 @@
 import { Md5 } from 'ts-md5/dist/md5'
+import { SVGAttr, SVGEvent, SVGTag } from './definitions'
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 
 interface Hashable {
     [key: string]: string
+}
+
+type EventFunc = (e: Event) => void
+export interface EventDefinition {
+    eventType: SVGEvent
+    func: EventFunc
 }
 
 /**
@@ -10,20 +17,22 @@ interface Hashable {
  * More specifically, all the SVG Types Nodes.
  */
 export default class SVGNode {
-    private _tag: string
-    private _attributes: Map<string, string>
+    private _tag: SVGTag
+    private _attributes: Map<SVGAttr, string>
     private _children: SVGNode[]
     private _innerText: string
+    private _events: EventDefinition[]
 
     /**
      * Construct a SVGNode respresenting the *tag* element
      * with no attributes, children or inner text.
      */
-    public constructor(tag: string) {
+    public constructor(tag: SVGTag) {
         this._tag = tag
         this._attributes = new Map()
         this._children = []
         this._innerText = ''
+        this._events = []
     }
 
     /**
@@ -33,7 +42,7 @@ export default class SVGNode {
      * # Note
      * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
      */
-    public set(attr: string, value: string): SVGNode {
+    public set(attr: SVGAttr, value: string): SVGNode {
         this._attributes.set(attr, value)
 
         return this
@@ -47,7 +56,7 @@ export default class SVGNode {
      * # Note
      * If the attribute was not set, the call still succeeds but does nothing.
      */
-    public map(attr: string, f: (value: string) => string): SVGNode {
+    public map(attr: SVGAttr, f: (value: string) => string): SVGNode {
         const value = this._attributes.get(attr)
         if (value === undefined) return this
 
@@ -68,6 +77,17 @@ export default class SVGNode {
     }
 
     /**
+     * Mutates the SVGNode to add an event.
+     * Multiple functions can be set for the same event.
+     * Then, it returns itself, for easy programming.
+     */
+    public addEvent(event: SVGEvent, func: EventFunc): SVGNode {
+        this._events.push({ eventType: event, func })
+
+        return this
+    }
+
+    /**
      * Mutates the SVGNode to set the inner text to *text*.
      * Then, it returns itself, for easy programming.
      */
@@ -75,6 +95,10 @@ export default class SVGNode {
         this._innerText = text
 
         return this
+    }
+
+    public getEvents(): EventDefinition[] {
+        return this._events
     }
 
     /**

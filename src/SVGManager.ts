@@ -1,7 +1,8 @@
 import V2D from './V2D'
-import SVGNode from './SVGNode'
+import SVGNode, { EventDefinition } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
+import { SVGAttr, SVGTag } from './definitions'
 
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'
@@ -52,31 +53,49 @@ export default class SVGManager {
 
         this._defintions.push(elementId)
         this.defsElement().appendChild(
-            element.set('id', this.toDefId(elementId)).toHTML(),
+            element.set(SVGAttr.Id, this.toDefId(elementId)).toHTML(),
         )
 
         return elementId
     }
 
-    private addFigure(elementId: string, position: V2D) {
-        this._svgElement.appendChild(
-            new SVGNode('use')
-                .set('href', '#' + elementId)
-                .set('x', position.x().toString())
-                .set('y', position.y().toString())
-                .toHTML(),
+    private addFigure(
+        elementId: string,
+        position: V2D,
+        events: EventDefinition[],
+    ) {
+        const elem = new SVGNode(SVGTag.Use)
+            .set(SVGAttr.Href, '#' + elementId)
+            .set(SVGAttr.X, position.x().toString())
+            .set(SVGAttr.Y, position.y().toString())
+            .toHTML()
+
+        const groupedEvents = events.reduce((r, a) => {
+            r[a.eventType] = r[a.eventType] || []
+            r[a.eventType].push(a)
+            return r
+        }, Object.create(null))
+
+        Object.keys(groupedEvents).forEach((ev) =>
+            elem.addEventListener((ev as string).substr(2), (e: Event) => {
+                groupedEvents[ev].forEach((eventCall: EventDefinition) => {
+                    eventCall.func(e)
+                })
+            }),
         )
+
+        this._svgElement.appendChild(elem)
     }
 
     private addNamedFigure(name: string, elementId: string, position: V2D) {
         if (this.doesNameExist(name)) throw new Error('Name already exists!')
 
         this._svgElement.appendChild(
-            new SVGNode('use')
-                .set('href', '#' + elementId)
-                .set('x', position.x().toString())
-                .set('y', position.y().toString())
-                .set('id', this.getName(name))
+            new SVGNode(SVGTag.Use)
+                .set(SVGAttr.Href, '#' + elementId)
+                .set(SVGAttr.X, position.x().toString())
+                .set(SVGAttr.Y, position.y().toString())
+                .set(SVGAttr.Id, this.getName(name))
                 .toHTML(),
         )
 
@@ -111,12 +130,12 @@ export default class SVGManager {
         this._defintions = []
         this._names = []
 
-        const svgElement = new SVGNode('svg')
-            .set('viewBox', DEFAULT_VIEWBOX)
-            .set('width', DEFAULT_SVG_WIDTH)
-            .set('height', DEFAULT_SVG_HEIGHT)
-            .set('id', this._managerid)
-            .append(new SVGNode('defs'))
+        const svgElement = new SVGNode(SVGTag.Svg)
+            .set(SVGAttr.ViewBox, DEFAULT_VIEWBOX)
+            .set(SVGAttr.Width, DEFAULT_SVG_WIDTH)
+            .set(SVGAttr.Height, DEFAULT_SVG_HEIGHT)
+            .set(SVGAttr.Id, this._managerid)
+            .append(new SVGNode(SVGTag.Defs))
             .toHTML()
 
         this._svgElement = this._rootElement.appendChild(svgElement)
@@ -235,7 +254,7 @@ export default class SVGManager {
         if (!this.doesDefExist(elementId))
             throw new Error("Tried to render an Id that doesn't exist")
 
-        this.addFigure(this.toDefId(elementId), position)
+        this.addFigure(this.toDefId(elementId), position, [])
     }
 
     /**
@@ -251,7 +270,7 @@ export default class SVGManager {
             this.addDefintion(element)
         }
 
-        this.addFigure(this.toDefId(elementId), position)
+        this.addFigure(this.toDefId(elementId), position, element.getEvents())
 
         return elementId
     }
@@ -374,9 +393,9 @@ export default class SVGManager {
     public seperateRenderNamed(name: string, element: SVGNode, position: V2D) {
         this._svgElement.appendChild(
             element
-                .set('id', this.getName(name))
-                .set('x', position.x().toString())
-                .set('y', position.y().toString())
+                .set(SVGAttr.Id, this.getName(name))
+                .set(SVGAttr.X, position.x().toString())
+                .set(SVGAttr.Y, position.y().toString())
                 .toHTML(),
         )
     }
@@ -395,7 +414,7 @@ export default class SVGManager {
         this._svgElement.innerHTML = ''
         this._defintions = []
         this._names = []
-        this._svgElement.appendChild(new SVGNode('defs').toHTML())
+        this._svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
     }
 
     /**

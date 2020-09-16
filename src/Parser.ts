@@ -1,17 +1,22 @@
 import { SVGNode } from '.'
+import { SVGAttr, SVGTag } from './definitions'
 
 function htmlToSVGNode(elem: HTMLElement): SVGNode {
-    let node = new SVGNode(elem.tagName)
+    const tag = elem.tagName as SVGTag
+    if (tag === undefined) throw new Error('Tag not recognized!')
+    let node = new SVGNode(tag)
 
     Array.from(elem.attributes).forEach((attribute: Attr) => {
-        node = node.set(attribute.name, attribute.value)
+        const attr = attribute.name as SVGAttr
+        if (attr === undefined) throw new Error('Attribute not recognized!')
+        node = node.set(attr, attribute.value)
     })
 
     Array.from(elem.children).forEach((child: HTMLElement) => {
         node = node.append(htmlToSVGNode(child))
     })
 
-    if (elem.innerText != undefined) node = node.setText(elem.innerText)
+    if (elem.innerText !== undefined) node = node.setText(elem.innerText)
 
     return node
 }
