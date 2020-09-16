@@ -1,4 +1,14 @@
-import { V2D, SVGManager, SVGNode, PathData, circle } from '../../../dist'
+import {
+    V2D,
+    SVGManager,
+    SVGNode,
+    PathData,
+    circle,
+    fetchSVGNode,
+    SVGTag,
+    SVGAttr,
+    SVGEvent,
+} from '../../../dist'
 
 function example1() {
     // Initialize the SVGManager
@@ -12,32 +22,39 @@ function example1() {
 function example2() {
     // Initialize the SVGManager
     const manager = new SVGManager()
-    manager.init('svg-root').setViewBoxWidth(500).setViewBoxHeight(500)
+    manager.init('svg-root')
+    manager.viewBox = manager.viewBox.setDimensions(new V2D(500, 500))
 
-    const gradient = new SVGNode('linearGradient')
-        .set('spreadMethod', 'pad')
-        .set('x1', '0%')
-        .set('y1', '0%')
-        .set('x2', '87%')
-        .set('y2', '111%')
+    const gradient = new SVGNode(SVGTag.LinearGradient)
+        .set(SVGAttr.SpreadMethod, 'pad')
+        .set(SVGAttr.X1, '0%')
+        .set(SVGAttr.Y1, '0%')
+        .set(SVGAttr.X2, '87%')
+        .set(SVGAttr.Y2, '111%')
         .append(
-            new SVGNode('stop')
-                .set('offset', '0%')
-                .set('style', 'stop-color:rgb(72, 60, 102);stop-opacity:1;'),
+            new SVGNode(SVGTag.Stop)
+                .set(SVGAttr.Offset, '0%')
+                .set(
+                    SVGAttr.Style,
+                    'stop-color:rgb(72, 60, 102);stop-opacity:1;',
+                ),
         )
         .append(
-            new SVGNode('stop')
-                .set('offset', '100%')
-                .set('style', 'stop-color:rgb(136, 169, 197);stop-opacity:1;'),
+            new SVGNode(SVGTag.Stop)
+                .set(SVGAttr.Offset, '100%')
+                .set(
+                    SVGAttr.Style,
+                    'stop-color:rgb(136, 169, 197);stop-opacity:1;',
+                ),
         )
 
     // Render a pentagon with a gradient at (0,0)
     const gradientId = manager.ensureDefinition(gradient)
     manager.renderNamed(
         'pentagon',
-        new SVGNode('path')
+        new SVGNode(SVGTag.Path)
             .set(
-                'd',
+                SVGAttr.D,
                 new PathData()
                     .moveTo(100, 100)
                     .lineTo(300, 100)
@@ -47,9 +64,12 @@ function example2() {
                     .closePath()
                     .toString(),
             )
-            .set('stroke', '#ccc')
-            .set('stroke-width', '1px')
-            .set('fill', `url(#${manager.mentionDefinition(gradientId)})`),
+            .set(SVGAttr.Stroke, '#ccc')
+            .set(SVGAttr.StrokeWidth, '1px')
+            .set(
+                SVGAttr.Fill,
+                `url(#${manager.mentionDefinition(gradientId)})`,
+            ),
         new V2D(0, 0),
     )
 }
@@ -57,20 +77,19 @@ function example2() {
 function example3() {
     // Initialize the SVGManager
     const manager = new SVGManager()
-    manager
-        .init('svg-root')
-        .setViewBoxWidth(600)
-        .setViewBoxHeight(600)
-        .setViewBoxLocation(new V2D(-50, -50))
+    manager.init('svg-root')
+    manager.viewBox = manager.viewBox
+        .setDimensions(new V2D(500, 500))
+        .setPosition(new V2D(-50, -50))
 
-    SVGNode.fromFile('./svg/gradient.svg').then((gradient: SVGNode) => {
+    fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
         // Render a pentagon with a gradient at (0,0)
         const gradientId = manager.ensureDefinition(gradient)
         manager.renderNamed(
             'pentagon',
-            new SVGNode('path')
+            new SVGNode(SVGTag.Path)
                 .set(
-                    'd',
+                    SVGAttr.D,
                     new PathData()
                         .moveTo(100, 100)
                         .lineTo(300, 100)
@@ -80,9 +99,12 @@ function example3() {
                         .closePath()
                         .toString(),
                 )
-                .set('stroke', '#ccc')
-                .set('stroke-width', '1px')
-                .set('fill', `url(#${manager.mentionDefinition(gradientId)})`),
+                .set(SVGAttr.Stroke, '#ccc')
+                .set(SVGAttr.StrokeWidth, '1px')
+                .set(
+                    SVGAttr.Fill,
+                    `url(#${manager.mentionDefinition(gradientId)})`,
+                ),
             new V2D(0, 0),
         )
 
@@ -101,16 +123,17 @@ function example3() {
 function example4() {
     // Initialize the SVGManager
     const manager = new SVGManager()
-    manager.init('svg-root').setViewBoxWidth(500).setViewBoxHeight(500)
+    manager.init('svg-root')
+    manager.viewBox = manager.viewBox.setDimensions(new V2D(500, 500))
 
-    SVGNode.fromFile('./svg/gradient.svg').then((gradient: SVGNode) => {
+    fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
         // Render a pentagon with a gradient at (0,0)
         const gradientId = manager.ensureDefinition(gradient)
         manager.renderNamed(
             'pentagon',
-            new SVGNode('path')
+            new SVGNode(SVGTag.Path)
                 .set(
-                    'd',
+                    SVGAttr.D,
                     new PathData()
                         .moveTo(100, 100)
                         .lineTo(300, 100)
@@ -120,9 +143,12 @@ function example4() {
                         .closePath()
                         .toString(),
                 )
-                .set('stroke', '#ccc')
-                .set('stroke-width', '1px')
-                .set('fill', `url(#${manager.mentionDefinition(gradientId)})`),
+                .set(SVGAttr.Stroke, '#ccc')
+                .set(SVGAttr.StrokeWidth, '1px')
+                .set(
+                    SVGAttr.Fill,
+                    `url(#${manager.mentionDefinition(gradientId)})`,
+                ),
             new V2D(0, 0),
         )
     })
@@ -131,39 +157,38 @@ function example4() {
 function example5() {
     // Initialize the SVGManager
     const manager = new SVGManager()
-    manager.init('svg-root').setViewBoxWidth(500).setViewBoxHeight(500)
+    manager.init('svg-root')
+    manager.viewBox = manager.viewBox
+        .setDimensions(new V2D(500, 500))
+        .setPosition(new V2D(-50, -50))
 
-    SVGNode.fromFile('./svg/gradient.svg').then((gradient: SVGNode) => {
+    fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
         // Render a pentagon with a gradient at (0,0)
         const gradientId = manager.ensureDefinition(gradient)
-        manager.renderNamed(
-            'pentagon',
-            new SVGNode('path')
+        manager.render(
+            new SVGNode(SVGTag.Path)
                 .set(
-                    'd',
+                    SVGAttr.D,
                     new PathData()
-                        .moveTo(-100, -175)
-                        .lineTo(100, -175)
-                        .lineTo(200, 125)
-                        .lineTo(0, 200)
-                        .lineTo(-200, 125)
+                        .moveTo(100, 100)
+                        .lineTo(300, 100)
+                        .lineTo(400, 300)
+                        .lineTo(200, 475)
+                        .lineTo(0, 300)
                         .closePath()
                         .toString(),
                 )
-                .set('stroke', '#ccc')
-                .set('stroke-width', '1px')
-                .set('fill', `url(#${manager.mentionDefinition(gradientId)})`),
+                .set(SVGAttr.Stroke, '#ccc')
+                .set(SVGAttr.StrokeWidth, '1px')
+                .set(
+                    SVGAttr.Fill,
+                    `url(#${manager.mentionDefinition(gradientId)})`,
+                )
+                .addEvent(SVGEvent.Click, (e) => {
+                    alert('hi!')
+                }),
             new V2D(0, 0),
         )
-    })
-
-    const svg = document.getElementById(manager.id())
-    svg.addEventListener('mousemove', (ev: MouseEvent) => {
-        const location = new V2D(
-            ev.clientX - svg.clientLeft,
-            ev.clientY - svg.clientTop,
-        )
-        manager.moveNamed('pentagon', location)
     })
 }
 
