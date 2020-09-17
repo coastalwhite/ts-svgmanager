@@ -359,19 +359,19 @@ Promise.all([
                 SVGAttr.Fill,
                 gradient1URL,
             ).addEvent(SVGEvent.MouseEnter, (e) => {
-                    manager.adjustNamedAttr(
-                        'pentagon',
-                        SVGAttr.Fill,
-                        gradient2URL,
-                    )
-                })
-                .addEvent(SVGEvent.MouseLeave, (e) => {
-                    manager.adjustNamedAttr(
-                        'pentagon',
-                        SVGAttr.Fill,
-                        gradient1URL,
-                    )
-                }),
+                manager.adjustNamedAttr(
+                    'pentagon',
+                    SVGAttr.Fill,
+                    gradient2URL,
+                )
+            })
+            .addEvent(SVGEvent.MouseLeave, (e) => {
+                manager.adjustNamedAttr(
+                    'pentagon',
+                    SVGAttr.Fill,
+                    gradient1URL,
+                )
+            }),
         new V2D(0, 0),
     )
 })
