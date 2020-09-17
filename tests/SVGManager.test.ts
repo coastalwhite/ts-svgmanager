@@ -10,7 +10,7 @@ let root = document.getElementById('root')
 
 describe('SVG Manager', function () {
     const manager = new SVGManager()
-    const manager_id = manager.id()
+    const manager_id = manager.id
     manager.init('root')
 
     describe('Basic Setup and Settings', function () {

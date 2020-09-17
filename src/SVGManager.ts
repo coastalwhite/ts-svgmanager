@@ -32,7 +32,7 @@ export default class SVGManager {
     private _names: string[]
 
     private defsElement(): SVGDefsElement {
-        let defs = this._svgElement.getElementsByTagName('defs')
+        const defs = this._svgElement.getElementsByTagName('defs')
         return defs[0]
     }
 
@@ -152,7 +152,7 @@ export default class SVGManager {
      * @param rootId The parent id
      */
     public init(rootId: string): SVGManager {
-        let rootElement = document.getElementById(rootId)
+        const rootElement = document.getElementById(rootId)
 
         this._rootElement = rootElement
         this._defintions = []
@@ -382,18 +382,23 @@ export default class SVGManager {
      * Removes all the content from the SVG in the DOM including the definitions
      */
     public clean() {
-        this._svgElement.innerHTML = ''
+        // Remove event listeners
+        const attributes = this._svgElement.attributes
+        this._rootElement.removeChild(this._svgElement)
+        const svgElement = new SVGNode(SVGTag.Svg).toHTML()
+        for (let i = 0; i < this._svgElement.attributes.length; i++) {
+            const attr = this._svgElement.attributes[i]
+            svgElement.setAttribute(attr.name, attr.value)
+        }
+
+        svgElement.innerHTML = ''
         this._defintions = []
         this._names = []
 
-        this._svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
+        svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
 
-        // Remove event listeners
-        const svgClone = this._svgElement.cloneNode(true)
-        this._svgElement = this._rootElement.replaceChild(
-            svgClone,
-            this._svgElement,
-        )
+        this._rootElement.appendChild(svgElement)
+        this._svgElement = svgElement
     }
 
     /**
