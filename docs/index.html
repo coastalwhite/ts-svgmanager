@@ -402,19 +402,19 @@ manager.viewBox = manager.viewBox.setDimensions(<span class="hljs-keyword">new</
                 SVGAttr.Fill,
                 gradient1URL,
             ).addEvent(SVGEvent.MouseEnter, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-                    manager.adjustNamedAttr(
-                        <span class="hljs-string">&#x27;pentagon&#x27;</span>,
-                        SVGAttr.Fill,
-                        gradient2URL,
-                    )
-                })
-                .addEvent(SVGEvent.MouseLeave, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-                    manager.adjustNamedAttr(
-                        <span class="hljs-string">&#x27;pentagon&#x27;</span>,
-                        SVGAttr.Fill,
-                        gradient1URL,
-                    )
-                }),
+                manager.adjustNamedAttr(
+                    <span class="hljs-string">&#x27;pentagon&#x27;</span>,
+                    SVGAttr.Fill,
+                    gradient2URL,
+                )
+            })
+            .addEvent(SVGEvent.MouseLeave, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+                manager.adjustNamedAttr(
+                    <span class="hljs-string">&#x27;pentagon&#x27;</span>,
+                    SVGAttr.Fill,
+                    gradient1URL,
+                )
+            }),
         <span class="hljs-keyword">new</span> V2D(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
     )
 })</code></pre>

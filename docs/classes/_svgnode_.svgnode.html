@@ -102,6 +102,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_svgnode_.svgnode.html#_children" class="tsd-kind-icon">_children</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_svgnode_.svgnode.html#_events" class="tsd-kind-icon">_events</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_svgnode_.svgnode.html#_innertext" class="tsd-kind-icon">_inner<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_svgnode_.svgnode.html#_name" class="tsd-kind-icon">_name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_svgnode_.svgnode.html#_tag" class="tsd-kind-icon">_tag</a></li>
 							</ul>
 						</section>
@@ -112,8 +113,10 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#append" class="tsd-kind-icon">append</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#getevents" class="tsd-kind-icon">get<wbr>Events</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#map" class="tsd-kind-icon">map</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#set" class="tsd-kind-icon">set</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#settext" class="tsd-kind-icon">set<wbr>Text</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#setxy" class="tsd-kind-icon">setXY</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#tohtml" class="tsd-kind-icon">toHTML</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_svgnode_.svgnode.html#tohash" class="tsd-kind-icon">to<wbr>Hash</a></li>
 							</ul>
@@ -133,7 +136,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L20">SVGNode.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L22">SVGNode.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -161,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">_attributes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SVGAttr</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L17">SVGNode.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L18">SVGNode.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">_children<span class="tsd-signature-symbol">:</span> <a href="_svgnode_.svgnode.html" class="tsd-signature-type">SVGNode</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L18">SVGNode.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L19">SVGNode.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">_events<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_definitions_index_.eventdefinition.html" class="tsd-signature-type">EventDefinition</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L20">SVGNode.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L21">SVGNode.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -191,7 +194,17 @@
 					<div class="tsd-signature tsd-kind-icon">_inner<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L19">SVGNode.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L20">SVGNode.ts:20</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _name</h3>
+					<div class="tsd-signature tsd-kind-icon">_name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L22">SVGNode.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -201,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">_tag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGTag</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L16">SVGNode.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L17">SVGNode.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -218,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L80">SVGNode.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L82">SVGNode.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -251,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L69">SVGNode.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L71">SVGNode.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -281,7 +294,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L96">SVGNode.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L98">SVGNode.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_definitions_index_.eventdefinition.html" class="tsd-signature-type">EventDefinition</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -298,7 +311,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L55">SVGNode.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L57">SVGNode.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -344,6 +357,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">(</span>newName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_svgnode_.svgnode.html" class="tsd-signature-type">SVGNode</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L102">SVGNode.ts:102</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_svgnode_.svgnode.html" class="tsd-signature-type">SVGNode</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="set" class="tsd-anchor"></a>
 					<h3>set</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -353,7 +389,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L41">SVGNode.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L43">SVGNode.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -389,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L90">SVGNode.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L92">SVGNode.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -409,6 +445,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setxy" class="tsd-anchor"></a>
+					<h3>setXY</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">setXY<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><a href="_v2d_.v2d.html" class="tsd-signature-type">V2D</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_svgnode_.svgnode.html" class="tsd-signature-type">SVGNode</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L108">SVGNode.ts:108</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pos: <a href="_v2d_.v2d.html" class="tsd-signature-type">V2D</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_svgnode_.svgnode.html" class="tsd-signature-type">SVGNode</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="tohtml" class="tsd-anchor"></a>
 					<h3>toHTML</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -418,7 +477,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L103">SVGNode.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L118">SVGNode.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -440,7 +499,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/486ec3e/src/SVGNode.ts#L120">SVGNode.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/coastalwhite/ts-svgmanager/blob/76eee72/src/SVGNode.ts#L138">SVGNode.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -521,6 +580,9 @@
 								<a href="_svgnode_.svgnode.html#_innertext" class="tsd-kind-icon">_inner<wbr>Text</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_svgnode_.svgnode.html#_name" class="tsd-kind-icon">_name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_svgnode_.svgnode.html#_tag" class="tsd-kind-icon">_tag</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -536,10 +598,16 @@
 								<a href="_svgnode_.svgnode.html#map" class="tsd-kind-icon">map</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_svgnode_.svgnode.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_svgnode_.svgnode.html#set" class="tsd-kind-icon">set</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_svgnode_.svgnode.html#settext" class="tsd-kind-icon">set<wbr>Text</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_svgnode_.svgnode.html#setxy" class="tsd-kind-icon">setXY</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_svgnode_.svgnode.html#tohtml" class="tsd-kind-icon">toHTML</a>
