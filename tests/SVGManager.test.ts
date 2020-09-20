@@ -215,12 +215,11 @@ describe('SVG Manager', function () {
         it('Should be able to seperate render', function () {
             manager.clean()
 
-            manager.seperateRenderNamed(
-                'test_render',
+            manager.render(
                 new SVGNode(SVGTag.A)
                     .set(SVGAttr.AttributeName, 'test_value')
-                    .setText('Testing text!'),
-                new V2D(0, 0),
+                    .setText('Testing text!')
+                    .name('test_render'),
             )
 
             assert.equal(
@@ -228,7 +227,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_render" x="0" y="0">
+                <a attributeName="test_value" id="${manager_id}-named-test_render">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -236,12 +235,12 @@ describe('SVG Manager', function () {
 
             manager.clean()
 
-            manager.seperateRenderNamed(
-                'test_render',
+            manager.render(
                 new SVGNode(SVGTag.A)
                     .set(SVGAttr.AttributeName, 'test_value 1')
+                    .name('test_render')
+                    .setXY(new V2D(7, 24))
                     .setText('Testing text!'),
-                new V2D(7, 24),
             )
 
             assert.equal(
@@ -249,7 +248,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value 1" id="${manager_id}-named-test_render" x="7" y="24">
+                <a attributeName="test_value 1" x="7" y="24" id="${manager_id}-named-test_render">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -271,7 +270,7 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
+                    <a attributeName="test_value" id="${manager.id}-figure-${hash}">
                         Testing text!
                     </a>
                 </defs>
@@ -288,17 +287,17 @@ describe('SVG Manager', function () {
 
             let hash = test_node.toHash()
 
-            manager.render(test_node, new V2D(5, 6))
+            manager.render(test_node.setXY(new V2D(7, 24)))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
+                    
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
+                <a attributeName="test_value" x="7" y="24">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -317,78 +316,31 @@ describe('SVG Manager', function () {
             let hash = test_node.toHash()
             let hash_2 = test_node_2.toHash()
 
-            manager.render(test_node, new V2D(5, 6))
+            manager.render(test_node.setXY(new V2D(5, 6)))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
+                <a attributeName="test_value" x="5" y="6">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.render(test_node_2, new V2D(2, 10))
+            manager.render(test_node_2.setXY(new V2D(2, 10)))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `<defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
-                    <g attributeName="value" id="${manager_id}-figure-${hash_2}">
-                        text value
-                    </g>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
-                <use href="#${manager_id}-figure-${hash_2}" x="2" y="10"></use>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it('Should be able to detect rendering the same item', function () {
-            manager.clean()
-
-            let test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
-
-            let test_node_2 = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
-
-            let hash = test_node.toHash()
-
-            assert.equal(hash, test_node_2.toHash())
-
-            manager.render(test_node, new V2D(5, 6))
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
-                </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.render(test_node_2, new V2D(2, 10))
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `<defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
-                </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6"></use>
-                <use href="#${manager_id}-figure-${hash}" x="2" y="10"></use>
+                <a attributeName="test_value" x="5" y="6">
+                    Testing text!
+                </a>
+                <g attributeName="value" x="2" y="10">
+                    text value
+                </g>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -402,17 +354,16 @@ describe('SVG Manager', function () {
 
             let hash = test_node.toHash()
 
-            manager.renderNamed('test_item', test_node, new V2D(5, 6))
+            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
+                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
         })
@@ -426,17 +377,16 @@ describe('SVG Manager', function () {
 
             let hash = test_node.toHash()
 
-            manager.renderNamed('test_item', test_node, new V2D(5, 6))
+            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
+                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
@@ -446,9 +396,6 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -463,78 +410,33 @@ describe('SVG Manager', function () {
 
             let hash = test_node.toHash()
 
-            manager.renderNamed('test_item', test_node, new V2D(5, 6))
+            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
+                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.moveNamed('test_item', new V2D(10, 30))
+            const item = manager.fetchNamed('test_item')
+            if (item === null) return
+            item.setAttribute(SVGAttr.X, '10')
+            item.setAttribute(SVGAttr.Y, '30')
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="10" y="30" id="${manager_id}-named-test_item"></use>
+                <a attributeName="test_value" id="${manager_id}-named-test_item" x="10" y="30">
+                    Testing text!
+                </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it("Should be able to fetch a named item's position", function () {
-            manager.clean()
-
-            let test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
-
-            let hash = test_node.toHash()
-
-            manager.renderNamed('test_item', test_node, new V2D(5, 6))
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
-                </defs>
-                <use href="#${manager_id}-figure-${hash}" x="5" y="6" id="${manager_id}-named-test_item"></use>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            assert.isTrue(
-                manager.fetchNamedLocation('test_item').equals(new V2D(5, 6)),
-            )
-
-            manager.moveNamed('test_item', new V2D(10, 30))
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
-                    </a>
-                </defs>
-                <use href="#${manager_id}-figure-${hash}" x="10" y="30" id="${manager_id}-named-test_item"></use>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            assert.isTrue(
-                manager.fetchNamedLocation('test_item').equals(new V2D(10, 30)),
             )
         })
 

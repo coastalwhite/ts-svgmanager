@@ -1,4 +1,5 @@
 import { Md5 } from 'ts-md5/dist/md5'
+import { V2D } from '.'
 import {
     EventDefinition,
     EventFunc,
@@ -18,6 +19,7 @@ export default class SVGNode {
     private _children: SVGNode[]
     private _innerText: string
     private _events: EventDefinition[]
+    private _name: string
 
     /**
      * Construct a SVGNode respresenting the *tag* element
@@ -97,6 +99,19 @@ export default class SVGNode {
         return this._events
     }
 
+    public name(newName: string): SVGNode {
+        this._name = newName
+
+        return this
+    }
+
+    public setXY(pos: V2D): SVGNode {
+        return this.set(SVGAttr.X, pos.x().toString()).set(
+            SVGAttr.Y,
+            pos.y().toString(),
+        )
+    }
+
     /**
      * Returns the JS SVGElement equavalent of current SVGNode
      */
@@ -106,6 +121,9 @@ export default class SVGNode {
         this._attributes.forEach((value, attr) => {
             element.setAttribute(attr, value)
         })
+
+        if (this._name !== undefined)
+            element.setAttribute(SVGAttr.Id, this._name)
 
         element.innerHTML = this._innerText
 

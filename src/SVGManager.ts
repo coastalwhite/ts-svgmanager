@@ -29,7 +29,6 @@ export default class SVGManager {
     private _rootElement: HTMLElement
     private _svgElement: SVGElement
     private _defintions: string[]
-    private _names: string[]
 
     private defsElement(): SVGDefsElement {
         const defs = this._svgElement.getElementsByTagName('defs')
@@ -50,10 +49,6 @@ export default class SVGManager {
 
     private doesDefExist(elementId: string): boolean {
         return this._defintions.includes(elementId)
-    }
-
-    private doesNameExist(name: string): boolean {
-        return this._names.includes(name)
     }
 
     private addDefintion(element: SVGNode): string {
@@ -90,7 +85,7 @@ export default class SVGManager {
         return elem
     }
 
-    private addFigure(
+    private addUse(
         elementId: string,
         position: V2D,
         events: EventDefinition[],
@@ -106,28 +101,17 @@ export default class SVGManager {
 
         this._svgElement.appendChild(elem)
     }
+    private addFigure(element: SVGNode, events: EventDefinition[]) {
+        const elemHTML = element.toHTML()
 
-    private addNamedFigure(
-        name: string,
-        elementId: string,
-        position: V2D,
-        events: EventDefinition[],
-    ) {
-        if (this.doesNameExist(name)) throw new Error('Name already exists!')
-
-        const elem = this.addEventsToElem(
-            new SVGNode(SVGTag.Use)
-                .set(SVGAttr.Href, '#' + elementId)
-                .set(SVGAttr.X, position.x().toString())
-                .set(SVGAttr.Y, position.y().toString())
-                .set(SVGAttr.Id, this.getName(name))
-                .toHTML(),
-            events,
+        if (
+            elemHTML.hasAttribute(SVGAttr.Id) &&
+            elemHTML.getAttribute(SVGAttr.Id) !== ''
         )
+            elemHTML.setAttribute(SVGAttr.Id, this.getName(elemHTML.id))
+        else elemHTML.removeAttribute(SVGAttr.Id)
 
-        this._svgElement.appendChild(elem)
-
-        this._names.push(name)
+        this._svgElement.appendChild(this.addEventsToElem(elemHTML, events))
     }
 
     /**
@@ -137,7 +121,6 @@ export default class SVGManager {
         this._managerid = uuidv4()
 
         this._defintions = []
-        this._names = []
     }
 
     /**
@@ -156,7 +139,6 @@ export default class SVGManager {
 
         this._rootElement = rootElement
         this._defintions = []
-        this._names = []
 
         const svgElement = new SVGNode(SVGTag.Svg)
             .set(SVGAttr.ViewBox, DEFAULT_VIEWBOX)
@@ -210,7 +192,7 @@ export default class SVGManager {
         if (!this.doesDefExist(elementId))
             throw new Error("Tried to render an Id that doesn't exist")
 
-        this.addFigure(this.toDefId(elementId), position, [])
+        this.addUse(this.toDefId(elementId), position, [])
     }
 
     /**
@@ -219,113 +201,8 @@ export default class SVGManager {
      * # Note
      * Will add the figure to definitions if not already there.
      */
-    public render(element: SVGNode, position: V2D): string {
-        const elementId = element.toHash()
-
-        if (!this.doesDefExist(elementId)) {
-            this.addDefintion(element)
-        }
-
-        this.addFigure(this.toDefId(elementId), position, element.getEvents())
-
-        return elementId
-    }
-
-    /**
-     * Renders a figure to the SVG using a SVGNode with a callback name.\
-     * If this name already exists, it will not do anything and output this to the debug console.
-     *
-     * # Note
-     * Will add the figure to definitions if not already there.
-     */
-    public renderNamed(name: string, element: SVGNode, position: V2D) {
-        if (this.doesNameExist(name)) {
-            console.debug(
-                'SVG Manager: Tried to reuse name for named figure, stop execution. (renderNamed)',
-            )
-            return
-        }
-
-        const elementId = element.toHash()
-        if (!this.doesDefExist(elementId)) {
-            this.addDefintion(element)
-        }
-
-        this.addNamedFigure(
-            name,
-            this.toDefId(elementId),
-            position,
-            element.getEvents(),
-        )
-    }
-
-    /**
-     * Renders a figure to the SVG using a figure ID/Hash with a callback name.\
-     * If this name already exists, it will not do anything and output this to the debug console.
-     *
-     * # Note
-     * Requires a definition to present for the figure ID
-     * otherwise it throws a Error
-     */
-    public renderNamedId(name: string, elementId: string, position: V2D) {
-        if (this.doesNameExist(name)) {
-            console.debug(
-                'SVG Manager: Tried to reuse name for named figure, stop execution. (renderNamedId)',
-            )
-            return
-        }
-
-        if (!this.doesDefExist(elementId))
-            throw new Error("Tried to render an Id that doesn't exist")
-
-        this.addNamedFigure(name, this.toDefId(elementId), position, [])
-    }
-
-    /**
-     * Moves a named figure to *v*\
-     * If named item does not exist, it will not do anything.
-     */
-    public moveNamed(name: string, v: V2D) {
-        const elem = document.getElementById(this.getName(name))
-
-        if (elem === null) return
-
-        if (elem.tagName === 'g') {
-            elem.setAttribute('transform', `translate(${v.x()}, ${v.y()})`)
-        } else {
-            elem.setAttribute('x', `${v.x()}`)
-            elem.setAttribute('y', `${v.y()}`)
-        }
-    }
-
-    /**
-     * Fetches location of a named figure\
-     * If named item does not exist, it will throw a error.
-     */
-    public fetchNamedLocation(name: string): V2D {
-        const elem = document.getElementById(this.getName(name))
-
-        if (elem === null) throw new Error('Named item does not exist')
-
-        if (elem.tagName === 'g') {
-            const transform_value = elem.getAttribute('transform')
-            const t_translate_value = transform_value.substr(
-                'translate('.length,
-            )
-            const translate_values = t_translate_value
-                .substr(0, t_translate_value.length - 1)
-                .split(', ')
-
-            return new V2D(
-                parseInt(translate_values[0]),
-                parseInt(translate_values[1]),
-            )
-        } else {
-            return new V2D(
-                parseInt(elem.getAttribute('x')),
-                parseInt(elem.getAttribute('y')),
-            )
-        }
+    public render(element: SVGNode) {
+        this.addFigure(element, element.getEvents())
     }
 
     /**
@@ -344,31 +221,16 @@ export default class SVGManager {
      */
     public removeNamed(name: string) {
         const item = document.getElementById(this.getName(name))
-
         if (item !== null) this._svgElement.removeChild(item)
-        this._names = this._names.filter((x) => x !== name)
     }
 
     /**
-     * Removes a named figure from the DOM, if it exists\
-     * Then will render *element* in its place.
+     *
      */
-    public rerenderNamed(name: string, element: SVGNode, position: V2D) {
-        this.removeNamed(name)
-        this.renderNamed(name, element, position)
-    }
-
-    /**
-     * Renders a SVGNode *element* to the DOM without definition.
-     */
-    public seperateRenderNamed(name: string, element: SVGNode, position: V2D) {
-        this._svgElement.appendChild(
-            element
-                .set(SVGAttr.Id, this.getName(name))
-                .set(SVGAttr.X, position.x().toString())
-                .set(SVGAttr.Y, position.y().toString())
-                .toHTML(),
-        )
+    public fetchNamed(name: string): SVGElement | null {
+        const item = document.getElementById(this.getName(name))
+        if (item === null) return null
+        return (item as unknown) as SVGElement
     }
 
     /**
@@ -393,7 +255,6 @@ export default class SVGManager {
 
         svgElement.innerHTML = ''
         this._defintions = []
-        this._names = []
 
         svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
 
@@ -425,27 +286,6 @@ export default class SVGManager {
      */
     get id(): string {
         return this._managerid
-    }
-
-    /**
-     * Adjusts an attribute of a named item
-     * @param name Name of named item
-     * @param attr Attribute to adjust
-     * @param value Value to adjust to
-     */
-    public adjustNamedAttr(
-        name: string,
-        attr: SVGAttr,
-        value: string,
-    ): SVGManager {
-        const namedItem = document.getElementById(this.getName(name))
-        if (namedItem === null) return
-        const defId = namedItem.getAttribute('href').substr(1)
-        const elem = document.getElementById(defId)
-        if (elem === null) return
-        const defNode = htmlParseSVGNode(elem)
-        const newDefId = this.ensureDefinition(defNode.set(attr, value))
-        namedItem.setAttribute(SVGAttr.Href, '#' + this.toDefId(newDefId))
     }
 
     /**
