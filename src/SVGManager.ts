@@ -1,5 +1,5 @@
 import V2D from './V2D'
-import SVGNode from './SVGNode'
+import SVGNode, { AttributeValue } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -87,18 +87,25 @@ export default class SVGManager {
 
     private addUse(
         elementId: string,
-        position: V2D,
-        events: EventDefinition[],
+        args?: {
+            name?: string
+            attributes?: { attrName: SVGAttr; attrValue: AttributeValue }[]
+            events?: EventDefinition[]
+        },
     ) {
-        const elem = this.addEventsToElem(
-            new SVGNode(SVGTag.Use)
-                .set(SVGAttr.Href, '#' + elementId)
-                .set(SVGAttr.X, position.x().toString())
-                .set(SVGAttr.Y, position.y().toString())
-                .toHTML(),
-            events,
-        )
+        const node = new SVGNode(SVGTag.Use).set(SVGAttr.Href, '#' + elementId)
+        if (args !== undefined) {
+            if (args.name !== undefined)
+                node.set(SVGAttr.Id, this.getName(args.name))
+            if (args.attributes !== undefined)
+                args.attributes.forEach((attribute) => {
+                    node.set(attribute.attrName, attribute.attrValue)
+                })
+        }
 
+        let elem = node.toHTML()
+        if (args !== undefined && args.events !== undefined)
+            elem = this.addEventsToElem(elem, args.events)
         this._svgElement.appendChild(elem)
     }
     private addFigure(element: SVGNode, events: EventDefinition[]) {
@@ -188,11 +195,18 @@ export default class SVGManager {
      * Requires a definition to present for the figure ID
      * otherwise it throws a Error
      */
-    public renderId(elementId: string, position: V2D) {
+    public renderId(
+        elementId: string,
+        args?: {
+            name?: string
+            attributes?: { attrName: SVGAttr; attrValue: AttributeValue }[]
+            events?: EventDefinition[]
+        },
+    ) {
         if (!this.doesDefExist(elementId))
             throw new Error("Tried to render an Id that doesn't exist")
 
-        this.addUse(this.toDefId(elementId), position, [])
+        this.addUse(this.toDefId(elementId), args)
     }
 
     /**

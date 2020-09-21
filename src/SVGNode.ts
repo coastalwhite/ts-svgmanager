@@ -9,13 +9,16 @@ import {
 } from './definitions'
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 
+type AttributeValue = string | number
+export { AttributeValue }
+
 /**
  * A JS Representation of a HTML-Node.
  * More specifically, all the SVG Types Nodes.
  */
 export default class SVGNode {
     private _tag: SVGTag
-    private _attributes: Map<SVGAttr, string>
+    private _attributes: Map<SVGAttr, AttributeValue>
     private _children: SVGNode[]
     private _innerText: string
     private _events: EventDefinition[]
@@ -40,7 +43,7 @@ export default class SVGNode {
      * # Note
      * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
      */
-    public set(attr: SVGAttr, value: string): SVGNode {
+    public set(attr: SVGAttr, value: AttributeValue): SVGNode {
         this._attributes.set(attr, value)
 
         return this
@@ -54,7 +57,10 @@ export default class SVGNode {
      * # Note
      * If the attribute was not set, the call still succeeds but does nothing.
      */
-    public map(attr: SVGAttr, f: (value: string) => string): SVGNode {
+    public map(
+        attr: SVGAttr,
+        f: (value: AttributeValue) => AttributeValue,
+    ): SVGNode {
         const value = this._attributes.get(attr)
         if (value === undefined) return this
 
@@ -119,7 +125,7 @@ export default class SVGNode {
         const element = document.createElementNS(SVG_NAMESPACE, this._tag)
 
         this._attributes.forEach((value, attr) => {
-            element.setAttribute(attr, value)
+            element.setAttribute(attr, value.toString())
         })
 
         if (this._name !== undefined)

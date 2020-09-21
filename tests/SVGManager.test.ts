@@ -462,7 +462,12 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.renderId(hash, new V2D(23, 55))
+            manager.renderId(hash, {
+                attributes: [
+                    { attrName: SVGAttr.X, attrValue: 23 },
+                    { attrName: SVGAttr.Y, attrValue: 55 },
+                ],
+            })
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
