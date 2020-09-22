@@ -154,7 +154,7 @@ export default class SVGNode {
     }
 
     public animate(svganimate: SVGAnimate): SVGNode {
-        this.append(svganimate.toNode())
+        this.append(svganimate)
         return this
     }
 
