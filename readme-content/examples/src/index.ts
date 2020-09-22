@@ -2,14 +2,19 @@ import {
     V2D,
     SVGManager,
     SVGNode,
-    PathData,
-    circle,
-    fetchSVGNode,
     SVGTag,
     SVGAttr,
     SVGEvent,
-    SVGAnimateMotion,
 } from '../../../dist'
+import { SVGAnimateMotion } from '../../../dist/helpers/Animate'
+import PathData from '../../../dist/helpers/PathData'
+import { fetchSVGNode } from '../../../dist/helpers/Parser'
+import { circle } from '../../../dist/helpers/Shapes'
+import {
+    GradientStop,
+    mentionGradient,
+    SVGLinGradient,
+} from '../../../dist/helpers/Gradient'
 
 function example1() {
     // Initialize the SVGManager
@@ -26,28 +31,15 @@ function example2() {
     manager.init('svg-root')
     manager.viewBox = manager.viewBox.setDimensions(new V2D(500, 500))
 
-    const gradient = new SVGNode(SVGTag.LinearGradient)
-        .set(SVGAttr.SpreadMethod, 'pad')
-        .set(SVGAttr.X1, '0%')
-        .set(SVGAttr.Y1, '0%')
-        .set(SVGAttr.X2, '87%')
-        .set(SVGAttr.Y2, '111%')
-        .append(
-            new SVGNode(SVGTag.Stop)
-                .set(SVGAttr.Offset, '0%')
-                .set(
-                    SVGAttr.Style,
-                    'stop-color:rgb(72, 60, 102);stop-opacity:1;',
-                ),
-        )
-        .append(
-            new SVGNode(SVGTag.Stop)
-                .set(SVGAttr.Offset, '100%')
-                .set(
-                    SVGAttr.Style,
-                    'stop-color:rgb(136, 169, 197);stop-opacity:1;',
-                ),
-        )
+    const gradient = new SVGLinGradient([
+        new GradientStop(0, 'rgb(72, 60, 102)'),
+        new GradientStop(1, 'rgb(136, 169, 197)'),
+    ])
+        .spreadMethod('pad')
+        .x1(0)
+        .y1(0)
+        .x2(0.87)
+        .y2(1.11)
 
     // Render a pentagon with a gradient at (0,0)
     const gradientId = manager.ensureDefinition(gradient)
@@ -80,42 +72,47 @@ function example3() {
         .setDimensions(new V2D(600, 600))
         .setPosition(new V2D(0, 0))
 
-    fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
-        // Render a pentagon with a gradient at (0,0)
-        const gradientId = manager.ensureDefinition(gradient)
-        manager.render(
-            new SVGNode(SVGTag.Path)
-                .set(
-                    SVGAttr.D,
+    const gradient = new SVGLinGradient([
+        new GradientStop(0, 'rgb(72, 60, 102)'),
+        new GradientStop(1, 'rgb(136, 169, 197)'),
+    ])
+        .spreadMethod('pad')
+        .x1(0)
+        .y1(0)
+        .x2(0.87)
+        .y2(1.11)
+
+    // Render a pentagon with a gradient at (0,0)
+    const gradientId = manager.ensureDefinition(gradient)
+    manager.render(
+        new SVGNode(SVGTag.Path)
+            .set(
+                SVGAttr.D,
+                new PathData()
+                    .moveTo(100, 100)
+                    .lineTo(300, 100)
+                    .lineTo(400, 300)
+                    .lineTo(200, 475)
+                    .lineTo(0, 300)
+                    .closePath()
+                    .toString(),
+            )
+            .set(SVGAttr.Stroke, '#ccc')
+            .set(SVGAttr.StrokeWidth, '1px')
+            .set(SVGAttr.Fill, `url(#${manager.mentionDefinition(gradientId)})`)
+            .name('pentagon')
+            .animate(
+                new SVGAnimateMotion(
                     new PathData()
-                        .moveTo(100, 100)
-                        .lineTo(300, 100)
-                        .lineTo(400, 300)
-                        .lineTo(200, 475)
-                        .lineTo(0, 300)
-                        .closePath()
-                        .toString(),
-                )
-                .set(SVGAttr.Stroke, '#ccc')
-                .set(SVGAttr.StrokeWidth, '1px')
-                .set(
-                    SVGAttr.Fill,
-                    `url(#${manager.mentionDefinition(gradientId)})`,
-                )
-                .name('pentagon')
-                .animate(
-                    new SVGAnimateMotion(
-                        new PathData()
-                            .moveTo(0, 0)
-                            .lineTo(100, 0)
-                            .lineTo(100, 100)
-                            .lineTo(0, 100)
-                            .closePath(),
-                        2000,
-                    ).repeatIndefinitely(),
-                ),
-        )
-    })
+                        .moveTo(0, 0)
+                        .lineTo(100, 0)
+                        .lineTo(100, 100)
+                        .lineTo(0, 100)
+                        .closePath(),
+                    2000,
+                ).repeatIndefinitely(),
+            ),
+    )
 }
 
 function example4() {
@@ -161,44 +158,62 @@ function example5() {
         .setDimensions(new V2D(500, 500))
         .setPosition(new V2D(0, 0))
 
-    Promise.all([
-        fetchSVGNode('./svg/gradient.svg'),
-        fetchSVGNode('./svg/gradient2.svg'),
-    ]).then((gradients: SVGNode[]) => {
-        const gradient1Id = manager.ensureDefinition(gradients[0]),
-            gradient2Id = manager.ensureDefinition(gradients[1])
+    const gradient1Id = manager.ensureDefinition(
+        new SVGLinGradient([
+            new GradientStop(0, 'rgb(72, 60, 102)'),
+            new GradientStop(1, 'rgb(136, 169, 197)'),
+        ])
+            .spreadMethod('pad')
+            .x1(0)
+            .y1(0)
+            .x2(0.87)
+            .y2(1.11),
+    )
+    const gradient2Id = manager.ensureDefinition(
+        new SVGLinGradient([
+            new GradientStop(0, 'rgb(255, 156, 96)'),
+            new GradientStop(1, 'rgb(245, 125, 125)'),
+        ])
+            .spreadMethod('pad')
+            .x1(0)
+            .y1(0)
+            .x2(1.28)
+            .y2(0.47),
+    )
 
-        const gradient1URL = `url(#${manager.mentionDefinition(gradient1Id)})`,
-            gradient2URL = `url(#${manager.mentionDefinition(gradient2Id)})`
-
-        manager.render(
-            new SVGNode(SVGTag.Path)
-                .set(
-                    SVGAttr.D,
-                    new PathData()
-                        .moveTo(100, 100)
-                        .lineTo(300, 100)
-                        .lineTo(400, 300)
-                        .lineTo(200, 475)
-                        .lineTo(0, 300)
-                        .closePath()
-                        .toString(),
+    manager.render(
+        new SVGNode(SVGTag.Path)
+            .set(
+                SVGAttr.D,
+                new PathData()
+                    .moveTo(100, 100)
+                    .lineTo(300, 100)
+                    .lineTo(400, 300)
+                    .lineTo(200, 475)
+                    .lineTo(0, 300)
+                    .closePath()
+                    .toString(),
+            )
+            .set(SVGAttr.Stroke, '#ccc')
+            .set(SVGAttr.StrokeWidth, '1px')
+            .set(SVGAttr.Fill, mentionGradient(manager, gradient1Id))
+            .name('pentagon')
+            .addEvent(SVGEvent.MouseEnter, (e) => {
+                const elem = manager.fetchNamed('pentagon')
+                elem.setAttribute(
+                    SVGAttr.Fill,
+                    mentionGradient(manager, gradient2Id),
                 )
-                .set(SVGAttr.Stroke, '#ccc')
-                .set(SVGAttr.StrokeWidth, '1px')
-                .set(SVGAttr.Fill, gradient1URL)
-                .name('pentagon')
-                .addEvent(SVGEvent.MouseEnter, (e) => {
-                    const elem = manager.fetchNamed('pentagon')
-                    elem.setAttribute(SVGAttr.Fill, gradient2URL)
-                })
-                .addEvent(SVGEvent.MouseLeave, (e) => {
-                    const elem = manager.fetchNamed('pentagon')
-                    elem.setAttribute(SVGAttr.Fill, gradient1URL)
-                })
-                .setXY(new V2D(0, 0)),
-        )
-    })
+            })
+            .addEvent(SVGEvent.MouseLeave, (e) => {
+                const elem = manager.fetchNamed('pentagon')
+                elem.setAttribute(
+                    SVGAttr.Fill,
+                    mentionGradient(manager, gradient1Id),
+                )
+            })
+            .setXY(new V2D(0, 0)),
+    )
 }
 
 function example6() {
