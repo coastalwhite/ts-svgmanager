@@ -1,7 +1,6 @@
-import SVGEvent from './Events'
-import SVGTag from './Tags'
-import SVGAttr from './Attributes'
-import SVGViewBox from './ViewBox'
+import SVGEvent from './SVGEvent'
+import SVGAttribute from './SVGAttribute'
+import SVGTag from './SVGTag'
 
 type EventFunc = (e: Event) => void
 interface EventDefinition {
@@ -9,4 +8,4 @@ interface EventDefinition {
     func: EventFunc
 }
 
-export { SVGEvent, SVGTag, SVGAttr, SVGViewBox, EventDefinition, EventFunc }
+export { SVGEvent, SVGTag, SVGAttribute, EventDefinition, EventFunc }

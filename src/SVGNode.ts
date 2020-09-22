@@ -3,7 +3,7 @@ import { V2D } from '.'
 import {
     EventDefinition,
     EventFunc,
-    SVGAttr,
+    SVGAttribute,
     SVGEvent,
     SVGTag,
 } from './definitions'
@@ -19,7 +19,7 @@ export { AttributeValue }
  */
 export default class SVGNode {
     private _tag: SVGTag
-    private _attributes: Map<SVGAttr, AttributeValue>
+    private _attributes: Map<SVGAttribute, AttributeValue>
     private _children: SVGNode[]
     private _innerText: string
     private _events: EventDefinition[]
@@ -47,7 +47,7 @@ export default class SVGNode {
      * # Note
      * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
      */
-    public set(attr: SVGAttr, value: AttributeValue): SVGNode {
+    public set(attr: SVGAttribute, value: AttributeValue): SVGNode {
         this._attributes.set(attr, value)
 
         return this
@@ -62,7 +62,7 @@ export default class SVGNode {
      * If the attribute was not set, the call still succeeds but does nothing.
      */
     public map(
-        attr: SVGAttr,
+        attr: SVGAttribute,
         f: (_value: AttributeValue) => AttributeValue,
     ): SVGNode {
         const value = this._attributes.get(attr)
@@ -163,10 +163,7 @@ export default class SVGNode {
      * @param pos Vector for the position
      */
     public setXY(pos: V2D): SVGNode {
-        return this.set(SVGAttr.X, pos.x().toString()).set(
-            SVGAttr.Y,
-            pos.y().toString(),
-        )
+        return this.set('x', pos.x().toString()).set('y', pos.y().toString())
     }
 
     /**

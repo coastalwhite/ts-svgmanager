@@ -1,4 +1,3 @@
-import { SVGAttr, SVGTag } from '../definitions'
 import SVGManager from '../SVGManager'
 import SVGNode from '../SVGNode'
 
@@ -14,12 +13,11 @@ export class GradientStop extends SVGNode {
         stopColor?: string,
         stopOpacity?: number,
     ) {
-        super(SVGTag.Stop)
+        super('stop')
 
-        this.set(SVGAttr.Offset, offset)
-        if (stopColor !== undefined) this.set(SVGAttr.StopColor, stopColor)
-        if (stopOpacity !== undefined)
-            this.set(SVGAttr.StopOpacity, stopOpacity)
+        this.set('offset', offset)
+        if (stopColor !== undefined) this.set('stop-color', stopColor)
+        if (stopOpacity !== undefined) this.set('stop-opacity', stopOpacity)
     }
 }
 
@@ -29,7 +27,7 @@ export class SVGRadGradient extends SVGNode {
      * @param stops Stops of the gradient
      */
     public constructor(stops: GradientStop[]) {
-        super(SVGTag.RadialGradient)
+        super('radialGradient')
         stops.forEach((stop) => this.append(stop))
     }
 
@@ -40,7 +38,7 @@ export class SVGRadGradient extends SVGNode {
     public gradientUnits(
         value: 'userSpaceOnUse' | 'objectBoundingBox',
     ): SVGRadGradient {
-        this.set(SVGAttr.GradientUnits, value)
+        this.set('gradientUnits', value)
         return this
     }
 
@@ -49,7 +47,7 @@ export class SVGRadGradient extends SVGNode {
      * @param value Transformation
      */
     public gradientTransform(value: string): SVGRadGradient {
-        this.set(SVGAttr.GradientTransform, value)
+        this.set('gradientTransform', value)
         return this
     }
 
@@ -58,7 +56,7 @@ export class SVGRadGradient extends SVGNode {
      * @param value Value of href
      */
     public href(value: string): SVGRadGradient {
-        this.set(SVGAttr.Href, value)
+        this.set('href', value)
         return this
     }
 
@@ -67,7 +65,7 @@ export class SVGRadGradient extends SVGNode {
      * @param value Either 'pad', 'reflect' or 'repeat'
      */
     public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGRadGradient {
-        this.set(SVGAttr.SpreadMethod, value)
+        this.set('spreadMethod', value)
         return this
     }
 
@@ -76,7 +74,7 @@ export class SVGRadGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public cx(length: number): SVGRadGradient {
-        this.set(SVGAttr.Cx, length)
+        this.set('cx', length)
         return this
     }
 
@@ -85,7 +83,7 @@ export class SVGRadGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public cy(length: number): SVGRadGradient {
-        this.set(SVGAttr.Cy, length)
+        this.set('cy', length)
         return this
     }
 
@@ -94,7 +92,7 @@ export class SVGRadGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public fr(length: number): SVGRadGradient {
-        this.set(SVGAttr.Fr, length)
+        this.set('fr', length)
         return this
     }
 
@@ -103,7 +101,7 @@ export class SVGRadGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public fx(length: number): SVGRadGradient {
-        this.set(SVGAttr.Fx, length)
+        this.set('fx', length)
         return this
     }
 
@@ -112,7 +110,7 @@ export class SVGRadGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public fy(length: number): SVGRadGradient {
-        this.set(SVGAttr.Fy, length)
+        this.set('fy', length)
         return this
     }
 
@@ -121,7 +119,7 @@ export class SVGRadGradient extends SVGNode {
      * @param radius Radius from 0-1
      */
     public r(radius: number): SVGRadGradient {
-        this.set(SVGAttr.R, radius)
+        this.set('r', radius)
         return this
     }
 }
@@ -132,7 +130,7 @@ export class SVGLinGradient extends SVGNode {
      * @param stops Stops of the gradient
      */
     public constructor(stops: GradientStop[]) {
-        super(SVGTag.LinearGradient)
+        super('linearGradient')
         stops.forEach((stop) => this.append(stop))
     }
 
@@ -143,7 +141,7 @@ export class SVGLinGradient extends SVGNode {
     public gradientUnits(
         value: 'userSpaceOnUse' | 'objectBoundingBox',
     ): SVGLinGradient {
-        this.set(SVGAttr.GradientUnits, value)
+        this.set('gradientUnits', value)
         return this
     }
 
@@ -152,7 +150,7 @@ export class SVGLinGradient extends SVGNode {
      * @param value Transformation
      */
     public gradientTransform(value: string): SVGLinGradient {
-        this.set(SVGAttr.GradientTransform, value)
+        this.set('gradientTransform', value)
         return this
     }
 
@@ -161,7 +159,7 @@ export class SVGLinGradient extends SVGNode {
      * @param value Value of href
      */
     public href(value: string): SVGLinGradient {
-        this.set(SVGAttr.Href, value)
+        this.set('href', value)
         return this
     }
 
@@ -170,7 +168,7 @@ export class SVGLinGradient extends SVGNode {
      * @param value Either 'pad', 'reflect' or 'repeat'
      */
     public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGLinGradient {
-        this.set(SVGAttr.SpreadMethod, value)
+        this.set('spreadMethod', value)
         return this
     }
 
@@ -179,7 +177,7 @@ export class SVGLinGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public x1(length: number): SVGLinGradient {
-        this.set(SVGAttr.X1, length)
+        this.set('x1', length)
         return this
     }
 
@@ -188,7 +186,7 @@ export class SVGLinGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public x2(length: number): SVGLinGradient {
-        this.set(SVGAttr.X2, length)
+        this.set('x2', length)
         return this
     }
 
@@ -197,7 +195,7 @@ export class SVGLinGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public y1(length: number): SVGLinGradient {
-        this.set(SVGAttr.Y1, length)
+        this.set('y1', length)
         return this
     }
 
@@ -206,7 +204,7 @@ export class SVGLinGradient extends SVGNode {
      * @param length Length from 0-1
      */
     public y2(length: number): SVGLinGradient {
-        this.set(SVGAttr.Y2, length)
+        this.set('y2', length)
         return this
     }
 }

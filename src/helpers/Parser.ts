@@ -1,5 +1,6 @@
 import { SVGNode } from '..'
-import { SVGAttr, SVGTag, SVGViewBox } from '../definitions'
+import ViewBox from './ViewBox'
+import { SVGTag, SVGAttribute } from '../definitions'
 
 function htmlToSVGNode(elem: HTMLElement): SVGNode {
     const tag = elem.tagName as SVGTag
@@ -7,7 +8,7 @@ function htmlToSVGNode(elem: HTMLElement): SVGNode {
     let node = new SVGNode(tag)
 
     Array.from(elem.attributes).forEach((attribute: Attr) => {
-        const attr = attribute.name as SVGAttr
+        const attr = attribute.name as SVGAttribute
         if (attr === undefined) throw new Error('Attribute not recognized!')
         node = node.set(attr, attribute.value)
     })
@@ -81,12 +82,12 @@ function syncLoadSVGNode(fileUrl: string): SVGNode {
     return stringToSVGNode(xhr.responseText)
 }
 
-function stringToSVGViewBox(str: string): SVGViewBox {
+function stringToSVGViewBox(str: string): ViewBox {
     const splitted = str.split(' ')
 
     if (splitted.length !== 4) throw new Error('Incorrect format')
 
-    return new SVGViewBox(
+    return new ViewBox(
         parseFloat(splitted[0]),
         parseFloat(splitted[1]),
         parseFloat(splitted[2]),

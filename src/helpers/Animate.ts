@@ -1,5 +1,5 @@
 import PathData from './PathData'
-import { SVGAttr, SVGTag } from '../definitions'
+import { SVGAttribute, SVGTag } from '../definitions'
 import SVGNode, { AttributeValue } from '../SVGNode'
 
 /**
@@ -17,23 +17,23 @@ export default class SVGAnimate extends SVGNode {
      */
     public constructor(
         duration: number,
-        attr?: SVGAttr,
+        attr?: SVGAttribute,
         values?: AttributeValue[],
         tag?: SVGTag,
     ) {
-        super(tag || SVGTag.Animate)
-        if (attr !== undefined) this.set(SVGAttr.AttributeName, attr)
+        super(tag || 'animate')
+        if (attr !== undefined) this.set('attributeName', attr)
         if (values !== undefined)
-            this.set(SVGAttr.Values, values.map((v) => v.toString()).join(';'))
-        this.set(SVGAttr.Dur, duration + 'ms')
+            this.set('values', values.map((v) => v.toString()).join(';'))
+        this.set('dur', duration + 'ms')
     }
 
     /**
      * Set the animation to repeat indefinitely
      */
     public repeatIndefinitely(): SVGAnimate {
-        this.set(SVGAttr.RepeatCount, 'indefinite')
-        this.set(SVGAttr.RepeatDur, 'indefinite')
+        this.set('repeatCount', 'indefinite')
+        this.set('repeatDur', 'indefinite')
 
         return this
     }
@@ -43,7 +43,7 @@ export default class SVGAnimate extends SVGNode {
      * @param times Number of times from the animation to be repeated
      */
     public repeatTimes(times: number): SVGAnimate {
-        this.set(SVGAttr.RepeatCount, times)
+        this.set('repeatCount', times)
 
         return this
     }
@@ -53,7 +53,7 @@ export default class SVGAnimate extends SVGNode {
      * @param duration Length of repeating time in milliseconds
      */
     public repeatDuration(duration: number): SVGAnimate {
-        this.set(SVGAttr.RepeatDur, `${duration}ms`)
+        this.set('repeatDur', `${duration}ms`)
 
         return this
     }
@@ -63,7 +63,7 @@ export default class SVGAnimate extends SVGNode {
      * @param after Time to begin after in milliseconds
      */
     public beginAfter(after: number): SVGAnimate {
-        this.set(SVGAttr.Begin, `${after}ms`)
+        this.set('begin', `${after}ms`)
 
         return this
     }
@@ -73,7 +73,7 @@ export default class SVGAnimate extends SVGNode {
      * @param at Timestamps in milliseconds for the animation to begin
      */
     public beginAt(at: number[]): SVGAnimate {
-        this.set(SVGAttr.Begin, at.map((time) => `${time}ms`).join(';'))
+        this.set('begin', at.map((time) => `${time}ms`).join(';'))
 
         return this
     }
@@ -83,7 +83,7 @@ export default class SVGAnimate extends SVGNode {
      * @param after Time to end after in milliseconds
      */
     public endAfter(after: number): SVGAnimate {
-        this.set(SVGAttr.End, `${after}ms`)
+        this.set('end', `${after}ms`)
 
         return this
     }
@@ -93,7 +93,7 @@ export default class SVGAnimate extends SVGNode {
      * @param at Timestamps in milliseconds for the animation to end
      */
     public endAt(at: number[]): SVGAnimate {
-        this.set(SVGAttr.End, at.map((time) => `${time}ms`).join(';'))
+        this.set('end', at.map((time) => `${time}ms`).join(';'))
 
         return this
     }
@@ -104,7 +104,7 @@ export default class SVGAnimate extends SVGNode {
      * @param times Numbers from 0-1 representing where in the animation time values should take place
      */
     public keyTimes(times: number[]): SVGAnimate {
-        this.set(SVGAttr.KeyTimes, times.map((time) => `${time}`).join(';'))
+        this.set('keyTimes', times.map((time) => `${time}`).join(';'))
 
         return this
     }
@@ -122,7 +122,7 @@ export class SVGAnimateMotion extends SVGAnimate {
      * @param duration Duration of motion in milliseconds
      */
     public constructor(path: PathData, duration: number) {
-        super(duration, undefined, undefined, SVGTag.AnimateMotion)
+        super(duration, undefined, undefined, 'animateMotion')
         this._path = path
     }
 
@@ -132,7 +132,7 @@ export class SVGAnimateMotion extends SVGAnimate {
      * @param points Numbers from 0-1 representing where along the path the keyTimes should take place
      */
     public keyPoints(points: number[]): SVGAnimateMotion {
-        this.set(SVGAttr.KeyPoints, points.map((p) => p.toString()).join(';'))
+        this.set('keyPoints', points.map((p) => p.toString()).join(';'))
         return this
     }
 }

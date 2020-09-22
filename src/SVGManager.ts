@@ -4,12 +4,11 @@ import { v4 as uuidv4 } from 'uuid'
 import {
     EventDefinition,
     EventFunc,
-    SVGAttr,
     SVGEvent,
-    SVGTag,
-    SVGViewBox,
+    SVGAttribute,
 } from './definitions'
 import { parseSVGViewBox } from './helpers/Parser'
+import ViewBox from './helpers/ViewBox'
 
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'
@@ -53,8 +52,7 @@ export default class SVGManager {
     }
 
     private addNamesToElem(el: SVGElement, names: string[]): SVGElement {
-        if (names.some((name) => this._names.includes(name)))
-            console.log('Duplicate name is being removed!')
+        if (names.some((name) => this._names.includes(name))) return el
 
         names
             .filter((name) => !this._names.includes(name))
@@ -78,7 +76,7 @@ export default class SVGManager {
 
         this._defintions.push(elementId)
         this.defsElement().appendChild(
-            element.set(SVGAttr.Id, this.toDefId(elementId)).toHTML(),
+            element.set('id', this.toDefId(elementId)).toHTML(),
         )
 
         return elementId
@@ -97,7 +95,7 @@ export default class SVGManager {
 
         // Add all event listeners to the HTML elements
         Object.keys(groupedEvents).forEach((ev) =>
-            elem.addEventListener((ev as string).substr(2), (e) => {
+            elem.addEventListener(ev, (e) => {
                 groupedEvents[ev].forEach((eventCall: EventDefinition) => {
                     eventCall.func(e)
                 })
@@ -130,11 +128,11 @@ export default class SVGManager {
         args?: {
             names?: string[]
             tags?: string[]
-            attributes?: { attrName: SVGAttr; attrValue: AttributeValue }[]
+            attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
             events?: EventDefinition[]
         },
     ) {
-        const node = new SVGNode(SVGTag.Use).set(SVGAttr.Href, '#' + elementId)
+        const node = new SVGNode('use').set('href', '#' + elementId)
         if (args !== undefined) {
             if (args.attributes !== undefined)
                 args.attributes.forEach((attribute) => {
@@ -185,12 +183,12 @@ export default class SVGManager {
         this._defintions = []
         this._names = []
 
-        const svgElement = new SVGNode(SVGTag.Svg)
-            .set(SVGAttr.ViewBox, DEFAULT_VIEWBOX)
-            .set(SVGAttr.Width, DEFAULT_SVG_WIDTH)
-            .set(SVGAttr.Height, DEFAULT_SVG_HEIGHT)
-            .set(SVGAttr.Id, this._managerid)
-            .append(new SVGNode(SVGTag.Defs))
+        const svgElement = new SVGNode('svg')
+            .set('viewBox', DEFAULT_VIEWBOX)
+            .set('width', DEFAULT_SVG_WIDTH)
+            .set('height', DEFAULT_SVG_HEIGHT)
+            .set('id', this._managerid)
+            .append(new SVGNode('defs'))
             .toHTML()
 
         this._svgElement = this._rootElement.appendChild(svgElement)
@@ -201,14 +199,14 @@ export default class SVGManager {
     /**
      * Fetches the ViewBox from root SVG
      */
-    get viewBox(): SVGViewBox {
+    get viewBox(): ViewBox {
         return parseSVGViewBox(this._svgElement.getAttribute('viewBox'))
     }
 
     /**
      * Sets the ViewBox to the root SVG
      */
-    set viewBox(vb: SVGViewBox) {
+    set viewBox(vb: ViewBox) {
         this._svgElement.setAttribute('viewBox', vb.toString())
     }
 
@@ -241,7 +239,7 @@ export default class SVGManager {
         args?: {
             names?: string[]
             tags?: string[]
-            attributes?: { attrName: SVGAttr; attrValue: AttributeValue }[]
+            attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
             events?: EventDefinition[]
         },
     ) {
@@ -314,9 +312,8 @@ export default class SVGManager {
      */
     public clean() {
         // Remove event listeners
-        const attributes = this._svgElement.attributes
         this._rootElement.removeChild(this._svgElement)
-        const svgElement = new SVGNode(SVGTag.Svg).toHTML()
+        const svgElement = new SVGNode('svg').toHTML()
         for (let i = 0; i < this._svgElement.attributes.length; i++) {
             const attr = this._svgElement.attributes[i]
             svgElement.setAttribute(attr.name, attr.value)
@@ -326,7 +323,7 @@ export default class SVGManager {
         this._defintions = []
         this._names = []
 
-        svgElement.appendChild(new SVGNode(SVGTag.Defs).toHTML())
+        svgElement.appendChild(new SVGNode('defs').toHTML())
 
         this._rootElement.appendChild(svgElement)
         this._svgElement = svgElement
@@ -336,7 +333,7 @@ export default class SVGManager {
      * Fetch an attribute value from root SVG element
      * @param attr Attribute name
      */
-    public get(attr: SVGAttr): string {
+    public get(attr: SVGAttribute): string {
         return this._svgElement.getAttribute(attr) || ''
     }
 
@@ -345,7 +342,7 @@ export default class SVGManager {
      * @param attr Attribute name
      * @param value Set value
      */
-    public set(attr: SVGAttr, value: AttributeValue): SVGManager {
+    public set(attr: SVGAttribute, value: AttributeValue): SVGManager {
         this._svgElement.setAttribute(attr, value.toString())
 
         return this

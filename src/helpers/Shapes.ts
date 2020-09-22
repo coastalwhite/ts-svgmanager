@@ -1,7 +1,6 @@
 import V2D from '../V2D'
 import PathData from './PathData'
 import SVGNode from '../SVGNode'
-import { SVGAttr, SVGTag } from '../definitions'
 
 /**
  * Returns a SVGNode containing a circle with radius *r* and
@@ -16,13 +15,13 @@ import { SVGAttr, SVGTag } from '../definitions'
  * These can all be overwritten using the SVGNode.set() method
  */
 export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
-    new SVGNode(SVGTag.Circle)
-        .set(SVGAttr.Cx, cx || 0)
-        .set(SVGAttr.Cy, cy || 0)
-        .set(SVGAttr.Stroke, '#000')
-        .set(SVGAttr.StrokeWidth, '1px')
-        .set(SVGAttr.Fill, 'transparent')
-        .set(SVGAttr.R, r.toString())
+    new SVGNode('circle')
+        .set('cx', cx || 0)
+        .set('cy', cy || 0)
+        .set('stroke', '#000')
+        .set('stroke-width', '1px')
+        .set('fill', 'transparent')
+        .set('r', r.toString())
 
 /**
  * Returns a SVGNode containing a line between two
@@ -35,13 +34,13 @@ export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
  * These can all be overwritten using the SVGNode.set() method
  */
 export const line = (from: V2D, to: V2D): SVGNode =>
-    new SVGNode(SVGTag.Line)
-        .set(SVGAttr.X1, from.x().toString())
-        .set(SVGAttr.Y1, from.y().toString())
-        .set(SVGAttr.X2, to.x().toString())
-        .set(SVGAttr.Y2, to.y().toString())
-        .set(SVGAttr.Stroke, '#000')
-        .set(SVGAttr.StrokeWidth, '1px')
+    new SVGNode('line')
+        .set('x1', from.x().toString())
+        .set('y1', from.y().toString())
+        .set('x2', to.x().toString())
+        .set('y2', to.y().toString())
+        .set('stroke', '#000')
+        .set('stroke-width', '1px')
 
 /**
  * Returns a SVGNode containing a path with lines between multiple
@@ -60,11 +59,11 @@ export const lines = (points: V2D[]): SVGNode => {
     points.shift()
     points.forEach((point) => pathData.lineTo(point.x(), point.y()))
 
-    return new SVGNode(SVGTag.Path)
-        .set(SVGAttr.D, pathData.toString())
-        .set(SVGAttr.Stroke, '#000')
-        .set(SVGAttr.StrokeWidth, '1px')
-        .set(SVGAttr.Fill, 'none')
+    return new SVGNode('path')
+        .set('d', pathData.toString())
+        .set('stroke', '#000')
+        .set('stroke-width', '1px')
+        .set('fill', 'none')
 }
 
 /**
@@ -79,16 +78,16 @@ export const lines = (points: V2D[]): SVGNode => {
  * These can all be overwritten using the SVGNode.set() method
  */
 export const curve = (from: V2D, to: V2D, control: V2D): SVGNode =>
-    new SVGNode(SVGTag.Path)
+    new SVGNode('path')
         .set(
-            SVGAttr.D,
+            'd',
             new PathData()
                 .moveTo(from.x(), from.y())
                 .quadraticCurveTo(to.x(), to.y(), control.x(), control.y())
                 .toString(),
         )
-        .set(SVGAttr.Stroke, '#000')
-        .set(SVGAttr.StrokeWidth, '1px')
+        .set('stroke', '#000')
+        .set('stroke-width', '1px')
 
 /**
  * Returns a SVGNode containing a quadratic-curve between two
@@ -114,9 +113,9 @@ export const curveCalc = (from: V2D, to: V2D, curving: number): SVGNode => {
         normal.sca((2 * curving) / normal.length()),
     )
 
-    return new SVGNode(SVGTag.Path)
+    return new SVGNode('path')
         .set(
-            SVGAttr.D,
+            'd',
             new PathData()
                 .moveTo(from.x(), from.y())
                 .quadraticCurveTo(
@@ -127,7 +126,7 @@ export const curveCalc = (from: V2D, to: V2D, curving: number): SVGNode => {
                 )
                 .toString(),
         )
-        .set(SVGAttr.Fill, 'transparent')
-        .set(SVGAttr.Stroke, '#000')
-        .set(SVGAttr.StrokeWidth, '1px')
+        .set('fill', 'transparent')
+        .set('stroke', '#000')
+        .set('stroke-width', '1px')
 }
