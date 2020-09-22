@@ -2,6 +2,11 @@ import { PathData, SVGNode } from '..'
 import { SVGAttr, SVGTag } from '../definitions'
 import { AttributeValue } from '../SVGNode'
 
+/**
+ * Helper class for easy initialization of SVG Animations
+ *
+ * Handy to be used with the SVGNode.animate() method
+ */
 export default class SVGAnimate {
     private _attr?: SVGAttr
     private _values: AttributeValue[]
@@ -26,6 +31,9 @@ export default class SVGAnimate {
         this._attributes = new Map()
     }
 
+    /**
+     * Set the animation to repeat indefinitely
+     */
     public repeatIndefinitely(): SVGAnimate {
         this._attributes.set(SVGAttr.RepeatCount, 'indefinite')
         this._attributes.set(SVGAttr.RepeatDur, 'indefinite')
@@ -33,24 +41,40 @@ export default class SVGAnimate {
         return this
     }
 
+    /**
+     * Set the animation to repeat `times` times
+     * @param times Number of times from the animation to be repeated
+     */
     public repeatTimes(times: number): SVGAnimate {
         this._attributes.set(SVGAttr.RepeatCount, times)
 
         return this
     }
 
+    /**
+     * Set the animation to repeat for `duration` time
+     * @param duration Length of repeating time in milliseconds
+     */
     public repeatDuration(duration: number): SVGAnimate {
         this._attributes.set(SVGAttr.RepeatDur, `${duration}ms`)
 
         return this
     }
 
+    /**
+     * Set the animation to begin after `аfter` amount of time
+     * @param after Time to begin after in milliseconds
+     */
     public beginAfter(after: number): SVGAnimate {
         this._attributes.set(SVGAttr.Begin, `${after}ms`)
 
         return this
     }
 
+    /**
+     * Set the animation to begin at `at` timestamps
+     * @param at Timestamps in milliseconds for the animation to begin
+     */
     public beginAt(at: number[]): SVGAnimate {
         this._attributes.set(
             SVGAttr.Begin,
@@ -60,12 +84,20 @@ export default class SVGAnimate {
         return this
     }
 
+    /**
+     * Set the animation to end after `аfter` amount of time
+     * @param after Time to end after in milliseconds
+     */
     public endAfter(after: number): SVGAnimate {
         this._attributes.set(SVGAttr.End, `${after}ms`)
 
         return this
     }
 
+    /**
+     * Set the animation to end at `at` timestamps
+     * @param at Timestamps in milliseconds for the animation to end
+     */
     public endAt(at: number[]): SVGAnimate {
         this._attributes.set(
             SVGAttr.End,
@@ -75,6 +107,11 @@ export default class SVGAnimate {
         return this
     }
 
+    /**
+     * Set the animation to control pacing
+     * Look at [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/keyTimes) for more info
+     * @param times Numbers from 0-1 representing where in the animation time values should take place
+     */
     public keyTimes(times: number[]): SVGAnimate {
         this._attributes.set(
             SVGAttr.KeyTimes,
@@ -84,11 +121,19 @@ export default class SVGAnimate {
         return this
     }
 
+    /**
+     * Set an attribute of the animation node to a value
+     * @param attr Attribute to set
+     * @param value Value to set to
+     */
     public set(attr: SVGAttr, value: AttributeValue): SVGAnimate {
         this._attributes.set(attr, value)
         return this
     }
 
+    /**
+     * Converts the SVGAnimate into a SVGNode
+     */
     public toNode(): SVGNode {
         const animate = new SVGNode(SVGTag.Animate).set(
             SVGAttr.Dur,
@@ -107,14 +152,27 @@ export default class SVGAnimate {
     }
 }
 
+/**
+ * Extension of SVGAnimate used to control motion of shapes along paths
+ */
 export class SVGAnimateMotion extends SVGAnimate {
     private _path: PathData
 
+    /**
+     * Create a SVGAnimateMotion object
+     * @param path Path to move along
+     * @param duration Duration of motion in milliseconds
+     */
     public constructor(path: PathData, duration: number) {
         super(duration)
         this._path = path
     }
 
+    /**
+     * Sets the keyPoints
+     * Look at [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/keyPoints) for more info
+     * @param points Numbers from 0-1 representing where along the path the keyTimes should take place
+     */
     public keyPoints(points: number[]): SVGAnimateMotion {
         this._attributes.set(
             SVGAttr.KeyPoints,
@@ -123,6 +181,9 @@ export class SVGAnimateMotion extends SVGAnimate {
         return this
     }
 
+    /**
+     * Converts the SVGAnimateMotion into a SVGNode
+     */
     public toNode(): SVGNode {
         const animate = new SVGNode(SVGTag.AnimateMotion)
             .set(SVGAttr.Dur, `${this._duration}ms`)
