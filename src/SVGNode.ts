@@ -63,7 +63,7 @@ export default class SVGNode {
      */
     public map(
         attr: SVGAttr,
-        f: (value: AttributeValue) => AttributeValue,
+        f: (_value: AttributeValue) => AttributeValue,
     ): SVGNode {
         const value = this._attributes.get(attr)
         if (value === undefined) return this

@@ -198,14 +198,14 @@ function example5() {
             .set(SVGAttr.StrokeWidth, '1px')
             .set(SVGAttr.Fill, mentionGradient(manager, gradient1Id))
             .name('pentagon')
-            .addEvent(SVGEvent.MouseEnter, (e) => {
+            .addEvent(SVGEvent.MouseEnter, (_e) => {
                 const elem = manager.fetchNamed('pentagon')
                 elem.setAttribute(
                     SVGAttr.Fill,
                     mentionGradient(manager, gradient2Id),
                 )
             })
-            .addEvent(SVGEvent.MouseLeave, (e) => {
+            .addEvent(SVGEvent.MouseLeave, (_e) => {
                 const elem = manager.fetchNamed('pentagon')
                 elem.setAttribute(
                     SVGAttr.Fill,
@@ -253,7 +253,7 @@ function example6() {
                         .set(SVGAttr.StrokeWidth, '1px')
                         .set(SVGAttr.Fill, gradient1URL)
                         .name('pentagon')
-                        .addEvent(SVGEvent.MouseEnter, (e) => {
+                        .addEvent(SVGEvent.MouseEnter, (_e) => {
                             const elem = manager.fetchNamed('pentagon')
                             elem.setAttribute(SVGAttr.Fill, gradient2URL)
 
@@ -262,7 +262,7 @@ function example6() {
                                 vertex.setAttribute(SVGAttr.R, '5'),
                             )
                         })
-                        .addEvent(SVGEvent.MouseLeave, (e) => {
+                        .addEvent(SVGEvent.MouseLeave, (_e) => {
                             const elem = manager.fetchNamed('pentagon')
                             elem.setAttribute(SVGAttr.Fill, gradient1URL)
 
