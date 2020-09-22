@@ -22,7 +22,8 @@ export default class SVGNode {
     private _children: SVGNode[]
     private _innerText: string
     private _events: EventDefinition[]
-    private _name: string
+    private _names: string[]
+    private _tags: string[]
 
     /**
      * Construct a SVGNode respresenting the *tag* element
@@ -34,6 +35,8 @@ export default class SVGNode {
         this._children = []
         this._innerText = ''
         this._events = []
+        this._names = []
+        this._tags = []
     }
 
     /**
@@ -101,16 +104,58 @@ export default class SVGNode {
         return this
     }
 
+    /**
+     * Fetch events given to the node
+     */
     public getEvents(): EventDefinition[] {
         return this._events
     }
 
-    public name(newName: string): SVGNode {
-        this._name = newName
+    /**
+     * Give name to the SVGNode to mention later
+     * @param name Name given to SVGNode
+     */
+    public name(name: string): SVGNode {
+        this._names.push(name)
 
         return this
     }
 
+    /**
+     * Give tag to the SVGNode to mention later
+     * @param tag Tag given to SVGNode
+     */
+    public tag(tag: string): SVGNode {
+        this._tags.push(tag)
+
+        return this
+    }
+
+    /**
+     * Return all names given to the SVGNode
+     */
+    public getNames(): string[] {
+        return this._names
+    }
+
+    /**
+     * Return all tags given to SVGNode
+     */
+    public getTags(): string[] {
+        return this._tags
+    }
+
+    /**
+     * Returns all children
+     */
+    public getChildren(): SVGNode[] {
+        return this._children
+    }
+
+    /**
+     * Set the X and Y attributes of the node
+     * @param pos Vector for the position
+     */
     public setXY(pos: V2D): SVGNode {
         return this.set(SVGAttr.X, pos.x().toString()).set(
             SVGAttr.Y,
@@ -128,9 +173,6 @@ export default class SVGNode {
             element.setAttribute(attr, value.toString())
         })
 
-        if (this._name !== undefined)
-            element.setAttribute(SVGAttr.Id, this._name)
-
         element.innerHTML = this._innerText
 
         this._children.forEach((child) => element.appendChild(child.toHTML()))
@@ -142,9 +184,6 @@ export default class SVGNode {
      * Returns the hashstring of SVGNode
      */
     public toHash(): string {
-        const id = this._attributes.get(SVGAttr.Id)
-        this.set(SVGAttr.Id, '')
-
         let md5 = new Md5()
 
         md5.appendStr('tag' + this._tag)
@@ -165,10 +204,6 @@ export default class SVGNode {
             .map((child) => child.toHash())
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((childHash) => md5.appendStr('child' + childHash))
-
-        if (id !== undefined) {
-            this.set(SVGAttr.Id, id)
-        }
 
         return md5.end() as string
     }

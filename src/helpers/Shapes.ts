@@ -15,10 +15,10 @@ import { SVGAttr, SVGTag } from '../definitions'
  *
  * These can all be overwritten using the SVGNode.set() method
  */
-export const circle = (r: number): SVGNode =>
+export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
     new SVGNode(SVGTag.Circle)
-        .set(SVGAttr.Cx, '0')
-        .set(SVGAttr.Cy, '0')
+        .set(SVGAttr.Cx, cx || 0)
+        .set(SVGAttr.Cy, cy || 0)
         .set(SVGAttr.Stroke, '#000')
         .set(SVGAttr.StrokeWidth, '1px')
         .set(SVGAttr.Fill, 'transparent')
