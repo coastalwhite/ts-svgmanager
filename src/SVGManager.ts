@@ -1,4 +1,3 @@
-import V2D from './V2D'
 import SVGNode, { AttributeValue } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
@@ -10,7 +9,7 @@ import {
     SVGTag,
     SVGViewBox,
 } from './definitions'
-import { htmlParseSVGNode, parseSVGViewBox } from './Parser'
+import { parseSVGViewBox } from './helpers/Parser'
 
 const DEFINITION_PREFIX = 'figure-'
 const NAME_PREFIX = 'named-'

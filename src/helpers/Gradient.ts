@@ -1,4 +1,5 @@
 import { SVGAttr, SVGTag } from '../definitions'
+import SVGManager from '../SVGManager'
 import SVGNode, { AttributeValue } from '../SVGNode'
 
 export class GradientStop extends SVGNode {
@@ -22,12 +23,14 @@ export class GradientStop extends SVGNode {
     }
 }
 
-abstract class SVGGradient {
-    protected _stops: GradientStop[]
-    protected _attributes: Map<SVGAttr, AttributeValue>
-
+export class SVGRadGradient extends SVGNode {
+    /**
+     * Create a Radial Gradient with `stops`
+     * @param stops Stops of the gradient
+     */
     public constructor(stops: GradientStop[]) {
-        this._stops = stops
+        super(SVGTag.RadialGradient)
+        stops.forEach((stop) => this.append(stop))
     }
 
     /**
@@ -36,8 +39,8 @@ abstract class SVGGradient {
      */
     public gradientUnits(
         value: 'userSpaceOnUse' | 'objectBoundingBox',
-    ): SVGGradient {
-        this._attributes.set(SVGAttr.GradientUnits, value)
+    ): SVGRadGradient {
+        this.set(SVGAttr.GradientUnits, value)
         return this
     }
 
@@ -45,8 +48,8 @@ abstract class SVGGradient {
      * Set the gradientTransform attribute of the Gradient
      * @param value Transformation
      */
-    public gradientTransform(value: string): SVGGradient {
-        this._attributes.set(SVGAttr.GradientTransform, value)
+    public gradientTransform(value: string): SVGRadGradient {
+        this.set(SVGAttr.GradientTransform, value)
         return this
     }
 
@@ -54,8 +57,8 @@ abstract class SVGGradient {
      * Set the href attribute of the Gradient
      * @param value Value of href
      */
-    public href(value: string): SVGGradient {
-        this._attributes.set(SVGAttr.Href, value)
+    public href(value: string): SVGRadGradient {
+        this.set(SVGAttr.Href, value)
         return this
     }
 
@@ -63,34 +66,9 @@ abstract class SVGGradient {
      * Set the spreadMethod attribute of the Gradient
      * @param value Either 'pad', 'reflect' or 'repeat'
      */
-    public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGGradient {
-        this._attributes.set(SVGAttr.SpreadMethod, value)
+    public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGRadGradient {
+        this.set(SVGAttr.SpreadMethod, value)
         return this
-    }
-
-    /**
-     * Set an attribute of the gradient node to a value
-     * @param attr Attribute to set
-     * @param value Value to set to
-     */
-    public set(attr: SVGAttr, value: AttributeValue): SVGGradient {
-        this._attributes.set(attr, value)
-        return this
-    }
-
-    /**
-     * Turn Gradient into SVGNode
-     */
-    public abstract toNode(): SVGNode
-}
-
-export class SVGRadGradient extends SVGGradient {
-    /**
-     * Create a Radial Gradient with `stops`
-     * @param stops Stops of the gradient
-     */
-    public constructor(stops: GradientStop[]) {
-        super(stops)
     }
 
     /**
@@ -98,7 +76,7 @@ export class SVGRadGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public cx(length: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.Cx, length)
+        this.set(SVGAttr.Cx, length)
         return this
     }
 
@@ -107,7 +85,7 @@ export class SVGRadGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public cy(length: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.Cy, length)
+        this.set(SVGAttr.Cy, length)
         return this
     }
 
@@ -116,7 +94,7 @@ export class SVGRadGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public fr(length: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.Fr, length)
+        this.set(SVGAttr.Fr, length)
         return this
     }
 
@@ -125,7 +103,7 @@ export class SVGRadGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public fx(length: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.Fx, length)
+        this.set(SVGAttr.Fx, length)
         return this
     }
 
@@ -134,7 +112,7 @@ export class SVGRadGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public fy(length: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.Fy, length)
+        this.set(SVGAttr.Fy, length)
         return this
     }
 
@@ -143,30 +121,57 @@ export class SVGRadGradient extends SVGGradient {
      * @param radius Radius from 0-1
      */
     public r(radius: number): SVGRadGradient {
-        this._attributes.set(SVGAttr.R, radius)
+        this.set(SVGAttr.R, radius)
         return this
-    }
-
-    /**
-     * Turn Radial Gradient into SVGNode
-     */
-    public toNode(): SVGNode {
-        const gradient = new SVGNode(SVGTag.RadialGradient)
-
-        this._stops.forEach((stop) => gradient.append(stop))
-        this._attributes.forEach((value, attr) => gradient.set(attr, value))
-
-        return gradient
     }
 }
 
-export class SVGLinGradient extends SVGGradient {
+export class SVGLinGradient extends SVGNode {
     /**
      * Create a Linear Gradient
      * @param stops Stops of the gradient
      */
     public constructor(stops: GradientStop[]) {
-        super(stops)
+        super(SVGTag.LinearGradient)
+        stops.forEach((stop) => this.append(stop))
+    }
+
+    /**
+     * Set the gradientUnits attribute of the Gradient
+     * @param value Either 'userSpaceOnUse' or 'objectBoundingBox'
+     */
+    public gradientUnits(
+        value: 'userSpaceOnUse' | 'objectBoundingBox',
+    ): SVGLinGradient {
+        this.set(SVGAttr.GradientUnits, value)
+        return this
+    }
+
+    /**
+     * Set the gradientTransform attribute of the Gradient
+     * @param value Transformation
+     */
+    public gradientTransform(value: string): SVGLinGradient {
+        this.set(SVGAttr.GradientTransform, value)
+        return this
+    }
+
+    /**
+     * Set the href attribute of the Gradient
+     * @param value Value of href
+     */
+    public href(value: string): SVGLinGradient {
+        this.set(SVGAttr.Href, value)
+        return this
+    }
+
+    /**
+     * Set the spreadMethod attribute of the Gradient
+     * @param value Either 'pad', 'reflect' or 'repeat'
+     */
+    public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGLinGradient {
+        this.set(SVGAttr.SpreadMethod, value)
+        return this
     }
 
     /**
@@ -174,7 +179,7 @@ export class SVGLinGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public x1(length: number): SVGLinGradient {
-        this._attributes.set(SVGAttr.X1, length)
+        this.set(SVGAttr.X1, length)
         return this
     }
 
@@ -183,7 +188,7 @@ export class SVGLinGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public x2(length: number): SVGLinGradient {
-        this._attributes.set(SVGAttr.X2, length)
+        this.set(SVGAttr.X2, length)
         return this
     }
 
@@ -192,7 +197,7 @@ export class SVGLinGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public y1(length: number): SVGLinGradient {
-        this._attributes.set(SVGAttr.Y1, length)
+        this.set(SVGAttr.Y1, length)
         return this
     }
 
@@ -201,19 +206,11 @@ export class SVGLinGradient extends SVGGradient {
      * @param length Length from 0-1
      */
     public y2(length: number): SVGLinGradient {
-        this._attributes.set(SVGAttr.Y2, length)
+        this.set(SVGAttr.Y2, length)
         return this
     }
+}
 
-    /**
-     * Turn Linear Gradient into SVGNode
-     */
-    public toNode(): SVGNode {
-        const gradient = new SVGNode(SVGTag.RadialGradient)
-
-        this._stops.forEach((stop) => gradient.append(stop))
-        this._attributes.forEach((value, attr) => gradient.set(attr, value))
-
-        return gradient
-    }
+export function mentionGradient(manager: SVGManager, definitionId: string) {
+    return 'url(#' + manager.mentionDefinition(definitionId) + ')'
 }
