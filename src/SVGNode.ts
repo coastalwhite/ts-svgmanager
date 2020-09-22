@@ -206,7 +206,7 @@ export default class SVGNode {
                 md5.appendStr('attribute' + attributeString)
             })
 
-        const childrenHashes = this._children
+        this._children
             .map((child) => child.toHash())
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((childHash) => md5.appendStr('child' + childHash))
