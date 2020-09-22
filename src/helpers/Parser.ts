@@ -36,7 +36,7 @@ function stringToSVGNode(str: string): SVGNode {
     const parser = new DOMParser()
     const parsed = parser.parseFromString(str, 'image/svg+xml')
 
-    if (parsed.children.length == 0) throw new Error('Parsed is empty')
+    if (parsed.children.length === 0) throw new Error('Parsed is empty')
     if (parsed.children.length > 1) throw new Error('Too many heads')
 
     return htmlToSVGNode(parsed.firstChild as HTMLElement)
@@ -54,7 +54,7 @@ async function asyncLoadSVGNode(fileUrl: string): Promise<SVGNode> {
         xhr.open('get', fileUrl, true)
         xhr.onload = function () {
             var status = xhr.status
-            if (status == 200) {
+            if (status === 200) {
                 resolve(stringToSVGNode(xhr.responseText))
             } else {
                 reject(status)
@@ -75,7 +75,7 @@ function syncLoadSVGNode(fileUrl: string): SVGNode {
     xhr.open('get', fileUrl, false)
     xhr.send(null)
 
-    if (xhr.status != 200)
+    if (xhr.status !== 200)
         throw new Error('Unable to fetch file as sync (' + xhr.status + ')')
 
     return stringToSVGNode(xhr.responseText)

@@ -1,6 +1,6 @@
 import { SVGAttr, SVGTag } from '../definitions'
 import SVGManager from '../SVGManager'
-import SVGNode, { AttributeValue } from '../SVGNode'
+import SVGNode from '../SVGNode'
 
 export class GradientStop extends SVGNode {
     /**

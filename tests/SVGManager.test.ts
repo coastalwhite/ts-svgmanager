@@ -6,7 +6,7 @@ import V2D from '../src/V2D'
 
 document.body.innerHTML = '<div id="root"></div>'
 
-let root = document.getElementById('root')
+const root = document.getElementById('root')
 
 describe('SVG Manager', function () {
     const manager = new SVGManager()
@@ -227,7 +227,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_render">
+                <a attributeName="test_value" class="${manager_id}-named-test_render">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -248,7 +248,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value 1" x="7" y="24" id="${manager_id}-named-test_render">
+                <a attributeName="test_value 1" x="7" y="24" class="${manager_id}-named-test_render">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -258,11 +258,11 @@ describe('SVG Manager', function () {
         it('Should be able to ensure definitions', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
 
-            let hash = test_node.toHash()
+            const hash = test_node.toHash()
 
             manager.ensureDefinition(test_node)
 
@@ -281,11 +281,9 @@ describe('SVG Manager', function () {
         it('Should be able to render items', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
-
-            let hash = test_node.toHash()
 
             manager.render(test_node.setXY(new V2D(7, 24)))
 
@@ -305,16 +303,13 @@ describe('SVG Manager', function () {
         it('Should be able to render multiple items', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
 
-            let test_node_2 = new SVGNode(SVGTag.G)
+            const test_node_2 = new SVGNode(SVGTag.G)
                 .set(SVGAttr.AttributeName, 'value')
                 .setText('text value')
-
-            let hash = test_node.toHash()
-            let hash_2 = test_node_2.toHash()
 
             manager.render(test_node.setXY(new V2D(5, 6)))
 
@@ -348,11 +343,9 @@ describe('SVG Manager', function () {
         it('Should be able to render a named item', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
-
-            let hash = test_node.toHash()
 
             manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
@@ -361,7 +354,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -371,11 +364,9 @@ describe('SVG Manager', function () {
         it('Should be able to remove a named item', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
-
-            let hash = test_node.toHash()
 
             manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
@@ -384,7 +375,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -404,11 +395,9 @@ describe('SVG Manager', function () {
         it('Should be able to move a named item', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
-
-            let hash = test_node.toHash()
 
             manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
 
@@ -417,7 +406,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_item" x="5" y="6">
+                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -433,7 +422,7 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" id="${manager_id}-named-test_item" x="10" y="30">
+                <a attributeName="test_value" x="10" y="30" class="${manager_id}-named-test_item">
                     Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -443,11 +432,11 @@ describe('SVG Manager', function () {
         it('Should be able to render from id', function () {
             manager.clean()
 
-            let test_node = new SVGNode(SVGTag.A)
+            const test_node = new SVGNode(SVGTag.A)
                 .set(SVGAttr.AttributeName, 'test_value')
                 .setText('Testing text!')
 
-            let hash = test_node.toHash()
+            const hash = test_node.toHash()
 
             manager.ensureDefinition(test_node)
 

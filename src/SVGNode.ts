@@ -190,7 +190,7 @@ export default class SVGNode {
      * Returns the hashstring of SVGNode
      */
     public toHash(): string {
-        let md5 = new Md5()
+        const md5 = new Md5()
 
         md5.appendStr('tag' + this._tag)
         md5.appendStr('innertext' + this._innerText)
