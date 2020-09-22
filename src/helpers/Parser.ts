@@ -1,5 +1,5 @@
-import { SVGNode } from '.'
-import { SVGAttr, SVGTag, SVGViewBox } from './definitions'
+import { SVGNode } from '..'
+import { SVGAttr, SVGTag, SVGViewBox } from '../definitions'
 
 function htmlToSVGNode(elem: HTMLElement): SVGNode {
     const tag = elem.tagName as SVGTag
