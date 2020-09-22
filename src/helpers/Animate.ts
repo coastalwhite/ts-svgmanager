@@ -1,6 +1,6 @@
-import { PathData, SVGNode } from '..'
+import PathData from './PathData'
 import { SVGAttr, SVGTag } from '../definitions'
-import { AttributeValue } from '../SVGNode'
+import SVGNode, { AttributeValue } from '../SVGNode'
 
 /**
  * Helper class for easy initialization of SVG Animations
