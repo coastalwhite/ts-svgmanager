@@ -114,8 +114,6 @@ export default class SVGAnimate extends SVGNode {
  * Extension of SVGAnimate used to control motion of shapes along paths
  */
 export class SVGAnimateMotion extends SVGAnimate {
-    private _path: PathData
-
     /**
      * Create a SVGAnimateMotion object
      * @param path Path to move along
@@ -123,7 +121,7 @@ export class SVGAnimateMotion extends SVGAnimate {
      */
     public constructor(path: PathData, duration: number) {
         super(duration, undefined, undefined, 'animateMotion')
-        this._path = path
+        this.set('path', path.toString())
     }
 
     /**

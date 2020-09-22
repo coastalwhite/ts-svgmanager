@@ -154,6 +154,8 @@ type SVGAttribute =
     | 'preserveAspectRatio'
     | 'primitiveUnits'
     | 'r'
+    | 'rx'
+    | 'ry'
     | 'radius'
     | 'referrerPolicy'
     | 'refX'
