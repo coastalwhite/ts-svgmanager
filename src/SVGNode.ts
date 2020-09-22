@@ -7,6 +7,7 @@ import {
     SVGEvent,
     SVGTag,
 } from './definitions'
+import SVGAnimate from './helpers/Animate'
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 
 type AttributeValue = string | number
@@ -150,6 +151,11 @@ export default class SVGNode {
      */
     public getChildren(): SVGNode[] {
         return this._children
+    }
+
+    public animate(svganimate: SVGAnimate): SVGNode {
+        this.append(svganimate.toNode())
+        return this
     }
 
     /**

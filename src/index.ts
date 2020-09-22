@@ -11,6 +11,7 @@ import {
     fetchSVGNode,
     fetchSVGNodeSync,
 } from './Parser'
+import SVGAnimate, { SVGAnimateMotion } from './helpers/Animate'
 
 export {
     SVGManager,
@@ -29,4 +30,6 @@ export {
     parseSVGViewBox,
     fetchSVGNode,
     fetchSVGNodeSync,
+    SVGAnimate,
+    SVGAnimateMotion,
 }

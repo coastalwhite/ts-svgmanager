@@ -8,6 +8,7 @@ import {
     SVGTag,
     SVGAttr,
     SVGEvent,
+    SVGAnimateMotion,
 } from '../../../dist'
 
 function example1() {
@@ -76,8 +77,8 @@ function example3() {
     const manager = new SVGManager()
     manager.init('svg-root')
     manager.viewBox = manager.viewBox
-        .setDimensions(new V2D(500, 500))
-        .setPosition(new V2D(-50, -50))
+        .setDimensions(new V2D(600, 600))
+        .setPosition(new V2D(0, 0))
 
     fetchSVGNode('./svg/gradient.svg').then((gradient: SVGNode) => {
         // Render a pentagon with a gradient at (0,0)
@@ -102,22 +103,18 @@ function example3() {
                     `url(#${manager.mentionDefinition(gradientId)})`,
                 )
                 .name('pentagon')
-                .setXY(new V2D(0, 0)),
+                .animate(
+                    new SVGAnimateMotion(
+                        new PathData()
+                            .moveTo(0, 0)
+                            .lineTo(100, 0)
+                            .lineTo(100, 100)
+                            .lineTo(0, 100)
+                            .closePath(),
+                        2000,
+                    ).repeatIndefinitely(),
+                ),
         )
-
-        let time = 0
-        setInterval(() => {
-            const x = Math.cos(time) * 30 - 15
-            const y = Math.sin(time) * 30 - 15
-
-            const elem = manager.fetchNamed('pentagon')
-            elem.setAttribute(
-                SVGAttr.Transform,
-                `translate(${x.toString()},${y.toString()})`,
-            )
-
-            time += (2 * Math.PI) / 1000
-        }, 1)
     })
 }
 
@@ -162,7 +159,7 @@ function example5() {
     manager.init('svg-root')
     manager.viewBox = manager.viewBox
         .setDimensions(new V2D(500, 500))
-        .setPosition(new V2D(-50, -50))
+        .setPosition(new V2D(0, 0))
 
     Promise.all([
         fetchSVGNode('./svg/gradient.svg'),
@@ -210,7 +207,7 @@ function example6() {
     manager.init('svg-root')
     manager.viewBox = manager.viewBox
         .setDimensions(new V2D(500, 500))
-        .setPosition(new V2D(-50, -50))
+        .setPosition(new V2D(0, 0))
 
     Promise.all([
         fetchSVGNode('./svg/gradient.svg'),
