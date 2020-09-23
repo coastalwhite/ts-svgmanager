@@ -1,6 +1,5 @@
 {
     "name": "examples",
-    "type": "commonjs",
     "version": "1.0.0",
     "description": "A Typescript SVG Manager - Examples",
     "main": "index.js",
