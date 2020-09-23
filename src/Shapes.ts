@@ -3,60 +3,38 @@ import SVGNode from './SVGNode'
 import V2D from './definitions/V2D'
 
 /**
- * Returns a SVGNode containing a circle with radius *r* and
- * includes default styling
  *
- * # Note
- * Default styling includes:
- *  - cx, cy both zero
- *  - black 1px outline
- *  - transparent fill
- *
- * These can all be overwritten using the SVGNode.set() method
  */
-export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
-    new SVGNode('circle')
+export function circle(r: number, cx?: number, cy?: number): SVGNode {
+    return new SVGNode('circle')
         .cx(cx || 0)
         .cy(cy || 0)
         .stroke('#000', '1px')
         .fill('transparent')
         .set('r', r)
+}
 
 /**
- * Returns a SVGNode containing a line between two
- * points/vectors *from* and *to* and default styling
  *
- * # Note
- * Default styling includes:
- *  - black 1px line
- *
- * These can all be overwritten using the SVGNode.set() method
  */
-export const line = (
+export function line(
     fromX: number,
     fromY: number,
     toX: number,
     toY: number,
-): SVGNode =>
-    new SVGNode('line')
+): SVGNode {
+    return new SVGNode('line')
         .set('x1', fromX)
         .set('y1', fromY)
         .set('x2', toX)
         .set('y2', toY)
         .stroke('#000', '1px')
+}
 
 /**
- * Returns a SVGNode containing a path with lines between multiple
- * points/vectors in *points* and adds default styling
  *
- * # Note
- * Default styling includes:
- *  - black 1px lines
- *  - no filling
- *
- * These can all be overwritten using the SVGNode.set() method
  */
-export const lines = (points: { x: number; y: number }[]): SVGNode => {
+export function lines(points: { x: number; y: number }[]): SVGNode {
     const pathData = new PathData().moveTo(points[0].x, points[0].y)
 
     points.shift()
@@ -69,25 +47,63 @@ export const lines = (points: { x: number; y: number }[]): SVGNode => {
 }
 
 /**
- * Returns a SVGNode containing a quadratic-curve between two
- * points/vectors *from* and *to*
- * and uses *control* as a quadratic-curve control point. Also adds default styling.
  *
- * # Note
- * Default styling includes:
- *  - black 1px lines
- *
- * These can all be overwritten using the SVGNode.set() method
  */
-export const curve = (
+export function polygon(points: { x: number; y: number }[]): SVGNode {
+    return new SVGNode('polygon')
+        .set('points', points.map((point) => point.x + ',' + point.y).join(' '))
+        .stroke('#000', '1px')
+        .fill('none')
+}
+
+/**
+ *
+ */
+export function rect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+): SVGNode {
+    return new SVGNode('rect')
+        .x(x)
+        .y(y)
+        .set('width', width)
+        .set('height', height)
+        .stroke('#000', '1px')
+        .fill('none')
+}
+
+/**
+ *
+ */
+export function ellipse(
+    rx: number,
+    ry: number,
+    cx?: number,
+    cy?: number,
+): SVGNode {
+    return new SVGNode('rect')
+        .cx(cx || 0)
+        .cy(cy || 0)
+        .set('rx', cx)
+        .set('ry', cy)
+        .stroke('#000', '1px')
+        .fill('none')
+}
+
+/**
+ *
+ */
+export function curve(
     fromX: number,
     fromY: number,
     toX: number,
     toY: number,
     controlX: number,
     controlY: number,
-): SVGNode =>
-    new SVGNode('path')
+): SVGNode {
+    return new SVGNode('path')
         .set(
             'd',
             new PathData()
@@ -95,27 +111,18 @@ export const curve = (
                 .quadraticCurveTo(toX, toY, controlX, controlY),
         )
         .stroke('#000', '1px')
+}
 
 /**
- * Returns a SVGNode containing a quadratic-curve between two
- * points/vectors *from* and *to*
- * and uses *curving* to determine the amount of the curvature.
- * Also adds default styling.
  *
- * # Note
- * Default styling includes:
- *  - black 1px lines
- *  - transparent filling
- *
- * These can all be overwritten using the SVGNode.set() method
  */
-export const curveCalc = (
+export function curveCalc(
     fromX: number,
     fromY: number,
     toX: number,
     toY: number,
     curving: number,
-): SVGNode => {
+): SVGNode {
     const from = new V2D(fromX, fromY),
         to = new V2D(toX, toY)
     const middle = from.middle(to)
