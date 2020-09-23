@@ -14,7 +14,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public moveTo(x: number, y: number): PathData {
+    public moveTo(x: number, y: number): this {
         this._inner += ` M ${x} ${y}`
         return this
     }
@@ -25,7 +25,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public lineTo(x: number, y: number): PathData {
+    public lineTo(x: number, y: number): this {
         this._inner += ` L ${x} ${y}`
         return this
     }
@@ -36,7 +36,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public horizontalLineTo(x: number): PathData {
+    public horizontalLineTo(x: number): this {
         this._inner += ` H ${x}`
         return this
     }
@@ -47,7 +47,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public verticalLineTo(y: number): PathData {
+    public verticalLineTo(y: number): this {
         this._inner += ` V ${y}`
         return this
     }
@@ -58,7 +58,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public lineRelativeTo(x: number, y: number): PathData {
+    public lineRelativeTo(x: number, y: number): this {
         this._inner += ` l ${x} ${y}`
         return this
     }
@@ -69,7 +69,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public horizontalLineRelativeTo(x: number): PathData {
+    public horizontalLineRelativeTo(x: number): this {
         this._inner += ` h ${x}`
         return this
     }
@@ -80,7 +80,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public verticalLineRelativeTo(y: number): PathData {
+    public verticalLineRelativeTo(y: number): this {
         this._inner += ` v ${y}`
         return this
     }
@@ -98,7 +98,7 @@ export default class PathData {
         control1Y: number,
         control2X: number,
         control2Y: number,
-    ): PathData {
+    ): this {
         this._inner += ` C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${endX} ${endY}`
         return this
     }
@@ -116,7 +116,7 @@ export default class PathData {
         control1Y: number,
         control2X: number,
         control2Y: number,
-    ): PathData {
+    ): this {
         this._inner += ` c ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${endX} ${endY}`
         return this
     }
@@ -134,7 +134,7 @@ export default class PathData {
         control1Y: number,
         control2X: number,
         control2Y: number,
-    ): PathData {
+    ): this {
         this._inner += ` S ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${endX} ${endY}`
         return this
     }
@@ -151,7 +151,7 @@ export default class PathData {
         endY: number,
         controlX: number,
         controlY: number,
-    ): PathData {
+    ): this {
         this._inner += ` s ${controlX} ${controlY}, ${endX} ${endY}`
         return this
     }
@@ -168,7 +168,7 @@ export default class PathData {
         endY: number,
         controlX: number,
         controlY: number,
-    ): PathData {
+    ): this {
         this._inner += ` Q ${controlX} ${controlY}, ${endX} ${endY}`
         return this
     }
@@ -185,7 +185,7 @@ export default class PathData {
         endY: number,
         controlX: number,
         controlY: number,
-    ): PathData {
+    ): this {
         this._inner += ` q ${controlX} ${controlY}, ${endX} ${endY}`
         return this
     }
@@ -198,7 +198,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
      */
-    public quadraticStringTo(x: number, y: number): PathData {
+    public quadraticStringTo(x: number, y: number): this {
         this._inner += ` T ${x} ${y}`
         return this
     }
@@ -211,7 +211,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves)
      */
-    public quadraticStringRelativeTo(x: number, y: number): PathData {
+    public quadraticStringRelativeTo(x: number, y: number): this {
         this._inner += ` t ${x} ${y}`
         return this
     }
@@ -230,7 +230,7 @@ export default class PathData {
         xAxisRotation: number,
         largeArcFlag: boolean,
         sweepFlag: boolean,
-    ): PathData {
+    ): this {
         this._inner += ` A ${rx} ${ry} ${xAxisRotation} ${
             largeArcFlag ? '1' : '0'
         } ${sweepFlag ? '1' : '0'} ${x} ${y}`
@@ -251,7 +251,7 @@ export default class PathData {
         xAxisRotation: number,
         largeArcFlag: boolean,
         sweepFlag: boolean,
-    ): PathData {
+    ): this {
         this._inner += ` a ${rx} ${ry} ${xAxisRotation} ${
             largeArcFlag ? '1' : '0'
         } ${sweepFlag ? '1' : '0'} ${x} ${y}`
@@ -264,7 +264,7 @@ export default class PathData {
      * # Note / Arguments
      * For further information: [Look here](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Line_commands)
      */
-    public closePath(): PathData {
+    public closePath(): this {
         this._inner += ` Z`
         return this
     }

@@ -1,5 +1,5 @@
 import SVGAnimate, { SVGAnimateMotion } from './Animate'
-import { SVGLinGradient, SVGRadGradient, GradientStop } from './Gradient'
+import { SVGLinGradient, SVGRadGradient, SVGStops } from './Gradient'
 import {
     fetchSVGNode,
     fetchSVGNodeSync,
@@ -8,7 +8,7 @@ import {
     parseSVGViewBox,
 } from './Parser'
 import PathData from './PathData'
-import { circle, curve, curveCalc, line, lines } from './Shapes'
+import { circle, curve, curveCalc, line, lines } from '../Shapes'
 import ViewBox from './ViewBox'
 
 export {
@@ -16,7 +16,7 @@ export {
     SVGAnimateMotion,
     SVGLinGradient,
     SVGRadGradient,
-    GradientStop,
+    SVGStops,
     fetchSVGNode,
     fetchSVGNodeSync,
     parseSVGViewBox,

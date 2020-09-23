@@ -31,7 +31,7 @@ export default class SVGAnimate extends SVGNode {
     /**
      * Set the animation to repeat indefinitely
      */
-    public repeatIndefinitely(): SVGAnimate {
+    public repeatIndefinitely(): this {
         this.set('repeatCount', 'indefinite')
         this.set('repeatDur', 'indefinite')
 
@@ -42,7 +42,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to repeat `times` times
      * @param times Number of times from the animation to be repeated
      */
-    public repeatTimes(times: number): SVGAnimate {
+    public repeatTimes(times: number): this {
         this.set('repeatCount', times)
 
         return this
@@ -52,7 +52,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to repeat for `duration` time
      * @param duration Length of repeating time in milliseconds
      */
-    public repeatDuration(duration: number): SVGAnimate {
+    public repeatDuration(duration: number): this {
         this.set('repeatDur', `${duration}ms`)
 
         return this
@@ -62,7 +62,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to begin after `аfter` amount of time
      * @param after Time to begin after in milliseconds
      */
-    public beginAfter(after: number): SVGAnimate {
+    public beginAfter(after: number): this {
         this.set('begin', `${after}ms`)
 
         return this
@@ -72,7 +72,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to begin at `at` timestamps
      * @param at Timestamps in milliseconds for the animation to begin
      */
-    public beginAt(at: number[]): SVGAnimate {
+    public beginAt(at: number[]): this {
         this.set('begin', at.map((time) => `${time}ms`).join(';'))
 
         return this
@@ -82,7 +82,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to end after `аfter` amount of time
      * @param after Time to end after in milliseconds
      */
-    public endAfter(after: number): SVGAnimate {
+    public endAfter(after: number): this {
         this.set('end', `${after}ms`)
 
         return this
@@ -92,7 +92,7 @@ export default class SVGAnimate extends SVGNode {
      * Set the animation to end at `at` timestamps
      * @param at Timestamps in milliseconds for the animation to end
      */
-    public endAt(at: number[]): SVGAnimate {
+    public endAt(at: number[]): this {
         this.set('end', at.map((time) => `${time}ms`).join(';'))
 
         return this
@@ -103,7 +103,7 @@ export default class SVGAnimate extends SVGNode {
      * Look at [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/keyTimes) for more info
      * @param times Numbers from 0-1 representing where in the animation time values should take place
      */
-    public keyTimes(times: number[]): SVGAnimate {
+    public keyTimes(times: number[]): this {
         this.set('keyTimes', times.map((time) => `${time}`).join(';'))
 
         return this
@@ -129,7 +129,7 @@ export class SVGAnimateMotion extends SVGAnimate {
      * Look at [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/keyPoints) for more info
      * @param points Numbers from 0-1 representing where along the path the keyTimes should take place
      */
-    public keyPoints(points: number[]): SVGAnimateMotion {
+    public keyPoints(points: number[]): this {
         this.set('keyPoints', points.map((p) => p.toString()).join(';'))
         return this
     }

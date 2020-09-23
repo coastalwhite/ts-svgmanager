@@ -1,6 +1,6 @@
-import PathData from './PathData'
-import SVGNode from '../SVGNode'
-import V2D from '../definitions/V2D'
+import PathData from './helpers/PathData'
+import SVGNode from './SVGNode'
+import V2D from './definitions/V2D'
 
 /**
  * Returns a SVGNode containing a circle with radius *r* and
@@ -39,10 +39,10 @@ export const line = (
     toY: number,
 ): SVGNode =>
     new SVGNode('line')
-        .set('x1', fromX.toString())
-        .set('y1', fromY.toString())
-        .set('x2', toX.toString())
-        .set('y2', toY.toString())
+        .set('x1', fromX)
+        .set('y1', fromY)
+        .set('x2', toX)
+        .set('y2', toY)
         .stroke('#000', '1px')
 
 /**
@@ -63,7 +63,7 @@ export const lines = (points: { x: number; y: number }[]): SVGNode => {
     points.forEach((point) => pathData.lineTo(point.x, point.y))
 
     return new SVGNode('path')
-        .set('d', pathData.toString())
+        .set('d', pathData)
         .stroke('#000', '1px')
         .fill('none')
 }
@@ -92,8 +92,7 @@ export const curve = (
             'd',
             new PathData()
                 .moveTo(fromX, fromY)
-                .quadraticCurveTo(toX, toY, controlX, controlY)
-                .toString(),
+                .quadraticCurveTo(toX, toY, controlX, controlY),
         )
         .stroke('#000', '1px')
 
@@ -139,8 +138,7 @@ export const curveCalc = (
                     to.y(),
                     normalNormalized.x(),
                     normalNormalized.y(),
-                )
-                .toString(),
+                ),
         )
         .fill('transparent')
         .stroke('#000', '1px')
