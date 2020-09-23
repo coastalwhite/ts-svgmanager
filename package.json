@@ -1,10 +1,11 @@
 {
     "name": "ts-svgmanager",
-    "version": "2.0.0-beta3",
+    "version": "2.0.0-beta16",
     "description": "A Typescript SVG Manager",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
+        "prepublish": "tsc",
         "test": "mocha -r ts-node/register -r jsdom-global/register tests/**/*.test.ts",
         "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
         "docs": "typedoc --out docs src; echo '' > ./docs/.nojekyll",
