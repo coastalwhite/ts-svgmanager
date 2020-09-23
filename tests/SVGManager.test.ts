@@ -1,8 +1,6 @@
 import { assert } from 'chai'
-import { SVGAttr, SVGTag } from '../src/definitions'
 import SVGManager from '../src/SVGManager'
 import SVGNode from '../src/SVGNode'
-import V2D from '../src/V2D'
 
 document.body.innerHTML = '<div id="root"></div>'
 
@@ -41,7 +39,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.set(SVGAttr.Width, '700px')
+            manager.set('width', '700px')
 
             assert.equal(
                 root.innerHTML,
@@ -53,7 +51,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.set(SVGAttr.Height, '300px')
+            manager.set('height', '300px')
 
             assert.equal(
                 root.innerHTML,
@@ -65,7 +63,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.set(SVGAttr.Width, '500px')
+            manager.set('width', '500px')
 
             assert.equal(
                 root.innerHTML,
@@ -77,7 +75,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.set(SVGAttr.Height, '500px')
+            manager.set('height', '500px')
 
             assert.equal(
                 root.innerHTML,
@@ -103,7 +101,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.viewBox = manager.viewBox.move(new V2D(10, 10))
+            manager.viewBox = manager.viewBox.move(10, 10)
 
             assert.equal(
                 root.innerHTML,
@@ -115,7 +113,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.viewBox = manager.viewBox.move(new V2D(-6, -4))
+            manager.viewBox = manager.viewBox.move(-6, -4)
 
             assert.equal(
                 root.innerHTML,
@@ -127,7 +125,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.viewBox = manager.viewBox.move(new V2D(-10, -10))
+            manager.viewBox = manager.viewBox.move(-10, -10)
 
             assert.equal(
                 root.innerHTML,
@@ -139,7 +137,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.viewBox = manager.viewBox.move(new V2D(6, 4))
+            manager.viewBox = manager.viewBox.move(6, 4)
 
             assert.equal(
                 root.innerHTML,
@@ -165,7 +163,7 @@ describe('SVG Manager', function () {
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.ensureDefinition(new SVGNode(SVGTag.G))
+            manager.ensureDefinition(new SVGNode('g'))
 
             assert.notEqual(
                 root.innerHTML,
@@ -216,9 +214,8 @@ describe('SVG Manager', function () {
             manager.clean()
 
             manager.render(
-                new SVGNode(SVGTag.A)
-                    .set(SVGAttr.AttributeName, 'test_value')
-                    .setText('Testing text!')
+                new SVGNode('a')
+                    .set('attributeName', 'test_value')
                     .name('test_render'),
             )
 
@@ -228,7 +225,6 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" class="${manager_id}-named-test_render">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -236,11 +232,11 @@ describe('SVG Manager', function () {
             manager.clean()
 
             manager.render(
-                new SVGNode(SVGTag.A)
-                    .set(SVGAttr.AttributeName, 'test_value 1')
+                new SVGNode('a')
+                    .set('attributeName', 'test_value 1')
                     .name('test_render')
-                    .setXY(new V2D(7, 24))
-                    .setText('Testing text!'),
+                    .x(7)
+                    .y(24),
             )
 
             assert.equal(
@@ -249,7 +245,6 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value 1" x="7" y="24" class="${manager_id}-named-test_render">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -258,9 +253,10 @@ describe('SVG Manager', function () {
         it('Should be able to ensure definitions', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
             const hash = test_node.toHash()
 
@@ -271,7 +267,6 @@ describe('SVG Manager', function () {
                 `
                 <defs>
                     <a attributeName="test_value" id="${manager.id}-figure-${hash}">
-                        Testing text!
                     </a>
                 </defs>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -281,11 +276,12 @@ describe('SVG Manager', function () {
         it('Should be able to render items', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            manager.render(test_node.setXY(new V2D(7, 24)))
+            manager.render(test_node.x(7).y(24))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -294,7 +290,6 @@ describe('SVG Manager', function () {
                     
                 </defs>
                 <a attributeName="test_value" x="7" y="24">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -303,15 +298,14 @@ describe('SVG Manager', function () {
         it('Should be able to render multiple items', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            const test_node_2 = new SVGNode(SVGTag.G)
-                .set(SVGAttr.AttributeName, 'value')
-                .setText('text value')
+            const test_node_2 = new SVGNode('g').set('attributeName', 'value')
 
-            manager.render(test_node.setXY(new V2D(5, 6)))
+            manager.render(test_node.x(5).y(6))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -319,22 +313,19 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" x="5" y="6">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
-            manager.render(test_node_2.setXY(new V2D(2, 10)))
+            manager.render(test_node_2.x(2).y(10))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `<defs>
                 </defs>
                 <a attributeName="test_value" x="5" y="6">
-                    Testing text!
                 </a>
                 <g attributeName="value" x="2" y="10">
-                    text value
                 </g>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -343,11 +334,12 @@ describe('SVG Manager', function () {
         it('Should be able to render a named item', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
+            manager.render(test_node.x(5).y(6).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -355,7 +347,6 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -364,11 +355,12 @@ describe('SVG Manager', function () {
         it('Should be able to remove a named item', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
+            manager.render(test_node.x(5).y(6).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -376,7 +368,6 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -395,11 +386,12 @@ describe('SVG Manager', function () {
         it('Should be able to move a named item', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            manager.render(test_node.setXY(new V2D(5, 6)).name('test_item'))
+            manager.render(test_node.x(5).y(6).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -407,15 +399,12 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
 
             const item = manager.fetchNamed('test_item')
-            if (item === null) return
-            item.setAttribute(SVGAttr.X, '10')
-            item.setAttribute(SVGAttr.Y, '30')
+            item.x(10).y(30)
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -423,7 +412,6 @@ describe('SVG Manager', function () {
                 <defs>
                 </defs>
                 <a attributeName="test_value" x="10" y="30" class="${manager_id}-named-test_item">
-                    Testing text!
                 </a>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
             )
@@ -432,20 +420,18 @@ describe('SVG Manager', function () {
         it('Should be able to render from id', function () {
             manager.clean()
 
-            const test_node = new SVGNode(SVGTag.A)
-                .set(SVGAttr.AttributeName, 'test_value')
-                .setText('Testing text!')
+            const test_node = new SVGNode('a').set(
+                'attributeName',
+                'test_value',
+            )
 
-            const hash = test_node.toHash()
-
-            manager.ensureDefinition(test_node)
+            const hash = manager.ensureDefinition(test_node)
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
+                    <a attributeName="test_value" id="${hash}">
                     </a>
                 </defs>
                 `.replace(/  |\r\n|\n|\r/gm, ''),
@@ -453,8 +439,8 @@ describe('SVG Manager', function () {
 
             manager.renderId(hash, {
                 attributes: [
-                    { attrName: SVGAttr.X, attrValue: 23 },
-                    { attrName: SVGAttr.Y, attrValue: 55 },
+                    { attrName: 'x', attrValue: 23 },
+                    { attrName: 'y', attrValue: 55 },
                 ],
             })
 
@@ -462,8 +448,7 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${manager_id}-figure-${hash}">
-                        Testing text!
+                    <a attributeName="test_value" id="${hash}">
                     </a>
                 </defs>
                 <use href="#${manager_id}-figure-${hash}" x="23" y="55"></use>

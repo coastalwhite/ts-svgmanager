@@ -1,5 +1,6 @@
 {
     "name": "examples",
+    "type": "commonjs",
     "version": "1.0.0",
     "description": "A Typescript SVG Manager - Examples",
     "main": "index.js",
@@ -7,15 +8,15 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "build": "cd ../../; tsc; cd readme-content/examples; webpack"
+        "build": "webpack"
     },
     "dependencies": {
-        "ts-svgmanager": "1.0.3"
+        "ts-svgmanager": "2.0.0-beta16"
     },
     "devDependencies": {
-        "ts-loader": "^8.0.2",
+        "ts-loader": "^8.0.4",
         "typescript": "^3.9.7",
-        "webpack": "^4.44.1",
+        "webpack": "^4.44.2",
         "webpack-cli": "^3.3.12"
     }
 }

@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import V2D from '../src/V2D'
+import V2D from '../src/definitions/V2D'
 
 describe('V2D', function () {
     describe('Basis tests', function () {
