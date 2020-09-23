@@ -1,4 +1,4 @@
-import { V2D } from '..'
+import V2D from '../definitions/V2D'
 
 /**
  * An Helper class for for the SVG ViewBox
@@ -21,8 +21,8 @@ class ViewBox {
      * Move the position of the ViewBox
      * @param by Vector to move the position of the viewbox with
      */
-    public move(by: V2D): ViewBox {
-        this._minPosition = this._minPosition.add(by)
+    public move(byX: number, byY: number): ViewBox {
+        this._minPosition = this._minPosition.add(new V2D(byX, byY))
 
         return this
     }
@@ -31,8 +31,8 @@ class ViewBox {
      * Sets the position of the ViewBox
      * @param v New position of the viewbox
      */
-    public setPosition(v: V2D): ViewBox {
-        this._minPosition = v
+    public setPosition(x: number, y: number): ViewBox {
+        this._minPosition = new V2D(x, y)
 
         return this
     }
@@ -40,16 +40,16 @@ class ViewBox {
     /**
      * Fetch the ViewBox Position
      */
-    public getPosition(): V2D {
-        return this._minPosition
+    public getPosition(): { x: number; y: number } {
+        return { x: this._minPosition.x(), y: this._minPosition.y() }
     }
 
     /**
      * Sets the dimensions of the ViewBox
      * @param v New dimensions of the ViewBox as V2D(Width, Height)
      */
-    public setDimensions(v: V2D): ViewBox {
-        this._dimensions = v
+    public setDimensions(width: number, height: number): ViewBox {
+        this._dimensions = new V2D(width, height)
 
         return this
     }

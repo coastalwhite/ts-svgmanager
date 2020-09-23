@@ -17,7 +17,7 @@ function htmlToSVGNode(elem: HTMLElement): SVGNode {
         node = node.append(htmlToSVGNode(child))
     })
 
-    if (elem.innerText !== undefined) node = node.setText(elem.innerText)
+    if (elem.innerText !== undefined) node.innerText = elem.innerText
 
     return node
 }

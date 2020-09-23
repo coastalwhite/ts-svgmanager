@@ -1,4 +1,4 @@
-import SVGNode, { AttributeValue } from './SVGNode'
+import SVGNode, { AttributeValue, SVGResponsiveNode } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -17,6 +17,10 @@ const TAG_PREFIX = 'tag-'
 const DEFAULT_SVG_WIDTH = '500px'
 const DEFAULT_SVG_HEIGHT = '500px'
 const DEFAULT_VIEWBOX = '0 0 100 100'
+
+export type SVGManagerDefinition = string & { isSvgManagerDef: true }
+export type SVGManagerName = string & { isSvgManagerName: true }
+export type SVGManagerTag = string & { isSvgManagerTag: true }
 
 /**
  * A class used to manage SVG's in order to minimize definitions
@@ -39,31 +43,55 @@ export default class SVGManager {
         return this._managerid + '-' + str
     }
 
-    private toDefId(elementId: string): string {
-        return this.prefixManagerId(DEFINITION_PREFIX + elementId)
+    private toDefId(elementId: string): SVGManagerDefinition {
+        return this.prefixManagerId(
+            DEFINITION_PREFIX + elementId,
+        ) as SVGManagerDefinition
     }
 
-    private getName(name: string): string {
-        return this.prefixManagerId(NAME_PREFIX + name)
+    private toNameClass(name: string): SVGManagerName {
+        return this.prefixManagerId(NAME_PREFIX + name) as SVGManagerName
     }
 
-    private getTag(tag: string): string {
-        return this.prefixManagerId(TAG_PREFIX + tag)
+    private toTagClass(tag: string): SVGManagerTag {
+        return this.prefixManagerId(TAG_PREFIX + tag) as SVGManagerTag
     }
 
-    private addNamesToElem(el: SVGElement, names: string[]): SVGElement {
-        if (names.some((name) => this._names.includes(name))) return el
+    public getNamesFromElem(el: SVGElement): string[] {
+        const prefix = this.prefixManagerId(NAME_PREFIX)
+
+        return Array.from(el.classList)
+            .filter((className) => className.startsWith(prefix))
+            .map((name) => name.substr(0, prefix.length))
+    }
+
+    public getTagsFromElem(el: SVGElement): string[] {
+        const prefix = this.prefixManagerId(TAG_PREFIX)
+
+        return Array.from(el.classList)
+            .filter((className) => className.startsWith(prefix))
+            .map((name) => name.substr(0, prefix.length))
+    }
+
+    public addNamesToElem(el: SVGElement, names: string[]): SVGElement {
+        this.getNamesFromElem(el).forEach((name) => {
+            el.classList.remove(name)
+        })
 
         names
             .filter((name) => !this._names.includes(name))
             .forEach((name) => {
-                el.classList.add(this.getName(name))
+                el.classList.add(this.toNameClass(name))
                 this._names.push(name)
             })
         return el
     }
-    private addTagsToElem(el: SVGElement, tags: string[]): SVGElement {
-        tags.forEach((tag) => el.classList.add(this.getTag(tag)))
+    public addTagsToElem(el: SVGElement, tags: string[]): SVGElement {
+        this.getTagsFromElem(el).forEach((tag) => {
+            el.classList.remove(tag)
+        })
+
+        tags.forEach((tag) => el.classList.add(this.toTagClass(tag)))
         return el
     }
 
@@ -71,15 +99,15 @@ export default class SVGManager {
         return this._defintions.includes(elementId)
     }
 
-    private addDefintion(element: SVGNode): string {
-        const elementId = element.toHash()
+    private addDefintion(element: SVGNode): SVGManagerDefinition {
+        const definitionId = this.toDefId(element.toHash())
 
-        this._defintions.push(elementId)
+        this._defintions.push(definitionId)
         this.defsElement().appendChild(
-            element.set('id', this.toDefId(elementId)).toHTML(),
+            this.addENT(element.set('id', definitionId).toHTML(), element),
         )
 
-        return elementId
+        return definitionId
     }
 
     private addEventsToElem(
@@ -109,11 +137,11 @@ export default class SVGManager {
      * Adds events, names, tags recursively
      */
     private addENT(head: SVGElement, node: SVGNode): SVGElement {
-        this.addEventsToElem(head, node.getEvents())
-        this.addNamesToElem(head, node.getNames())
-        this.addTagsToElem(head, node.getTags())
+        this.addEventsToElem(head, node.events)
+        this.addNamesToElem(head, node.names)
+        this.addTagsToElem(head, node.tags)
 
-        const nodeChildren = node.getChildren()
+        const nodeChildren = node.children
         const headChildren = Array.from(head.children) as SVGElement[]
         if (nodeChildren.length === headChildren.length)
             headChildren.forEach((child, index) =>
@@ -176,7 +204,7 @@ export default class SVGManager {
      * - height of 500px
      * @param rootId The parent id
      */
-    public init(rootId: string): SVGManager {
+    public init(rootId: string): this {
         const rootElement = document.getElementById(rootId)
 
         this._rootElement = rootElement
@@ -214,14 +242,14 @@ export default class SVGManager {
      * Adds the definition of element to list of definitions,
      * So that next time, when it is used, the element can rendered using the definition.
      */
-    public ensureDefinition(element: SVGNode): string {
+    public ensureDefinition(element: SVGNode): SVGManagerDefinition {
         const elementId = element.toHash()
 
         if (!this.doesDefExist(elementId)) {
             this.addDefintion(element)
         }
 
-        return elementId
+        return this.toDefId(elementId)
     }
 
     /**
@@ -235,18 +263,20 @@ export default class SVGManager {
      * @param args Optional arguments from the rendering, including the names, tags, attributes and events
      */
     public renderId(
-        elementId: string,
+        definition: SVGManagerDefinition,
         args?: {
             names?: string[]
             tags?: string[]
             attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
             events?: EventDefinition[]
         },
-    ) {
-        if (!this.doesDefExist(elementId))
+    ): this {
+        if (!this.doesDefExist(definition))
             throw new Error("Tried to render an Id that doesn't exist")
 
-        this.addUse(this.toDefId(elementId), args)
+        this.addUse(this.toDefId(definition), args)
+
+        return this
     }
 
     /**
@@ -255,8 +285,10 @@ export default class SVGManager {
      * # Note
      * Will add the figure to definitions if not already there.
      */
-    public render(element: SVGNode) {
+    public render(element: SVGNode): this {
         this.addFigure(element)
+
+        return this
     }
 
     /**
@@ -264,7 +296,7 @@ export default class SVGManager {
      * Multiple functions can be set for the same event.
      * Then, it returns itself, for easy programming.
      */
-    public addEvent(event: SVGEvent, func: EventFunc): SVGManager {
+    public addEvent(event: SVGEvent, func: EventFunc): this {
         this._svgElement.addEventListener(event.substr(2), func)
         return this
     }
@@ -273,31 +305,35 @@ export default class SVGManager {
      * Removes a named figure from the DOM\
      * If named item does not exist, it will not do anything.
      */
-    public removeNamed(name: string) {
+    public removeNamed(name: string): this {
         const items = Array.from(
-            this._svgElement.getElementsByClassName(this.getName(name)),
+            this._svgElement.getElementsByClassName(this.toNameClass(name)),
         )
         items.forEach((item) => this._svgElement.removeChild(item))
+
+        return this
     }
 
     /**
      * Fetches the DOM element that belongs to a named node
      */
-    public fetchNamed(name: string): SVGElement | null {
-        return (
-            (Array.from(
-                this._svgElement.getElementsByClassName(this.getName(name)),
-            )[0] as SVGElement) || null
-        )
+    public fetchNamed(name: string): SVGResponsiveNode | null {
+        const items = Array.from(
+            this._svgElement.getElementsByClassName(this.toNameClass(name)),
+        ).map((el) => new SVGResponsiveNode(el as SVGElement, this))
+
+        if (items.length === 0) return null
+
+        return items[0]
     }
 
     /**
      * Fetches all DOM elements in the SVG tagged with tag
      */
-    public fetchTagged(tag: string): SVGElement[] {
+    public fetchTagged(tag: string): SVGResponsiveNode[] {
         return Array.from(
-            this._svgElement.getElementsByClassName(this.getTag(tag)),
-        ) as SVGElement[]
+            this._svgElement.getElementsByClassName(this.toTagClass(tag)),
+        ).map((el) => new SVGResponsiveNode(el as SVGElement, this))
     }
 
     /**
@@ -342,7 +378,7 @@ export default class SVGManager {
      * @param attr Attribute name
      * @param value Set value
      */
-    public set(attr: SVGAttribute, value: AttributeValue): SVGManager {
+    public set(attr: SVGAttribute, value: AttributeValue): this {
         this._svgElement.setAttribute(attr, value.toString())
 
         return this
@@ -351,16 +387,7 @@ export default class SVGManager {
     /**
      * Returns the unique identifier connected to this SVGManager
      */
-    get id(): string {
+    public get id(): string {
         return this._managerid
-    }
-
-    /**
-     * Returns the DOM-id of a definition\
-     * Used with e.g. linear gradients
-     * @param elementId manager id of the element
-     */
-    public mentionDefinition(elementId: string): string {
-        return this.toDefId(elementId)
     }
 }

@@ -1,10 +1,5 @@
 import SVGAnimate, { SVGAnimateMotion } from './Animate'
-import {
-    SVGLinGradient,
-    SVGRadGradient,
-    GradientStop,
-    mentionGradient,
-} from './Gradient'
+import { SVGLinGradient, SVGRadGradient, GradientStop } from './Gradient'
 import {
     fetchSVGNode,
     fetchSVGNodeSync,
@@ -22,7 +17,6 @@ export {
     SVGLinGradient,
     SVGRadGradient,
     GradientStop,
-    mentionGradient,
     fetchSVGNode,
     fetchSVGNodeSync,
     parseSVGViewBox,

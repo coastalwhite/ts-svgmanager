@@ -1,6 +1,6 @@
-import V2D from '../V2D'
 import PathData from './PathData'
 import SVGNode from '../SVGNode'
+import V2D from '../definitions/V2D'
 
 /**
  * Returns a SVGNode containing a circle with radius *r* and
@@ -16,12 +16,11 @@ import SVGNode from '../SVGNode'
  */
 export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
     new SVGNode('circle')
-        .set('cx', cx || 0)
-        .set('cy', cy || 0)
-        .set('stroke', '#000')
-        .set('stroke-width', '1px')
-        .set('fill', 'transparent')
-        .set('r', r.toString())
+        .cx(cx || 0)
+        .cy(cy || 0)
+        .stroke('#000', '1px')
+        .fill('transparent')
+        .set('r', r)
 
 /**
  * Returns a SVGNode containing a line between two
@@ -33,14 +32,18 @@ export const circle = (r: number, cx?: number, cy?: number): SVGNode =>
  *
  * These can all be overwritten using the SVGNode.set() method
  */
-export const line = (from: V2D, to: V2D): SVGNode =>
+export const line = (
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+): SVGNode =>
     new SVGNode('line')
-        .set('x1', from.x().toString())
-        .set('y1', from.y().toString())
-        .set('x2', to.x().toString())
-        .set('y2', to.y().toString())
-        .set('stroke', '#000')
-        .set('stroke-width', '1px')
+        .set('x1', fromX.toString())
+        .set('y1', fromY.toString())
+        .set('x2', toX.toString())
+        .set('y2', toY.toString())
+        .stroke('#000', '1px')
 
 /**
  * Returns a SVGNode containing a path with lines between multiple
@@ -53,17 +56,16 @@ export const line = (from: V2D, to: V2D): SVGNode =>
  *
  * These can all be overwritten using the SVGNode.set() method
  */
-export const lines = (points: V2D[]): SVGNode => {
-    const pathData = new PathData().moveTo(points[0].x(), points[0].y())
+export const lines = (points: { x: number; y: number }[]): SVGNode => {
+    const pathData = new PathData().moveTo(points[0].x, points[0].y)
 
     points.shift()
-    points.forEach((point) => pathData.lineTo(point.x(), point.y()))
+    points.forEach((point) => pathData.lineTo(point.x, point.y))
 
     return new SVGNode('path')
         .set('d', pathData.toString())
-        .set('stroke', '#000')
-        .set('stroke-width', '1px')
-        .set('fill', 'none')
+        .stroke('#000', '1px')
+        .fill('none')
 }
 
 /**
@@ -77,17 +79,23 @@ export const lines = (points: V2D[]): SVGNode => {
  *
  * These can all be overwritten using the SVGNode.set() method
  */
-export const curve = (from: V2D, to: V2D, control: V2D): SVGNode =>
+export const curve = (
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    controlX: number,
+    controlY: number,
+): SVGNode =>
     new SVGNode('path')
         .set(
             'd',
             new PathData()
-                .moveTo(from.x(), from.y())
-                .quadraticCurveTo(to.x(), to.y(), control.x(), control.y())
+                .moveTo(fromX, fromY)
+                .quadraticCurveTo(toX, toY, controlX, controlY)
                 .toString(),
         )
-        .set('stroke', '#000')
-        .set('stroke-width', '1px')
+        .stroke('#000', '1px')
 
 /**
  * Returns a SVGNode containing a quadratic-curve between two
@@ -102,7 +110,15 @@ export const curve = (from: V2D, to: V2D, control: V2D): SVGNode =>
  *
  * These can all be overwritten using the SVGNode.set() method
  */
-export const curveCalc = (from: V2D, to: V2D, curving: number): SVGNode => {
+export const curveCalc = (
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    curving: number,
+): SVGNode => {
+    const from = new V2D(fromX, fromY),
+        to = new V2D(toX, toY)
     const middle = from.middle(to)
     const dif = to.sub(from)
     let normal = new V2D(-1 * dif.y(), dif.x())
@@ -126,7 +142,6 @@ export const curveCalc = (from: V2D, to: V2D, curving: number): SVGNode => {
                 )
                 .toString(),
         )
-        .set('fill', 'transparent')
-        .set('stroke', '#000')
-        .set('stroke-width', '1px')
+        .fill('transparent')
+        .stroke('#000', '1px')
 }

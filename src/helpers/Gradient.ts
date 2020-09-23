@@ -1,4 +1,3 @@
-import SVGManager from '../SVGManager'
 import SVGNode from '../SVGNode'
 
 export class GradientStop extends SVGNode {
@@ -66,24 +65,6 @@ export class SVGRadGradient extends SVGNode {
      */
     public spreadMethod(value: 'pad' | 'reflect' | 'repeat'): SVGRadGradient {
         this.set('spreadMethod', value)
-        return this
-    }
-
-    /**
-     * Set the circle center x attribute of the Radial Gradient
-     * @param length Length from 0-1
-     */
-    public cx(length: number): SVGRadGradient {
-        this.set('cx', length)
-        return this
-    }
-
-    /**
-     * Set the circle center y attribute of the Radial Gradient
-     * @param length Length from 0-1
-     */
-    public cy(length: number): SVGRadGradient {
-        this.set('cy', length)
         return this
     }
 
@@ -207,8 +188,4 @@ export class SVGLinGradient extends SVGNode {
         this.set('y2', length)
         return this
     }
-}
-
-export function mentionGradient(manager: SVGManager, definitionId: string) {
-    return 'url(#' + manager.mentionDefinition(definitionId) + ')'
 }
