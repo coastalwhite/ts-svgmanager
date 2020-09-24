@@ -22,7 +22,7 @@ export type AttributeMap = Map<SVGAttribute, AttributeValue>
  */
 export default class SVGNode {
     protected _tagName: SVGTag
-    protected _attributes: Map<SVGAttribute, AttributeValue>
+    protected _attributes: AttributeMap
     protected _children: SVGNode[]
     protected _innerText: string
 
@@ -51,7 +51,7 @@ export default class SVGNode {
         return this._children
     }
 
-    public get attributes(): Map<SVGAttribute, AttributeValue> {
+    public get attributes(): AttributeMap {
         return this._attributes
     }
 
@@ -98,12 +98,7 @@ export default class SVGNode {
         width?: AttributeValue,
         opacity?: AttributeValue,
     ): this {
-        this.set('stroke', 'url(#' + definition + ')')
-
-        if (width !== undefined) this.set('stroke-width', width)
-        if (opacity !== undefined) this.set('stroke-opacity', opacity)
-
-        return this
+        return this.stroke('url(#' + definition + ')', width, opacity)
     }
 
     public fill(color: AttributeValue, opacity?: AttributeValue): this {
@@ -118,11 +113,7 @@ export default class SVGNode {
         definition: SVGManagerDefinition,
         opacity?: AttributeValue,
     ): this {
-        this.set('fill', 'url(#' + definition + ')')
-
-        if (opacity !== undefined) this.set('fill-opacity', opacity)
-
-        return this
+        return this.fill('url(#' + definition + ')', opacity)
     }
 
     public x(val: AttributeValue): this {
@@ -158,7 +149,7 @@ export default class SVGNode {
         return this
     }
 
-    public get(attr: SVGAttribute): AttributeValue {
+    public get(attr: SVGAttribute): AttributeValue | undefined {
         return this._attributes.get(attr)
     }
 
@@ -225,7 +216,10 @@ export default class SVGNode {
     }
 
     public class(className: string): this {
-        this.set('class', this.get('class') + ' ' + className)
+        let currentClass = (this.get('class') || '').toString()
+        if (currentClass.length > 0) currentClass += ' '
+
+        this.set('class', currentClass + className)
 
         return this
     }
@@ -243,54 +237,104 @@ export default class SVGNode {
     }
 
     public equals(node: SVGNode): boolean {
-        if (!this.shallowEquals(node)) return false
-
-        if (
-            this.names.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0)) !==
-            node.names.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0))
+        return (
+            this.shallowEquals(node) &&
+            this.areNamesEqual(node.names) &&
+            this.areTagsEqual(node.tags)
         )
-            return false
+    }
 
-        if (
-            this.tags.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0)) !==
-            node.tags.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0))
+    private areNamesEqual(names: string[]): boolean {
+        if (this.names.length !== names.length) return false
+
+        let sortedThisArray = this.names.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
         )
-            return false
+        let sortedNodeArray = names.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
+        )
 
-        if (this.innerText !== node.innerText) return false
+        while (sortedThisArray.length !== 0) {
+            if (sortedThisArray[0] !== sortedNodeArray[0]) return false
+            sortedThisArray = sortedThisArray.slice(1)
+            sortedNodeArray = sortedNodeArray.slice(1)
+        }
 
         return true
+    }
+
+    private areTagsEqual(tags: string[]): boolean {
+        if (this.tags.length !== tags.length) return false
+
+        let sortedThisArray = this.tags.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
+        )
+        let sortedNodeArray = tags.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
+        )
+
+        while (sortedThisArray.length !== 0) {
+            if (sortedThisArray[0] !== sortedNodeArray[0]) return false
+            sortedThisArray = sortedThisArray.slice(1)
+            sortedNodeArray = sortedNodeArray.slice(1)
+        }
+
+        return true
+    }
+
+    private areAttributeMapsEqual(attrMap: AttributeMap): boolean {
+        const thisArray = Array.from(this.attributes).map(([attr, value]) => [
+            attr,
+            value.toString(),
+        ])
+        const nodeArray = Array.from(attrMap).map(([attr, value]) => [
+            attr,
+            value.toString(),
+        ])
+
+        if (thisArray.length !== nodeArray.length) return false
+
+        const sortedThisArray = thisArray.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
+        )
+        const sortedNodeArray = nodeArray.sort((a, b) =>
+            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
+        )
+
+        while (sortedThisArray.length !== 0) {
+            const thisPop = sortedThisArray.pop()
+            const nodePop = sortedNodeArray.pop()
+
+            if (!(thisPop[0] === nodePop[0] && thisPop[1] === nodePop[1]))
+                return false
+        }
+
+        return true
+    }
+
+    private areChildrenEqual(children: SVGNode[]): boolean {
+        if (this.children.length !== children.length) return false
+
+        return this.children.every((child, index) =>
+            child.equals(children[index]),
+        )
     }
 
     public shallowEquals(node: SVGNode): boolean {
-        if (
-            Array.from(this.attributes).sort((a, b) =>
-                a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-            ) !==
-            Array.from(node.attributes).sort((a, b) =>
-                a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-            )
+        return (
+            this.tagName === node.tagName &&
+            this.innerText === node.innerText &&
+            this.areAttributeMapsEqual(node.attributes) &&
+            this.areChildrenEqual(node.children)
         )
-            return false
-
-        if (
-            !(
-                this.children.length === node.children.length &&
-                this.children.some((child, index) =>
-                    child.equals(node.children[index]),
-                )
-            )
-        )
-            return false
-
-        if (this.innerText !== node.innerText) return false
-
-        return true
     }
 
     public removeChild(index: number): this {
+        if (index >= this.children.length || index < 0)
+            throw 'removeChild: index out of range'
+
         this._children = [
-            ...this._children.slice(0, index - 1),
+            ...this._children.slice(0, index),
             ...this._children.slice(index + 1),
         ]
 
@@ -299,6 +343,16 @@ export default class SVGNode {
 
     public removeChildren(): this {
         this._children = []
+
+        return this
+    }
+
+    public clearEvents(eventType?: SVGEvent): this {
+        if (eventType === undefined) this._events = []
+        else
+            this._events = this.events.filter(
+                ({ eventType: eType }) => eType !== eventType,
+            )
 
         return this
     }
@@ -346,11 +400,23 @@ export default class SVGNode {
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((childHash) => md5.appendStr('child' + childHash))
 
+        this.names
+            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
+            .forEach((name) => {
+                md5.appendStr('name' + name)
+            })
+
+        this.tags
+            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
+            .forEach((tag) => {
+                md5.appendStr('tag' + tag)
+            })
+
         return md5.end() as string
     }
 }
 
-export class SVGResponsiveNode extends SVGNode {
+export class SVGLinkedNode extends SVGNode {
     private _element: SVGElement
     private _manager: SVGManager
 
@@ -359,15 +425,18 @@ export class SVGResponsiveNode extends SVGNode {
 
         this._names = manager.getNamesFromElem(element)
         this._tags = manager.getTagsFromElem(element)
+
+        this._element = element
+        this._manager = manager
     }
 
     public get children() {
         return Array.from(this._element.children).map(
-            (el) => new SVGResponsiveNode(el as SVGElement, this._manager),
+            (el) => new SVGLinkedNode(el as SVGElement, this._manager),
         )
     }
 
-    public get attributes(): Map<SVGAttribute, AttributeValue> {
+    public get attributes(): AttributeMap {
         return new Map(
             Array.from(this._element.attributes).map((attr: Attr) => [
                 attr.name as SVGAttribute,
@@ -412,7 +481,7 @@ export class SVGResponsiveNode extends SVGNode {
         return this
     }
 
-    public DOMElement(): SVGElement {
+    public get element(): SVGElement {
         return this._element
     }
 
@@ -438,13 +507,25 @@ export class SVGResponsiveNode extends SVGNode {
     }
 
     public removeChild(index: number): this {
-        this._element.removeChild(this._element.children[index])
+        this._element.removeChild(this.element.children[index])
 
         return this
     }
 
     public removeChildren(): this {
-        this._element.innerHTML = this.innerText
+        this.element.innerHTML = this.innerText
+
+        return this
+    }
+
+    public clearEvents(eventType?: SVGEvent): this {
+        if (eventType !== undefined)
+            throw 'SVGLinkedNode: Unable remove elements from certain type in Linked Nodes'
+
+        this._events = []
+
+        const copy = this.copy()
+        this.element.parentElement.replaceChild(copy.toHTML(), this.element)
 
         return this
     }

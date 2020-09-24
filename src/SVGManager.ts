@@ -1,4 +1,4 @@
-import SVGNode, { AttributeValue, SVGResponsiveNode } from './SVGNode'
+import SVGNode, { AttributeValue, SVGLinkedNode } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -62,7 +62,7 @@ export default class SVGManager {
 
         return Array.from(el.classList)
             .filter((className) => className.startsWith(prefix))
-            .map((name) => name.substr(0, prefix.length))
+            .map((name) => name.substr(prefix.length))
     }
 
     public getTagsFromElem(el: SVGElement): string[] {
@@ -70,7 +70,7 @@ export default class SVGManager {
 
         return Array.from(el.classList)
             .filter((className) => className.startsWith(prefix))
-            .map((name) => name.substr(0, prefix.length))
+            .map((name) => name.substr(prefix.length))
     }
 
     public addNamesToElem(el: SVGElement, names: string[]): SVGElement {
@@ -296,7 +296,7 @@ export default class SVGManager {
      * Multiple functions can be set for the same event.
      * Then, it returns itself, for easy programming.
      */
-    public addEvent(event: SVGEvent, func: EventFunc): this {
+    public on(event: SVGEvent, func: EventFunc): this {
         this._svgElement.addEventListener(event.substr(2), func)
         return this
     }
@@ -317,10 +317,10 @@ export default class SVGManager {
     /**
      * Fetches the DOM element that belongs to a named node
      */
-    public fetchNamed(name: string): SVGResponsiveNode | null {
+    public fetchNamed(name: string): SVGLinkedNode | null {
         const items = Array.from(
             this._svgElement.getElementsByClassName(this.toNameClass(name)),
-        ).map((el) => new SVGResponsiveNode(el as SVGElement, this))
+        ).map((el) => new SVGLinkedNode(el as SVGElement, this))
 
         if (items.length === 0) return null
 
@@ -330,10 +330,10 @@ export default class SVGManager {
     /**
      * Fetches all DOM elements in the SVG tagged with tag
      */
-    public fetchTagged(tag: string): SVGResponsiveNode[] {
+    public fetchTagged(tag: string): SVGLinkedNode[] {
         return Array.from(
             this._svgElement.getElementsByClassName(this.toTagClass(tag)),
-        ).map((el) => new SVGResponsiveNode(el as SVGElement, this))
+        ).map((el) => new SVGLinkedNode(el as SVGElement, this))
     }
 
     /**
