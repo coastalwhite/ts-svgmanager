@@ -86,8 +86,8 @@ export function ellipse(
     return new SVGNode('rect')
         .cx(cx || 0)
         .cy(cy || 0)
-        .set('rx', cx)
-        .set('ry', cy)
+        .set('rx', rx)
+        .set('ry', ry)
         .stroke('#000', '1px')
         .fill('none')
 }

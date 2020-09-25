@@ -27,10 +27,6 @@ describe('SVG Node', function () {
                 assert.equal(new SVGNode('a').innerText, '')
             })
 
-            it('names', function () {
-                assert.equal(new SVGNode('a').names.length, 0)
-            })
-
             it('tags', function () {
                 assert.equal(new SVGNode('a').tags.length, 0)
             })
@@ -87,7 +83,6 @@ describe('SVG Node', function () {
 
             it('Other properties are not affected', function () {
                 assert.equal(new SVGNode('a').set('x', 123).children.length, 0)
-                assert.equal(new SVGNode('a').set('x', 123).names.length, 0)
                 assert.equal(new SVGNode('a').set('x', 123).tags.length, 0)
                 assert.equal(new SVGNode('a').set('x', 123).events.length, 0)
                 assert.equal(new SVGNode('a').set('x', 123).tagName, 'a')
@@ -186,7 +181,6 @@ describe('SVG Node', function () {
                         .length,
                     0,
                 )
-                assert.equal(new SVGNode('a').append(circle(5)).names.length, 0)
                 assert.equal(new SVGNode('a').append(circle(5)).tags.length, 0)
                 assert.equal(
                     new SVGNode('a').append(circle(5)).events.length,
@@ -320,33 +314,6 @@ describe('SVG Node', function () {
                     new SVGNode('a')
                         .text('xyz')
                         .equals(new SVGNode('a').text('xyza')),
-                )
-            })
-
-            it('differentiate names', function () {
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('x')
-                        .equals(new SVGNode('a').name('x')),
-                )
-
-                assert.isFalse(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .equals(new SVGNode('a').name('x')),
-                )
-
-                assert.isFalse(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .equals(new SVGNode('a').name('xyza')),
-                )
-
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .name('zyx')
-                        .equals(new SVGNode('a').name('zyx').name('xyz')),
                 )
             })
 
@@ -512,35 +479,6 @@ describe('SVG Node', function () {
                 )
             })
 
-            it('not differentiate names', function () {
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('x')
-                        .shallowEquals(new SVGNode('a').name('x')),
-                )
-
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .shallowEquals(new SVGNode('a').name('x')),
-                )
-
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .shallowEquals(new SVGNode('a').name('xyza')),
-                )
-
-                assert.isTrue(
-                    new SVGNode('a')
-                        .name('xyz')
-                        .name('zyx')
-                        .shallowEquals(
-                            new SVGNode('a').name('zyx').name('xyz'),
-                        ),
-                )
-            })
-
             it('not differentiate tags', function () {
                 assert.isTrue(
                     new SVGNode('a')
@@ -657,18 +595,18 @@ describe('SVG Node', function () {
 
     describe('Other setters - on/text/animate/class/name/tag', function () {
         it('on', function () {
-            const f = () => 'hi'
+            const f = (): string => 'hi'
             assert.equal(circle(0).on('click', f).events.length, 1)
-            assert.equal(circle(0).on('click', f).events[0].eventType, 'click')
+            assert.equal(circle(0).on('click', f).events[0].eventName, 'click')
             assert.equal(circle(0).on('click', f).events[0].func, f)
 
-            const g = () => 'bye'
+            const g = (): string => 'bye'
             assert.equal(
                 circle(0).on('click', f).on('mouseover', g).events.length,
                 2,
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[0].eventType,
+                circle(0).on('click', f).on('mouseover', g).events[0].eventName,
                 'click',
             )
             assert.equal(
@@ -676,7 +614,7 @@ describe('SVG Node', function () {
                 f,
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[1].eventType,
+                circle(0).on('click', f).on('mouseover', g).events[1].eventName,
                 'mouseover',
             )
             assert.equal(
@@ -703,25 +641,6 @@ describe('SVG Node', function () {
             assert.equal(
                 circle(0).class('class1').class('class2').get('class'),
                 'class1 class2',
-            )
-        })
-
-        it('name', function () {
-            assert.equal(circle(0).name('name1').names.length, 1)
-            assert.equal(circle(0).name('name1').names[0], 'name1')
-            assert.equal(circle(0).name('name1').name('name2').names.length, 2)
-            assert.equal(
-                circle(0).name('name1').name('name2').names[0],
-                'name1',
-            )
-            assert.equal(
-                circle(0).name('name1').name('name2').names[1],
-                'name2',
-            )
-
-            assert.equal(
-                Array.from(new SVGNode('a').name('test').attributes).length,
-                0,
             )
         })
 
@@ -947,8 +866,8 @@ describe('SVG Node', function () {
                         .on('click', () => 'test')
                         .events.every(
                             (event, index) =>
-                                el2.events[index].eventType ===
-                                    event.eventType &&
+                                el2.events[index].eventName ===
+                                    event.eventName &&
                                 el2.events[index].func === event.func,
                         ),
                 )
@@ -956,14 +875,6 @@ describe('SVG Node', function () {
                     el1.on('click', () => 'test2').events.length,
                     el1Copy.events.length,
                 )
-            })
-
-            it('names', function () {
-                const el1 = circle(0)
-                const el2 = el1
-                const el1Copy = el1.copy()
-                assert.isTrue(el1.name('name1').equals(el2))
-                assert.isFalse(el1.name('name2').equals(el1Copy))
             })
 
             it('tags', function () {
@@ -991,7 +902,6 @@ describe('SVG Node', function () {
             assert.equal(el1.toHash(), el1.copy().toHash())
             assert.notEqual(el1.toHash(), el1.copy().x(10).toHash())
             assert.notEqual(el1.toHash(), el1.copy().append(circle(2)).toHash())
-            assert.notEqual(el1.toHash(), el1.copy().name('name1').toHash())
             assert.notEqual(el1.toHash(), el1.copy().tag('tag1').toHash())
             assert.notEqual(
                 new SVGNode('a').toHash(),

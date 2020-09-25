@@ -111,16 +111,6 @@ export default class V2D {
     }
 
     /**
-     * Returns the stringified vector
-     */
-    public toString(): string {
-        return `V2D: {
-            _x: ${this.x()},
-            _y: ${this.y()}
-        }`
-    }
-
-    /**
      * Returns a invert version of current vector\
      * V2D(x,y).invert() maps to V2D(y,x)
      *

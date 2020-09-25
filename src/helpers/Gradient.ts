@@ -1,4 +1,4 @@
-import { SVGAttribute, SVGTag } from '../definitions'
+import { SVGTag } from '../definitions'
 import SVGNode, { AttributeValue } from '../SVGNode'
 
 export class SVGStops {
@@ -33,25 +33,17 @@ export class SVGStops {
     /**
      * Returns head
      */
-    public set(attr: SVGAttribute, value: AttributeValue): this {
-        if (this._stops.length === 0)
-            throw new Error('SVGStops stack is empty, nothing to be set to')
-
-        this._stops[this._stops.length - 1].set(attr, value)
+    public mapHead(f: (node: SVGNode) => void): this {
+        f(this.head)
 
         return this
     }
 
-    /**
-     * Returns head
-     */
-    public append(child: SVGNode): this {
+    public get head(): SVGNode {
         if (this._stops.length === 0)
-            throw new Error('SVGStops stack is empty, nothing to be set to')
+            throw 'SVGStops: stack is empty, no head exists'
 
-        this._stops[this._stops.length - 1].append(child)
-
-        return this
+        return this._stops[this._stops.length - 1]
     }
 
     /**
@@ -62,18 +54,34 @@ export class SVGStops {
         return this
     }
 
-    public forEach(f: (_node: SVGNode) => void) {
+    public forEach(
+        f: (node: SVGNode, index: number, array: SVGNode[]) => void,
+    ): void {
         this._stops.forEach(f)
     }
 
-    public map(f: (_node: SVGNode) => SVGNode): this {
+    public map(
+        f: (node: SVGNode, index: number, array: SVGNode[]) => SVGNode,
+    ): this {
         this._stops = this._stops.map(f)
 
         return this
     }
 
-    public push(item: SVGNode) {
+    public push(item: SVGNode): void {
         this._stops.push(item)
+    }
+
+    public every(
+        f: (node: SVGNode, index: number, array: SVGNode[]) => boolean,
+    ): boolean {
+        return this._stops.every(f)
+    }
+
+    public some(
+        f: (node: SVGNode, index: number, array: SVGNode[]) => boolean,
+    ): boolean {
+        return this._stops.some(f)
     }
 
     public copy(): SVGStops {

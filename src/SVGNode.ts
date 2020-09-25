@@ -1,12 +1,11 @@
 import { Md5 } from 'ts-md5/dist/md5'
 import { SVGManager } from '.'
+import { SVGAttribute, SVGTag } from './definitions'
 import {
-    EventDefinition,
-    EventFunc,
-    SVGAttribute,
-    SVGEvent,
-    SVGTag,
-} from './definitions'
+    SVGManagerEventHandler,
+    SVGEventName,
+    SVGManagerEventDefinition,
+} from './Events'
 import SVGAnimate from './helpers/Animate'
 import { SVGManagerDefinition } from './SVGManager'
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
@@ -26,9 +25,8 @@ export default class SVGNode {
     protected _children: SVGNode[]
     protected _innerText: string
 
-    protected _events: EventDefinition[]
+    protected _events: SVGManagerEventDefinition[]
 
-    protected _names: string[]
     protected _tags: string[]
 
     /**
@@ -43,7 +41,6 @@ export default class SVGNode {
 
         this._events = []
 
-        this._names = []
         this._tags = []
     }
 
@@ -68,12 +65,8 @@ export default class SVGNode {
         return this
     }
 
-    public get events(): EventDefinition[] {
+    public get events(): SVGManagerEventDefinition[] {
         return this._events
-    }
-
-    public get names(): string[] {
-        return this._names
     }
 
     public get tags(): string[] {
@@ -189,18 +182,8 @@ export default class SVGNode {
      * Multiple functions can be set for the same event.
      * Then, it returns itself, for easy programming.
      */
-    public on(eventType: SVGEvent, func: EventFunc): this {
-        this._events.push({ eventType, func })
-
-        return this
-    }
-
-    /**
-     * Give name to the SVGNode to mention later
-     * @param name Name given to SVGNode
-     */
-    public name(name: string): this {
-        this._names.push(name)
+    public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
+        this._events.push({ eventName, func })
 
         return this
     }
@@ -228,39 +211,15 @@ export default class SVGNode {
         const node = new SVGNode(this.tagName)
         this.attributes.forEach((value, key) => node.set(key, value))
         this.children.forEach((child) => node.append(child.copy()))
-        this.names.forEach((name) => node.name(name))
         this.tags.forEach((tag) => node.tag(tag))
-        this.events.forEach((event) => node.on(event.eventType, event.func))
+        this.events.forEach((event) => node.on(event.eventName, event.func))
         node.text(this.innerText)
 
         return node
     }
 
     public equals(node: SVGNode): boolean {
-        return (
-            this.shallowEquals(node) &&
-            this.areNamesEqual(node.names) &&
-            this.areTagsEqual(node.tags)
-        )
-    }
-
-    private areNamesEqual(names: string[]): boolean {
-        if (this.names.length !== names.length) return false
-
-        let sortedThisArray = this.names.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-        let sortedNodeArray = names.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-
-        while (sortedThisArray.length !== 0) {
-            if (sortedThisArray[0] !== sortedNodeArray[0]) return false
-            sortedThisArray = sortedThisArray.slice(1)
-            sortedNodeArray = sortedNodeArray.slice(1)
-        }
-
-        return true
+        return this.shallowEquals(node) && this.areTagsEqual(node.tags)
     }
 
     private areTagsEqual(tags: string[]): boolean {
@@ -305,6 +264,8 @@ export default class SVGNode {
             const thisPop = sortedThisArray.pop()
             const nodePop = sortedNodeArray.pop()
 
+            if (thisPop === undefined || nodePop === undefined) return false
+
             if (!(thisPop[0] === nodePop[0] && thisPop[1] === nodePop[1]))
                 return false
         }
@@ -347,11 +308,11 @@ export default class SVGNode {
         return this
     }
 
-    public clearEvents(eventType?: SVGEvent): this {
-        if (eventType === undefined) this._events = []
+    public clearEvents(eventName?: SVGEventName): this {
+        if (eventName === undefined) this._events = []
         else
             this._events = this.events.filter(
-                ({ eventType: eType }) => eType !== eventType,
+                ({ eventName: evName }) => evName !== eventName,
             )
 
         return this
@@ -375,6 +336,30 @@ export default class SVGNode {
         element.innerHTML = this.innerText
 
         this.children.forEach((child) => element.appendChild(child.toHTML()))
+
+        // Group all events together by type
+        const groupedEvents = this.events.reduce((r, a) => {
+            r[a.eventName] = r[a.eventName] || []
+            r[a.eventName].push(a)
+            return r
+        }, Object.create(null))
+
+        // Add all event listeners to the HTML elements
+        Object.keys(groupedEvents).forEach((svgEvent) =>
+            element.addEventListener(svgEvent, (e) => {
+                groupedEvents[svgEvent].forEach(
+                    (eventCall: SVGManagerEventDefinition) => {
+                        if (e.target === null)
+                            throw 'SVGNode: Event target is null'
+
+                        eventCall.func(
+                            e,
+                            new SVGLinkedNode(e.target as SVGElement),
+                        )
+                    },
+                )
+            }),
+        )
 
         return element
     }
@@ -400,12 +385,6 @@ export default class SVGNode {
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((childHash) => md5.appendStr('child' + childHash))
 
-        this.names
-            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
-            .forEach((name) => {
-                md5.appendStr('name' + name)
-            })
-
         this.tags
             .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
             .forEach((tag) => {
@@ -418,21 +397,20 @@ export default class SVGNode {
 
 export class SVGLinkedNode extends SVGNode {
     private _element: SVGElement
-    private _manager: SVGManager
 
-    public constructor(element: SVGElement, manager: SVGManager) {
+    public constructor(element: SVGElement) {
         super(element.tagName as SVGTag)
 
-        this._names = manager.getNamesFromElem(element)
-        this._tags = manager.getTagsFromElem(element)
+        this._tags = SVGManager.getTagsFromClasses(
+            element.getAttribute('class') || '',
+        )
 
         this._element = element
-        this._manager = manager
     }
 
-    public get children() {
+    public get children(): SVGLinkedNode[] {
         return Array.from(this._element.children).map(
-            (el) => new SVGLinkedNode(el as SVGElement, this._manager),
+            (el) => new SVGLinkedNode(el as SVGElement),
         )
     }
 
@@ -450,7 +428,7 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public get innerText(): string {
-        return this._element.textContent
+        return this._element.textContent || ''
     }
 
     /**
@@ -466,8 +444,8 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    public get(attr: SVGAttribute): AttributeValue {
-        return this._element.getAttribute(attr)
+    public get(attr: SVGAttribute): AttributeValue | undefined {
+        return this._element.getAttribute(attr) || undefined
     }
 
     public append(child: SVGNode): this {
@@ -485,23 +463,19 @@ export class SVGLinkedNode extends SVGNode {
         return this._element
     }
 
-    public on(eventType: SVGEvent, func: EventFunc): this {
-        this._element.addEventListener(eventType, func)
-        this._events.push({ eventType, func })
-
-        return this
-    }
-
-    public name(name: string): this {
-        this._manager.addNamesToElem(this._element, [name])
-        this._names.push(name)
+    public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
+        this._element.addEventListener(eventName, (ev) => {
+            if (ev.target === null) throw 'SVGLinkedNode: Event target is null'
+            func(ev, new SVGLinkedNode(ev.target as SVGElement))
+        })
+        this._events.push({ eventName, func })
 
         return this
     }
 
     public tag(tag: string): this {
-        this._manager.addTagsToElem(this._element, [tag])
         this._tags.push(tag)
+        SVGManager.addTagsToNode(this)
 
         return this
     }
@@ -518,14 +492,18 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    public clearEvents(eventType?: SVGEvent): this {
-        if (eventType !== undefined)
+    public clearEvents(eventName?: SVGEventName): this {
+        if (eventName !== undefined)
             throw 'SVGLinkedNode: Unable remove elements from certain type in Linked Nodes'
 
         this._events = []
 
+        const parent = this.element.parentElement
+
+        if (parent === null) throw 'SVGNode: Element does not have parent'
+
         const copy = this.copy()
-        this.element.parentElement.replaceChild(copy.toHTML(), this.element)
+        parent.replaceChild(copy.toHTML(), this.element)
 
         return this
     }

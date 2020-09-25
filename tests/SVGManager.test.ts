@@ -1,166 +1,121 @@
 import { assert } from 'chai'
-import SVGManager from '../src/SVGManager'
+import PathData from '../src/helpers/PathData'
+import ViewBox from '../src/helpers/ViewBox'
+import { circle } from '../src/Shapes'
+import SVGManager, { TAG_PREFIX } from '../src/SVGManager'
 import SVGNode from '../src/SVGNode'
 
 document.body.innerHTML = '<div id="root"></div>'
 
 const root = document.getElementById('root')
+if (root === null) throw "Can't get root"
 
 describe('SVG Manager', function () {
     const manager = new SVGManager()
-    const manager_id = manager.id
     manager.init('root')
 
-    describe('Basic Setup and Settings', function () {
-        it('Should be that initialization adds a def tag', function () {
+    describe('Basic control functions - init/size/clean/remove/viewBox', function () {
+        it('init', function () {
             manager.clean()
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to change dimensions of the svg root', function () {
+        it('size', function () {
             manager.clean()
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.set('width', '700px')
+            manager.width('700px')
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="700px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.set('height', '300px')
+            manager.height('300px')
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="300px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="700px" height="300px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.set('width', '500px')
+            manager.width('500px')
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="300px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="300px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.set('height', '500px')
+            manager.height('500px')
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to move the viewbox', function () {
+        it('clean', function () {
             manager.clean()
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.viewBox = manager.viewBox.move(10, 10)
-
-            assert.equal(
-                root.innerHTML,
                 `
-                <svg viewBox="10 10 100 100" width="500px" height="500px" id="${manager_id}">
-                    <defs>
-                    </defs>
-                </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.viewBox = manager.viewBox.move(-6, -4)
-
-            assert.equal(
-                root.innerHTML,
-                `
-                <svg viewBox="4 6 100 100" width="500px" height="500px" id="${manager_id}">
-                    <defs>
-                    </defs>
-                </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.viewBox = manager.viewBox.move(-10, -10)
-
-            assert.equal(
-                root.innerHTML,
-                `
-                <svg viewBox="-6 -4 100 100" width="500px" height="500px" id="${manager_id}">
-                    <defs>
-                    </defs>
-                </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.viewBox = manager.viewBox.move(6, 4)
-
-            assert.equal(
-                root.innerHTML,
-                `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
-                    <defs>
-                    </defs>
-                </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it('Should be able to clean', function () {
-            manager.clean()
-
-            assert.equal(
-                root.innerHTML,
-                `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
-                    <defs>
-                    </defs>
-                </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
             manager.ensureDefinition(new SVGNode('g'))
@@ -168,11 +123,13 @@ describe('SVG Manager', function () {
             assert.notEqual(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
             manager.clean()
@@ -180,108 +137,134 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to remove', function () {
+        it('viewbox', function () {
             manager.clean()
 
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager_id}">
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.remove()
+            manager.viewBox(new ViewBox(10, 10, 100, 100))
 
-            assert.equal(root.innerHTML, ``.replace(/  |\r\n|\n|\r/gm, ''))
+            assert.equal(
+                root.innerHTML,
+                `
+                <svg viewBox="10 10 100 100" width="500px" height="500px" id="${manager.id}">
+                    <defs>
+                    </defs>
+                </svg>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+
+            manager.viewBox(new ViewBox(4, 6, 100, 100))
+
+            assert.equal(
+                root.innerHTML,
+                `
+                <svg viewBox="4 6 100 100" width="500px" height="500px" id="${manager.id}">
+                    <defs>
+                    </defs>
+                </svg>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+
+            manager.viewBox(new ViewBox(-6, -4, 100, 100))
+
+            assert.equal(
+                root.innerHTML,
+                `
+                <svg viewBox="-6 -4 100 100" width="500px" height="500px" id="${manager.id}">
+                    <defs>
+                    </defs>
+                </svg>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+
+            manager.viewBox(new ViewBox(0, 0, 100, 100))
+
+            assert.equal(
+                root.innerHTML,
+                `
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                    <defs>
+                    </defs>
+                </svg>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+        })
+
+        it('remove', function () {
+            manager.clean()
+
+            assert.equal(
+                root.innerHTML,
+                `
+                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                    <defs>
+                    </defs>
+                </svg>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+
+            manager.destruct()
+
+            assert.equal(root.innerHTML, ``.replace('\t', '').replace('\n', ''))
 
             manager.init('root')
         })
     })
 
-    describe('Rendering', function () {
-        it('Should be able to seperate render', function () {
+    describe('Rendering - render/renderId/ensureDefinition', function () {
+        it('ensureDefinition', function () {
             manager.clean()
 
-            manager.render(
-                new SVGNode('a')
-                    .set('attributeName', 'test_value')
-                    .name('test_render'),
-            )
+            const def = manager.ensureDefinition(new SVGNode('a'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                </defs>
-                <a attributeName="test_value" class="${manager_id}-named-test_render">
-                </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.clean()
-
-            manager.render(
-                new SVGNode('a')
-                    .set('attributeName', 'test_value 1')
-                    .name('test_render')
-                    .x(7)
-                    .y(24),
-            )
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                </defs>
-                <a attributeName="test_value 1" x="7" y="24" class="${manager_id}-named-test_render">
-                </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it('Should be able to ensure definitions', function () {
-            manager.clean()
-
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            const hash = test_node.toHash()
-
-            manager.ensureDefinition(test_node)
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                    <a attributeName="test_value" id="${manager.id}-figure-${hash}">
+                    <a id="${def}">
                     </a>
                 </defs>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to render items', function () {
+        it('render - single item', function () {
             manager.clean()
 
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            manager.render(test_node.x(7).y(24))
+            manager.render(new SVGNode('a').x(7).y(24))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -289,155 +272,89 @@ describe('SVG Manager', function () {
                 <defs>
                     
                 </defs>
-                <a attributeName="test_value" x="7" y="24">
+                <a x="7" y="24">
                 </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to render multiple items', function () {
+        it('render - multiple items', function () {
             manager.clean()
 
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            const test_node_2 = new SVGNode('g').set('attributeName', 'value')
-
-            manager.render(test_node.x(5).y(6))
+            manager.render(new SVGNode('a').x(5).y(6).text('test1'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" x="5" y="6">
+                <a x="5" y="6">
+                    test1
                 </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.render(test_node_2.x(2).y(10))
+            manager.render(new SVGNode('g').x(2).y(10).text('test2'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `<defs>
                 </defs>
-                <a attributeName="test_value" x="5" y="6">
+                <a x="5" y="6">
+                    test1
                 </a>
-                <g attributeName="value" x="2" y="10">
+                <g x="2" y="10">
+                    test2
                 </g>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to render a named item', function () {
+        it('render - tagged', function () {
             manager.clean()
 
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
+            manager.render(
+                new SVGNode('a').x(5).y(6).tag('test_item').text('Hi!'),
             )
-
-            manager.render(test_node.x(5).y(6).name('test_item'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
                 </defs>
-                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
+                <a x="5" y="6" class="${TAG_PREFIX}test_item">
+                    Hi!
                 </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
         })
 
-        it('Should be able to remove a named item', function () {
+        it('renderId', function () {
             manager.clean()
 
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            manager.render(test_node.x(5).y(6).name('test_item'))
+            const def = manager.ensureDefinition(new SVGNode('a').x(3).y(7))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                </defs>
-                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
-                </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            manager.removeNamed('test_item')
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                </defs>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it('Should be able to move a named item', function () {
-            manager.clean()
-
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            manager.render(test_node.x(5).y(6).name('test_item'))
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                </defs>
-                <a attributeName="test_value" x="5" y="6" class="${manager_id}-named-test_item">
-                </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-
-            const item = manager.fetchNamed('test_item')
-            item.x(10).y(30)
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                </defs>
-                <a attributeName="test_value" x="10" y="30" class="${manager_id}-named-test_item">
-                </a>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
-            )
-        })
-
-        it('Should be able to render from id', function () {
-            manager.clean()
-
-            const test_node = new SVGNode('a').set(
-                'attributeName',
-                'test_value',
-            )
-
-            const hash = manager.ensureDefinition(test_node)
-
-            assert.equal(
-                (root.firstChild as SVGElement).innerHTML,
-                `
-                <defs>
-                    <a attributeName="test_value" id="${hash}">
+                    <a x="3" y="7" id="${def}">
                     </a>
                 </defs>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
             )
 
-            manager.renderId(hash, {
+            manager.renderId(def, {
                 attributes: [
                     { attrName: 'x', attrValue: 23 },
                     { attrName: 'y', attrValue: 55 },
@@ -448,11 +365,153 @@ describe('SVG Manager', function () {
                 (root.firstChild as SVGElement).innerHTML,
                 `
                 <defs>
-                    <a attributeName="test_value" id="${hash}">
+                    <a x="3" y="7" id="${def}">
                     </a>
                 </defs>
-                <use href="#${manager_id}-figure-${hash}" x="23" y="55"></use>
-                `.replace(/  |\r\n|\n|\r/gm, ''),
+                <use href="#${manager.id}-figure-${def}" x="23" y="55"></use>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+        })
+    })
+
+    describe('Tags - tagged', function () {
+        it('fetchTagged', function () {
+            manager.clean()
+
+            const vertex = circle(3).tag('vertex')
+
+            manager.render(new SVGNode('g').append(vertex.cx(10).cy(10)))
+            manager.render(new SVGNode('a').append(vertex.cx(5).cy(5)))
+
+            assert.equal(
+                (root.firstChild as SVGElement).innerHTML,
+                `
+                <defs>
+                </defs>
+                <g>
+                    <circle cx="10" cy="10" stroke="#000" stroke-width="1px" fill="transparent" r="3" class="${TAG_PREFIX}vertex">
+                    </circle>
+                </g>
+                <a>
+                    <circle cx="5" cy="5" stroke="#000" stroke-width="1px" fill="transparent" r="3" class="${TAG_PREFIX}vertex">
+                    </circle>
+                </a>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+
+            const items = manager.tagged('vertex')
+            items.forEach((item) => item.r(2))
+
+            assert.equal(
+                (root.firstChild as SVGElement).innerHTML,
+                `
+                <defs>
+                </defs>
+                <g>
+                    <circle cx="10" cy="10" stroke="#000" stroke-width="1px" fill="transparent" r="2" class="${TAG_PREFIX}vertex">
+                    </circle>
+                </g>
+                <a>
+                    <circle cx="5" cy="5" stroke="#000" stroke-width="1px" fill="transparent" r="2" class="${TAG_PREFIX}vertex">
+                    </circle>
+                </a>
+                `
+                    .replace(/[\t\n]+/g, '')
+                    .replace(/\s{2,}/g, ''),
+            )
+        })
+    })
+
+    describe('tags - addTagsToNode/getTagsFromClasses', function () {
+        it('addTagsToNode', function () {
+            assert.equal(circle(0).get('class'), undefined)
+            assert.equal(circle(0).tag('hi').get('class'), undefined)
+            assert.equal(
+                SVGManager.addTagsToNode(circle(0).tag('hi')).get('class'),
+                TAG_PREFIX + 'hi',
+            )
+            assert.equal(
+                SVGManager.addTagsToNode(
+                    SVGManager.addTagsToNode(circle(0).tag('hi')).tag('bye'),
+                ).get('class'),
+                TAG_PREFIX + 'hi ' + TAG_PREFIX + 'bye',
+            )
+        })
+
+        it('getTagsFromClassnames', function () {
+            assert.equal(
+                JSON.stringify(
+                    SVGManager.getTagsFromClasses(
+                        (
+                            SVGManager.addTagsToNode(
+                                circle(0).tag('hi').tag('bye'),
+                            ).get('class') || ''
+                        ).toString(),
+                    ),
+                ),
+                JSON.stringify(['hi', 'bye']),
+            )
+        })
+    })
+
+    describe('Basic attribute methods - set/get/on', function () {
+        it('set/get', function () {
+            manager.clean()
+            assert.equal(manager.set('x', 123).get('x'), '123')
+            manager.clean()
+            assert.equal(
+                manager.set('d', new PathData().moveTo(10, 10)).get('d'),
+                'M 10 10',
+            )
+            manager.clean()
+            assert.equal(manager.set('width', 'test').get('width'), 'test')
+        })
+
+        it('on', function () {
+            const f = (): string => 'hi'
+            assert.equal(manager.on('click', f).events.length, 1)
+            manager.clean()
+            assert.equal(manager.on('click', f).events[0].eventName, 'click')
+            manager.clean()
+            assert.equal(manager.on('click', f).events[0].func, f)
+            manager.clean()
+
+            const g = (): string => 'bye'
+            assert.equal(
+                manager.on('click', f).on('mouseover', g).events.length,
+                2,
+            )
+
+            manager.clean()
+
+            assert.equal(
+                manager.on('click', f).on('mouseover', g).events[0].eventName,
+                'click',
+            )
+
+            manager.clean()
+
+            assert.equal(
+                manager.on('click', f).on('mouseover', g).events[0].func,
+                f,
+            )
+
+            manager.clean()
+
+            assert.equal(
+                manager.on('click', f).on('mouseover', g).events[1].eventName,
+                'mouseover',
+            )
+
+            manager.clean()
+
+            assert.equal(
+                manager.on('click', f).on('mouseover', g).events[1].func,
+                g,
             )
         })
     })

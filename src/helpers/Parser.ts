@@ -1,20 +1,20 @@
-import { SVGNode } from '..'
+import SVGNode from '../SVGNode'
 import ViewBox from './ViewBox'
 import { SVGTag, SVGAttribute } from '../definitions'
 
-function htmlToSVGNode(elem: HTMLElement): SVGNode {
+function htmlParseSVGNode(elem: HTMLElement): SVGNode {
     const tag = elem.tagName as SVGTag
     if (tag === undefined) throw new Error('Tag not recognized!')
-    let node = new SVGNode(tag)
+    const node = new SVGNode(tag)
 
     Array.from(elem.attributes).forEach((attribute: Attr) => {
         const attr = attribute.name as SVGAttribute
         if (attr === undefined) throw new Error('Attribute not recognized!')
-        node = node.set(attr, attribute.value)
+        node.set(attr, attribute.value)
     })
 
-    Array.from(elem.children).forEach((child: HTMLElement) => {
-        node = node.append(htmlToSVGNode(child))
+    Array.from(elem.children).forEach((child: Element) => {
+        node.append(htmlParseSVGNode(child as HTMLElement))
     })
 
     if (elem.innerText !== undefined) node.text(elem.innerText)
@@ -33,14 +33,14 @@ function htmlToSVGNode(elem: HTMLElement): SVGNode {
  * If parse fails will also throw an error.
  * @param str A string to parse
  */
-function stringToSVGNode(str: string): SVGNode {
+function parseSVGNode(str: string): SVGNode {
     const parser = new DOMParser()
     const parsed = parser.parseFromString(str, 'image/svg+xml')
 
     if (parsed.children.length === 0) throw new Error('Parsed is empty')
     if (parsed.children.length > 1) throw new Error('Too many heads')
 
-    return htmlToSVGNode(parsed.firstChild as HTMLElement)
+    return htmlParseSVGNode(parsed.firstChild as HTMLElement)
 }
 
 /**
@@ -49,14 +49,14 @@ function stringToSVGNode(str: string): SVGNode {
  * Will reject if file cannot be fetched
  * @param fileUrl A path to a svg file from the generated JS file
  */
-async function asyncLoadSVGNode(fileUrl: string): Promise<SVGNode> {
+async function fetchSVGNode(fileUrl: string): Promise<SVGNode> {
     return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest()
+        const xhr = new XMLHttpRequest()
         xhr.open('get', fileUrl, true)
-        xhr.onload = function () {
-            var status = xhr.status
+        xhr.onload = function (): void {
+            const status = xhr.status
             if (status === 200) {
-                resolve(stringToSVGNode(xhr.responseText))
+                resolve(parseSVGNode(xhr.responseText))
             } else {
                 reject(status)
             }
@@ -71,7 +71,7 @@ async function asyncLoadSVGNode(fileUrl: string): Promise<SVGNode> {
  * Will throw an error if file cannot be fetched
  * @param fileUrl A path to a svg file from the generated JS file
  */
-function syncLoadSVGNode(fileUrl: string): SVGNode {
+function fetchSVGNodeSync(fileUrl: string): SVGNode {
     const xhr = new XMLHttpRequest()
     xhr.open('get', fileUrl, false)
     xhr.send(null)
@@ -79,10 +79,10 @@ function syncLoadSVGNode(fileUrl: string): SVGNode {
     if (xhr.status !== 200)
         throw new Error('Unable to fetch file as sync (' + xhr.status + ')')
 
-    return stringToSVGNode(xhr.responseText)
+    return parseSVGNode(xhr.responseText)
 }
 
-function stringToSVGViewBox(str: string): ViewBox {
+function parseSVGViewBox(str: string): ViewBox {
     const splitted = str.split(' ')
 
     if (splitted.length !== 4) throw new Error('Incorrect format')
@@ -96,9 +96,9 @@ function stringToSVGViewBox(str: string): ViewBox {
 }
 
 export {
-    stringToSVGViewBox as parseSVGViewBox,
-    stringToSVGNode as parseSVGNode,
-    syncLoadSVGNode as fetchSVGNodeSync,
-    asyncLoadSVGNode as fetchSVGNode,
-    htmlToSVGNode as htmlParseSVGNode,
+    parseSVGViewBox,
+    parseSVGNode,
+    fetchSVGNodeSync,
+    fetchSVGNode,
+    htmlParseSVGNode,
 }

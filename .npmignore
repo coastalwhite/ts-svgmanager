@@ -3,9 +3,11 @@ src
 .vscode
 tests
 docs
+coverage
 README.md
 readme-content
 .prettierrc.toml
 .nojekyll
 .eslintrc.json
 package-lock.json
+.nycoutput

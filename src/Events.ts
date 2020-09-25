@@ -1,4 +1,6 @@
-type SVGEvent =
+import { SVGLinkedNode } from './SVGNode'
+
+export type SVGEventName =
     | 'begin'
     | 'end'
     | 'repeat'
@@ -64,8 +66,17 @@ type SVGEvent =
     | 'toggle'
     | 'volumechange'
     | 'waiting'
+    | 'wheel'
     | 'activate'
     | 'focusin'
     | 'focusout'
 
-export default SVGEvent
+export type SVGManagerEventHandler = (
+    event: Event,
+    node: SVGLinkedNode,
+) => unknown
+
+export interface SVGManagerEventDefinition {
+    eventName: SVGEventName
+    func: SVGManagerEventHandler
+}
