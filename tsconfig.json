@@ -8,9 +8,8 @@
         "lib": ["es6", "dom", "ES2017"],
         "target": "es2015",
         "declaration": true,
-        "emitDeclarationOnly": true,
         "outDir": "./dist"
     },
-    "include": ["src/**/*", "tests/**/*"],
-    "exclude": ["node_modules"]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "tests/**/*"]
 }

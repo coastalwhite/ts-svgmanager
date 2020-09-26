@@ -2,6 +2,7 @@ import SVGNode from '../SVGNode'
 import ViewBox from './ViewBox'
 import { SVGTag, SVGAttribute } from '../definitions'
 
+/** Parse html element into node */
 function htmlParseSVGNode(elem: HTMLElement): SVGNode {
     const tag = elem.tagName as SVGTag
     if (tag === undefined) throw new Error('Tag not recognized!')
@@ -82,6 +83,7 @@ function fetchSVGNodeSync(fileUrl: string): SVGNode {
     return parseSVGNode(xhr.responseText)
 }
 
+/** Parse viewbox into ViewBox class */
 function parseSVGViewBox(str: string): ViewBox {
     const splitted = str.split(' ')
 

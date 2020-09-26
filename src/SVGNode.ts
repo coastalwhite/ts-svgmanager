@@ -1,5 +1,5 @@
 import { Md5 } from 'ts-md5/dist/md5'
-import { SVGManager } from '.'
+import { SVGManagerDefinition } from '.'
 import { SVGAttribute, SVGTag } from './definitions'
 import {
     SVGManagerEventHandler,
@@ -7,31 +7,67 @@ import {
     SVGManagerEventDefinition,
 } from './Events'
 import SVGAnimate from './helpers/Animate'
-import { SVGManagerDefinition } from './SVGManager'
+
+/** @hidden Namespace used to create SVG elements */
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 
+/** @hidden type for value of attributes */
 export interface AttributeValue {
     toString(): string
 }
+
+/** @hidden type for SVGNode.attributes */
 export type AttributeMap = Map<SVGAttribute, AttributeValue>
 
 /**
  * A JS Representation of a HTML-Node.
  * More specifically, all the SVG Types Nodes.
+ *
+ * ## Usage
+ * ```ts
+ * import { SVGNode } from 'ts-svgmanager'
+ *
+ * // Initialize a circle with args
+ * const circle = new SVGNode('circle').r(5).cx(10).cy(20)
+ * ```
+ *
+ * ## Important methods
+ * ### [[SVGNode.set]] and [[SVGNode.get]]
+ * Lets you set and get attributes, respectively
+ *
+ * ### [[SVGNode.append]]
+ * Will let you append a childnode
+ *
+ * ### [[SVGNode.tag]]
+ * Allows you to add a tag for later reference from the [[SVGManager]]
+ *
+ * ### [[SVGNode.on]]
+ * Creates a event listener on the node
+ *
+ * ### [[SVGNode.text]]
+ * Which allows you to set the innerText
  */
 export default class SVGNode {
+    /** @hidden */
     protected _tagName: SVGTag
+    /** @hidden */
     protected _attributes: AttributeMap
+    /** @hidden */
     protected _children: SVGNode[]
+    /** @hidden */
     protected _innerText: string
 
+    /** @hidden */
     protected _events: SVGManagerEventDefinition[]
 
+    /** @hidden */
     protected _tags: string[]
 
     /**
-     * Construct a SVGNode respresenting the *tag* element
+     * Construct a SVGNode respresenting the *tagName* element
      * with no attributes, children or inner text.
+     *
+     * @param tagName created node tagName
      */
     public constructor(tagName: SVGTag) {
         this._tagName = tagName
@@ -44,35 +80,43 @@ export default class SVGNode {
         this._tags = []
     }
 
+    /** Fetch the current children */
     public get children(): SVGNode[] {
         return this._children
     }
 
+    /** Fetch the current attributes */
     public get attributes(): AttributeMap {
         return this._attributes
     }
 
+    /** Fetch the tagName of the node */
     public get tagName(): SVGTag {
         return this._tagName
     }
 
+    /** Fetch the innerText of the node */
     public get innerText(): string {
         return this._innerText
     }
 
+    /** Fetch the events defined on the node */
+    public get events(): SVGManagerEventDefinition[] {
+        return this._events
+    }
+
+    /** Fetch the tags set on the node */
+    public get tags(): string[] {
+        return this._tags
+    }
+
+    /** Sets the innerText of the node */
     public text(s: string): this {
         this._innerText = s
         return this
     }
 
-    public get events(): SVGManagerEventDefinition[] {
-        return this._events
-    }
-
-    public get tags(): string[] {
-        return this._tags
-    }
-
+    /** Shortcut for setting stroke attributes */
     public stroke(
         color: AttributeValue,
         width?: AttributeValue,
@@ -86,6 +130,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Shortcut for setting stroke attributes to a definition (See more at [[SVGManager.define]]) */
     public strokeDef(
         definition: SVGManagerDefinition,
         width?: AttributeValue,
@@ -94,6 +139,7 @@ export default class SVGNode {
         return this.stroke('url(#' + definition + ')', width, opacity)
     }
 
+    /** Shortcut for setting fill attributes */
     public fill(color: AttributeValue, opacity?: AttributeValue): this {
         this.set('fill', color)
 
@@ -102,6 +148,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Shortcut for setting fill attributes to a definition (See more at [[SVGManager.define]]) */
     public fillDef(
         definition: SVGManagerDefinition,
         opacity?: AttributeValue,
@@ -109,22 +156,27 @@ export default class SVGNode {
         return this.fill('url(#' + definition + ')', opacity)
     }
 
+    /** Setter for the x attribute */
     public x(val: AttributeValue): this {
         return this.set('x', val)
     }
 
+    /** Setter for the y attribute */
     public y(val: AttributeValue): this {
         return this.set('y', val)
     }
 
+    /** Setter for the cx attribute */
     public cx(val: AttributeValue): this {
         return this.set('cx', val)
     }
 
+    /** Setter for the cy attribute */
     public cy(val: AttributeValue): this {
         return this.set('cy', val)
     }
 
+    /** Setter for the r attribute */
     public r(radius: AttributeValue): this {
         return this.set('r', radius)
     }
@@ -132,9 +184,6 @@ export default class SVGNode {
     /**
      * Mutates the SVGNode to add/change an attribute *attr* to *value*.
      * Then, it returns itself, for easy programming.
-     *
-     * # Note
-     * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
      */
     public set(attr: SVGAttribute, value: AttributeValue): this {
         this._attributes.set(attr, value)
@@ -142,6 +191,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Fetch a specific attribute's value */
     public get(attr: SVGAttribute): AttributeValue | undefined {
         return this._attributes.get(attr)
     }
@@ -198,6 +248,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Adds a class to a SVGNode */
     public class(className: string): this {
         let currentClass = (this.get('class') || '').toString()
         if (currentClass.length > 0) currentClass += ' '
@@ -207,6 +258,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Creates a deepcopy from current SVGNode */
     public copy(): SVGNode {
         const node = new SVGNode(this.tagName)
         this.attributes.forEach((value, key) => node.set(key, value))
@@ -218,10 +270,16 @@ export default class SVGNode {
         return node
     }
 
+    /** Checks deeply whether two nodes are equal */
     public equals(node: SVGNode): boolean {
-        return this.shallowEquals(node) && this.areTagsEqual(node.tags)
+        return (
+            this.shallowEquals(node) &&
+            this.areTagsEqual(node.tags) &&
+            this.areChildrenEqual(node.children)
+        )
     }
 
+    /** @hidden */
     private areTagsEqual(tags: string[]): boolean {
         if (this.tags.length !== tags.length) return false
 
@@ -241,6 +299,7 @@ export default class SVGNode {
         return true
     }
 
+    /** @hidden */
     private areAttributeMapsEqual(attrMap: AttributeMap): boolean {
         const thisArray = Array.from(this.attributes).map(([attr, value]) => [
             attr,
@@ -273,6 +332,7 @@ export default class SVGNode {
         return true
     }
 
+    /** @hidden */
     private areChildrenEqual(children: SVGNode[]): boolean {
         if (this.children.length !== children.length) return false
 
@@ -281,15 +341,16 @@ export default class SVGNode {
         )
     }
 
+    /** Checks shallowly whether two nodes are equal */
     public shallowEquals(node: SVGNode): boolean {
         return (
             this.tagName === node.tagName &&
             this.innerText === node.innerText &&
-            this.areAttributeMapsEqual(node.attributes) &&
-            this.areChildrenEqual(node.children)
+            this.areAttributeMapsEqual(node.attributes)
         )
     }
 
+    /** Remove child at certain index */
     public removeChild(index: number): this {
         if (index >= this.children.length || index < 0)
             throw 'removeChild: index out of range'
@@ -302,12 +363,14 @@ export default class SVGNode {
         return this
     }
 
+    /** Remove all children */
     public removeChildren(): this {
         this._children = []
 
         return this
     }
 
+    /** Remove either all events from 1 SVGEventName, or all if not given a name */
     public clearEvents(eventName?: SVGEventName): this {
         if (eventName === undefined) this._events = []
         else
@@ -318,6 +381,7 @@ export default class SVGNode {
         return this
     }
 
+    /** Animates the node using an SVGAnimate object */
     public animate(svganimate: SVGAnimate): this {
         this.append(svganimate)
         return this
@@ -389,13 +453,71 @@ export default class SVGNode {
     }
 }
 
-export class SVGLinkedNode extends SVGNode {
-    private _element: SVGElement | null
+/** Shortcut for creating a `use` SVGNode for a certain SVGManagerDefinition */
+export class SVGUse extends SVGNode {
+    public constructor(definition: SVGManagerDefinition) {
+        super('use')
+        this.set('href', '#' + definition)
+    }
+}
 
+/** @hidden */
+export const TAG_PREFIX = 'tag-'
+
+/**
+ * @hidden
+ */
+type SVGManagerTag = string & { isSvgManagerTag: true }
+
+/**
+ * A SVGNode linked/attached to a DOM element,
+ * which will therefore instantly apply any changes to the DOM,
+ * and fetch up to date properties of the SVGNode
+ */
+export class SVGLinkedNode extends SVGNode {
+    /** @hidden */
+    protected _element: SVGElement | null
+
+    /** @hidden */
+    protected static getTagsFromClasses(classNames: string): string[] {
+        return classNames
+            .split(' ')
+            .filter((className) => className.startsWith(TAG_PREFIX))
+            .map((name) => name.substr(TAG_PREFIX.length))
+    }
+
+    /** @hidden */
+    protected static addTagsToNode(node: SVGNode): SVGNode {
+        node.children.forEach((child) => this.addTagsToNode(child))
+
+        if (node.tags.length === 0) return node
+
+        const classNames = (node.get('class') || '').toString()
+        const nodeTags = this.getTagsFromClasses(classNames)
+        const classNamesMinusTags = classNames
+            .split(' ')
+            .filter((className) => nodeTags.includes(className))
+
+        node.tags.forEach((tag) => {
+            classNamesMinusTags.push(this.toTagClass(tag))
+        })
+
+        if (classNamesMinusTags.length !== 0)
+            node.set('class', classNamesMinusTags.join(' '))
+
+        return node
+    }
+
+    /** @hidden */
+    protected static toTagClass(tag: string): SVGManagerTag {
+        return (TAG_PREFIX + tag) as SVGManagerTag
+    }
+
+    /** Construct a SVGLinkedNode using a DOM element */
     public constructor(element: SVGElement) {
         super(element.tagName as SVGTag)
 
-        this._tags = SVGManager.getTagsFromClasses(
+        this._tags = SVGLinkedNode.getTagsFromClasses(
             element.getAttribute('class') || '',
         )
 
@@ -425,13 +547,6 @@ export class SVGLinkedNode extends SVGNode {
         return this.element.textContent || ''
     }
 
-    /**
-     * Mutates the SVGNode to add/change an attribute *attr* to *value*.
-     * Then, it returns itself, for easy programming.
-     *
-     * # Note
-     * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
-     */
     public set(attr: SVGAttribute, value: AttributeValue): this {
         this.element.setAttribute(attr, value.toString())
 
@@ -453,12 +568,6 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    public get element(): SVGElement {
-        if (this._element === null) throw 'SVGLinkedNode: Element is destructed'
-
-        return this._element
-    }
-
     public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
         this.element.addEventListener(eventName, (ev) => {
             func(ev, new SVGLinkedNode(this.element))
@@ -470,7 +579,7 @@ export class SVGLinkedNode extends SVGNode {
 
     public tag(tag: string): this {
         this._tags.push(tag)
-        SVGManager.addTagsToNode(this)
+        SVGLinkedNode.addTagsToNode(this)
 
         return this
     }
@@ -487,9 +596,10 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    public destruct(): void {
-        this.element.remove()
-        this._element = null
+    public tagged(tag: string): SVGLinkedNode[] {
+        return Array.from(
+            this.element.getElementsByClassName(SVGLinkedNode.toTagClass(tag)),
+        ).map((el) => new SVGLinkedNode(el as SVGElement))
     }
 
     public clearEvents(eventName?: SVGEventName): this {
@@ -498,13 +608,21 @@ export class SVGLinkedNode extends SVGNode {
 
         this._events = []
 
-        const parent = this.element.parentElement
-
-        if (parent === null) throw 'SVGNode: Element does not have parent'
-
-        const copy = this.copy()
-        parent.replaceChild(copy.toHTML(), this.element)
+        this.element.replaceWith(this.element.cloneNode(true))
 
         return this
+    }
+
+    /** Fetch the raw element on the DOM */
+    public get element(): SVGElement {
+        if (this._element === null) throw 'SVGLinkedNode: Element is destructed'
+
+        return this._element
+    }
+
+    /** Will remove the element from the DOM and deactivate this variable */
+    public destruct(): void {
+        this.element.remove()
+        this._element = null
     }
 }

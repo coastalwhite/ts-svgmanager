@@ -1,180 +1,200 @@
-import SVGNode, { AttributeValue, SVGLinkedNode } from './SVGNode'
+import SVGNode, { AttributeValue, SVGLinkedNode, SVGUse } from './SVGNode'
 
 import { v4 as uuidv4 } from 'uuid'
 import { SVGAttribute } from './definitions'
-import {
-    SVGEventName,
-    SVGManagerEventDefinition,
-    SVGManagerEventHandler,
-} from './Events'
+import { SVGManagerEventDefinition } from './Events'
+import { SVGManagerDefinition } from '.'
 
+/** @hidden */
 const DEFINITION_PREFIX = 'figure-'
-export const TAG_PREFIX = 'tag-'
 
-const DEFAULT_SVG_WIDTH = '500px'
-const DEFAULT_SVG_HEIGHT = '500px'
+/** @hidden */
 const DEFAULT_VIEWBOX = '0 0 100 100'
 
-export type SVGManagerDefinition = string & { isSvgManagerDef: true }
-export type SVGManagerName = string & { isSvgManagerName: true }
-export type SVGManagerTag = string & { isSvgManagerTag: true }
-
 /**
- * A class used to manage SVG's in order to minimize definitions
- * and make controlling it from JS/TS as easy and reliable as possible.
+ * A manager class for interactive SVG's
+ *
+ * ## Initializing
+ * ```html
+ * <!-- Rest of DOM... -->
+ * <div id="svg-root">
+ *      <!-- Here the SVG will be inserted -->
+ * </div>
+ * <!-- Rest of DOM... -->
+ * ```
+ *
+ * ```ts
+ * import { SVGManager } from 'ts-svgmanager'
+ *
+ * // This will initialize a interactive SVG in the container
+ * const manager = new SVGManager().init('svg-root')
+ * ```
+ *
+ * ## Examples
+ * ### Example 1 - Rendering a circle
+ * ```ts
+ * import { SVGManager } from 'ts-svgmanager'
+ * import ViewBox from 'ts-svgmanager/helpers/ViewBox'
+ * import { circle } from 'ts-svgmanager/Shapes'
+ *
+ * // Initializing the SVGManager with a viewBox of '-30 -30 60 60'
+ * const manager = new SVGManager()
+ *     .init('svg-root')
+ *     .viewBox(new ViewBox(-30, -30, 60, 60))
+ *
+ * // Rendering a circle with a radius of 20 at (0,0)
+ * manager.render(circle(20))
+ * ```
+ *
+ * ### Example 2 - Rendering a custom cursor
+ * ```ts
+ * import { SVGManager } from 'ts-svgmanager'
+ * import ViewBox from 'ts-svgmanager/helpers/ViewBox'
+ * import { circle } from 'ts-svgmanager/Shapes'
+ *
+ * // Initializing the SVGManager with a viewBox of '-30 -30 60 60'
+ * const manager = new SVGManager()
+ *     .init('svg-root')
+ *     .viewBox(new ViewBox(0, 0, 200, 200))
+ *     .width(200)
+ *     .height(200)
+ *     .set('cursor', 'none') // Remove the normal cursor
+ *
+ * // Rendering a circle with a radius of 10 at (0,0)
+ * manager.render(circle(10).tag('custom-cursor'))
+ *
+ * // Adding the onmousemove listener
+ * manager.on('mousemove', (ev: MouseEvent, svgNode) => {
+ *     // Get the position of the SVG element
+ *     const svgX = svgNode.element.getBoundingClientRect().x,
+ *         svgY = svgNode.element.getBoundingClientRect().y
+ *
+ *     // Get the x and y of the mouse relative to the SVG
+ *     const x = ev.clientX - svgX,
+ *         y = ev.clientY - svgY
+ *
+ *     // Move the cursor to this location
+ *     manager.tagged('custom-cursor').forEach((cursor) => cursor.cx(x).cy(y))
+ * })
+ * ```
  */
-export default class SVGManager {
+export default class SVGManager extends SVGLinkedNode {
+    /** @hidden Manager identifier */
     private _managerid: string
-    private _definitions: string[]
 
-    private _node: SVGLinkedNode | null
+    /** @hidden Saved definitions */
+    private _definitions: SVGManagerDefinition[]
 
-    private get parentElement(): HTMLElement {
-        const parentElement = this.node.element.parentElement
-
-        if (parentElement === null) throw 'SVGManager: Node has no parent'
-
-        return parentElement
-    }
-
-    private get node(): SVGLinkedNode {
-        if (this._node === null)
-            throw 'SVGManager: A SVGManager needs to be initialized (using SVGManager.init(rootId) before usage'
-
-        return this._node
-    }
-
+    /**
+     * @hidden
+     * Fetches the Defs Element in the SVG
+     */
     private defsElement(): SVGLinkedNode {
-        const defs = this.node.children.find(
-            (child) => child.tagName === 'defs',
-        )
+        // Find the first child with defs as a tagName
+        const defs = this.children.find((child) => child.tagName === 'defs')
 
+        // If not found throw an error
         if (defs === undefined) throw 'SVGManager: Definition not found in svg'
 
         return defs
     }
 
-    private toDefId(elementId: string): SVGManagerDefinition {
-        return (this._managerid +
-            '-' +
-            DEFINITION_PREFIX +
-            elementId) as SVGManagerDefinition
+    /** @hidden Turns a hash into a SVGManagerDefinition */
+    private toDefId(hash: string): SVGManagerDefinition {
+        // Prefix the managerId and the Std Def Prefix
+        return `${this._managerid}-${DEFINITION_PREFIX}${hash}` as SVGManagerDefinition
     }
 
-    public static toTagClass(tag: string): SVGManagerTag {
-        return (TAG_PREFIX + tag) as SVGManagerTag
+    /** @hidden Returns whether a definition already exists or not */
+    private doesDefExist(definition: SVGManagerDefinition): boolean {
+        return this._definitions.includes(definition)
     }
 
-    public static getTagsFromClasses(classNames: string): string[] {
-        return classNames
-            .split(' ')
-            .filter((className) => className.startsWith(TAG_PREFIX))
-            .map((name) => name.substr(TAG_PREFIX.length))
-    }
+    /** @hidden Adds a definition and returns the SVGManagerDefinition */
+    private addDefintion(node: SVGNode): SVGManagerDefinition {
+        // Fetch definition string
+        const definition = this.toDefId(node.toHash())
 
-    public static addTagsToNode(node: SVGNode): SVGNode {
-        node.children.forEach((child) => this.addTagsToNode(child))
+        // Add definition to saved defs
+        this._definitions.push(definition)
 
-        if (node.tags.length === 0) return node
-
-        const classNames = (node.get('class') || '').toString()
-        const nodeTags = this.getTagsFromClasses(classNames)
-        const classNamesMinusTags = classNames
-            .split(' ')
-            .filter((className) => nodeTags.includes(className))
-
-        node.tags.forEach((tag) => {
-            classNamesMinusTags.push(this.toTagClass(tag))
-        })
-
-        if (classNamesMinusTags.length !== 0)
-            node.set('class', classNamesMinusTags.join(' '))
-
-        return node
-    }
-
-    private doesDefExist(elementId: string): boolean {
-        return this._definitions.includes(elementId)
-    }
-
-    private addDefintion(element: SVGNode): SVGManagerDefinition {
-        const definitionId = this.toDefId(element.toHash())
-
-        this._definitions.push(definitionId)
+        // Append node to defs
         this.defsElement().append(
-            SVGManager.addTagsToNode(element.set('id', definitionId)),
+            SVGManager.addTagsToNode(node.copy().set('id', definition)),
         )
 
-        return definitionId
+        return definition
     }
 
+    /** @hidden Add a use of a definition to the SVGManager */
     private addUse(
-        elementId: string,
+        definition: SVGManagerDefinition,
         args?: {
             tags?: string[]
             attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
             events?: SVGManagerEventDefinition[]
         },
     ): void {
-        const node = new SVGNode('use').set('href', '#' + elementId)
+        // Create use with def id
+        const useNode = new SVGUse(definition)
+
+        // If arguments are given
         if (args !== undefined) {
+            // If args.tags are given add them them to the useNode
+            if (args.tags !== undefined)
+                args.tags.forEach((tag) => useNode.tag(tag))
+
+            // If args.attributes are given add them them to the useNode
             if (args.attributes !== undefined)
                 args.attributes.forEach((attribute) =>
-                    node.set(attribute.attrName, attribute.attrValue),
+                    useNode.set(attribute.attrName, attribute.attrValue),
                 )
+
+            // If args.events are given add them them to the useNode
             if (args.events !== undefined)
                 args.events.forEach((event) =>
-                    node.on(event.eventName, event.func),
+                    useNode.on(event.eventName, event.func),
                 )
-            if (args.tags !== undefined)
-                args.tags.forEach((tag) => node.tag(tag))
         }
 
-        this.node.append(node)
+        // Append Use to Manager
+        this.append(useNode)
     }
 
-    private addFigure(element: SVGNode): void {
-        this.node.append(SVGManager.addTagsToNode(element))
+    /** @hidden Add child to SVGManager with tags set */
+    private addFigure(node: SVGNode): void {
+        this.append(SVGManager.addTagsToNode(node.copy()))
     }
 
     /**
-     * Constructs a empty SVGManager object
+     * Constructs a empty and uninitialized SVGManager object
      */
     public constructor() {
+        super(new SVGNode('svg').toHTML())
+        this._element = null
+
         this._managerid = uuidv4()
 
-        this._node = null
         this._definitions = []
     }
 
     /**
-     * Initializes the SVGManager to DOM within the container with id *rootId*\
-     * It returns itself, for easy programming
-     *
-     * # Note
-     * This svg has some default styling:
-     * - viewBox of '0 0 100 100'
-     * - width of 500px
-     * - height of 500px
-     * @param rootId The parent id
+     * Initialize the SVGManager
+     * @param rootId container-id in which to put the SVG
      */
     public init(rootId: string): this {
+        const svgElement = new SVGNode('svg')
+            .set('viewBox', DEFAULT_VIEWBOX)
+            .set('id', this._managerid)
+            .append(new SVGNode('defs'))
+            .toHTML()
+
         const rootElement = document.getElementById(rootId)
 
         if (rootElement === null)
             throw 'SVGManager: rootId of "' + rootId + '" not found!'
 
-        this._definitions = []
-
-        const svgElement = new SVGNode('svg')
-            .set('viewBox', DEFAULT_VIEWBOX)
-            .set('width', DEFAULT_SVG_WIDTH)
-            .set('height', DEFAULT_SVG_HEIGHT)
-            .set('id', this._managerid)
-            .append(new SVGNode('defs'))
-            .toHTML()
-
-        this._node = new SVGLinkedNode(rootElement.appendChild(svgElement))
+        rootElement.appendChild(svgElement)
 
         return this
     }
@@ -182,31 +202,30 @@ export default class SVGManager {
     /**
      * Adds the definition of element to list of definitions,
      * So that next time, when it is used, the element can rendered using the definition.
+     *
+     * This will be used in [[renderDef]], [[SVGNode.fillDef]] and [[SVGNode.strokeDef]]
      */
-    public ensureDefinition(element: SVGNode): SVGManagerDefinition {
-        const elementId = element.toHash()
+    public define(node: SVGNode): SVGManagerDefinition {
+        const definition = this.toDefId(node.toHash())
 
-        if (!this.doesDefExist(elementId)) {
-            this.addDefintion(element)
-        }
+        if (!this.doesDefExist(definition)) this.addDefintion(node)
 
-        return this.toDefId(elementId)
+        return definition
     }
 
     /**
-     * Renders a figure to the SVG using a figure ID/Hash.
+     * Renders a figure to the SVG using a definition string.
      *
      * # Note
      * Requires a definition to present for the figure ID
      * otherwise it throws a Error
      *
-     * @param elementId Definition id string
-     * @param args Optional arguments from the rendering, including the names, tags, attributes and events
+     * @param definition Definition id string
+     * @param args Optional arguments from the rendering, including the tags, attributes and events
      */
-    public renderId(
+    public renderDef(
         definition: SVGManagerDefinition,
         args?: {
-            names?: string[]
             tags?: string[]
             attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
             events?: SVGManagerEventDefinition[]
@@ -226,105 +245,69 @@ export default class SVGManager {
      * # Note
      * Will add the figure to definitions if not already there.
      */
-    public render(element: SVGNode): this {
-        this.addFigure(element)
+    public render(node: SVGNode): this {
+        this.addFigure(node)
 
         return this
     }
 
     /**
-     * Mutates the SVGManager to add an event.
-     * Multiple functions can be set for the same event.
-     * Then, it returns itself, for easy programming.
-     */
-    public on(event: SVGEventName, func: SVGManagerEventHandler): this {
-        this.node.on(event, func)
-        return this
-    }
-
-    /**
-     * Fetches all DOM elements in the SVG tagged with tag
-     */
-    public tagged(tag: string): SVGLinkedNode[] {
-        return Array.from(
-            this.node.element.getElementsByClassName(
-                SVGManager.toTagClass(tag),
-            ),
-        ).map((el) => new SVGLinkedNode(el as SVGElement))
-    }
-
-    /**
-     * Removes the SVG from the DOM
-     */
-    public destruct(): void {
-        this.node.element.remove()
-        this._node = null
-    }
-
-    /**
-     * Removes all the content from the SVG in the DOM including the definitions
+     * Removes the rendered items, definitions, events and innerText
      */
     public clean(): void {
-        // Remove event listeners
-        const node = new SVGNode('svg')
-        Array.from(this.node.attributes).forEach(([attr, value]) =>
-            node.set(attr, value),
-        )
-
-        const newChild = this.parentElement.appendChild(node.toHTML())
-        this.node.element.remove()
-        const svgNode = new SVGLinkedNode(newChild)
-
-        svgNode.text('')
-        this._definitions = []
-
-        svgNode.append(new SVGNode('defs'))
-
-        this._node = svgNode
+        this.clearEvents()
+        this.removeChildren()
+        this.text('')
+        this.render(new SVGNode('defs'))
     }
 
     /**
-     * Fetch an attribute value from root SVG element
-     * @param attr Attribute name
-     */
-    public get(attr: SVGAttribute): AttributeValue | undefined {
-        return this.node.get(attr)
-    }
-
-    /**
-     * Set/change an attribute value from root SVG element
-     * @param attr Attribute name
-     * @param value Set value
-     */
-    public set(attr: SVGAttribute, value: AttributeValue): this {
-        this.node.set(attr, value)
+     * A raw append, only use when you know what is going on
+     *
+     * **Recommended to use [[render]] instead**
+     * */
+    public append(child: SVGNode): this {
+        this.element.appendChild(child.toHTML())
 
         return this
     }
 
+    /** Setter for the viewBox attribute */
     public viewBox(vb: AttributeValue): SVGManager {
-        this.node.set('viewBox', vb)
+        this.set('viewBox', vb)
         return this
     }
 
+    /** Setter for the width attribute */
     public width(length: AttributeValue): SVGManager {
-        this.node.set('width', length)
+        this.set('width', length)
         return this
     }
 
+    /** Setter for the height attribute */
     public height(length: AttributeValue): SVGManager {
-        this.node.set('height', length)
+        this.set('height', length)
         return this
     }
 
     /**
-     * Returns the unique identifier connected to this SVGManager
+     * The id connected to this SVGManager,
+     * also set as the DOM-id for the SVG element
      */
     public get id(): string {
         return this._managerid
     }
 
-    public get events(): SVGManagerEventDefinition[] {
-        return this.node.events
+    /**
+     * The actual SVG element on the DOM
+     */
+    public get element(): SVGElement {
+        const elem = document.getElementById(
+            this._managerid,
+        ) as SVGElement | null
+
+        if (elem === null)
+            throw 'SVGManager: Cannot find SVG element, maybe initialize the SVGManager?'
+        return elem
     }
 }

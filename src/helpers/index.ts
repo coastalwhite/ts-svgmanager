@@ -8,7 +8,6 @@ import {
     parseSVGViewBox,
 } from './Parser'
 import PathData from './PathData'
-import { circle, curve, curveCalc, line, lines } from '../Shapes'
 import ViewBox from './ViewBox'
 
 export {
@@ -23,10 +22,5 @@ export {
     parseSVGNode,
     htmlParseSVGNode,
     PathData,
-    circle,
-    curve,
-    curveCalc,
-    line,
-    lines,
     ViewBox,
 }

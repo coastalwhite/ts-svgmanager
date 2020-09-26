@@ -1,9 +1,15 @@
 import { SVGTag } from '../definitions'
 import SVGNode, { AttributeValue } from '../SVGNode'
 
+/**
+ * An easy way to create multiple `stop` elements
+ *
+ * Basically an stack with the `stop` method to add a new `stop`
+ */
 export class SVGStops {
     private _stops: SVGNode[]
 
+    /** Creates an empty stack */
     public constructor() {
         this._stops = []
     }
@@ -39,6 +45,9 @@ export class SVGStops {
         return this
     }
 
+    /**
+     * Turns the head to the stack
+     */
     public get head(): SVGNode {
         if (this._stops.length === 0)
             throw 'SVGStops: stack is empty, no head exists'
@@ -47,13 +56,16 @@ export class SVGStops {
     }
 
     /**
-     * Pops last element of stack
+     * Pops head element of stack
      */
     public pop(): this {
         this._stops.pop()
         return this
     }
 
+    /**
+     * Execute f for every element in stack
+     */
     public forEach(
         f: (node: SVGNode, index: number, array: SVGNode[]) => void,
     ): void {

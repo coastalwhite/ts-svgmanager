@@ -10,7 +10,7 @@
         "build": "webpack"
     },
     "dependencies": {
-        "ts-svgmanager": "2.0.0-beta16"
+        "ts-svgmanager": "2.0.0-beta21"
     },
     "devDependencies": {
         "ts-loader": "^8.0.4",

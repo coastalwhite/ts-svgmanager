@@ -1,11 +1,17 @@
 import PathData from './helpers/PathData'
-import SVGNode from './SVGNode'
-import V2D from './definitions/V2D'
+import SVGNode, { AttributeValue } from './SVGNode'
 
 /**
+ * Create a circle with a certain radius `r`
+ *
+ * Optional args are `cx`: center x and `cy`: center y
  *
  */
-export function circle(r: number, cx?: number, cy?: number): SVGNode {
+export function circle(
+    r: AttributeValue,
+    cx?: AttributeValue,
+    cy?: AttributeValue,
+): SVGNode {
     return new SVGNode('circle')
         .cx(cx || 0)
         .cy(cy || 0)
@@ -15,13 +21,13 @@ export function circle(r: number, cx?: number, cy?: number): SVGNode {
 }
 
 /**
- *
+ * Create a line from one point to another
  */
 export function line(
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
+    fromX: AttributeValue,
+    fromY: AttributeValue,
+    toX: AttributeValue,
+    toY: AttributeValue,
 ): SVGNode {
     return new SVGNode('line')
         .set('x1', fromX)
@@ -32,7 +38,7 @@ export function line(
 }
 
 /**
- *
+ * Create a number of connecting lines given by a array of x and y coordinates
  */
 export function lines(points: { x: number; y: number }[]): SVGNode {
     const pathData = new PathData().moveTo(points[0].x, points[0].y)
@@ -47,7 +53,7 @@ export function lines(points: { x: number; y: number }[]): SVGNode {
 }
 
 /**
- *
+ * Creates a polygon using the given points
  */
 export function polygon(points: { x: number; y: number }[]): SVGNode {
     return new SVGNode('polygon')
@@ -57,7 +63,7 @@ export function polygon(points: { x: number; y: number }[]): SVGNode {
 }
 
 /**
- *
+ * Creates a rectangle using x, y, width and height
  */
 export function rect(
     x: number,
@@ -75,7 +81,9 @@ export function rect(
 }
 
 /**
+ * Creates a ellipse with a certain radius-X (rx) and radius-Y (ry)
  *
+ * Optional arguments are center-X (cx) and center-Y (cy)
  */
 export function ellipse(
     rx: number,
@@ -83,7 +91,7 @@ export function ellipse(
     cx?: number,
     cy?: number,
 ): SVGNode {
-    return new SVGNode('rect')
+    return new SVGNode('ellipse')
         .cx(cx || 0)
         .cy(cy || 0)
         .set('rx', rx)
@@ -93,7 +101,7 @@ export function ellipse(
 }
 
 /**
- *
+ * Draws a curve from one point to another using a control point
  */
 export function curve(
     fromX: number,
@@ -110,43 +118,5 @@ export function curve(
                 .moveTo(fromX, fromY)
                 .quadraticCurveTo(toX, toY, controlX, controlY),
         )
-        .stroke('#000', '1px')
-}
-
-/**
- *
- */
-export function curveCalc(
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
-    curving: number,
-): SVGNode {
-    const from = new V2D(fromX, fromY),
-        to = new V2D(toX, toY)
-    const middle = from.middle(to)
-    const dif = to.sub(from)
-    let normal = new V2D(-1 * dif.y(), dif.x())
-    if (!((normal.y() > 0 && curving >= 0) || (normal.y() < 0 && curving < 0)))
-        normal = normal.sca(-1)
-
-    const normalNormalized = middle.add(
-        normal.sca((2 * curving) / normal.length()),
-    )
-
-    return new SVGNode('path')
-        .set(
-            'd',
-            new PathData()
-                .moveTo(from.x(), from.y())
-                .quadraticCurveTo(
-                    to.x(),
-                    to.y(),
-                    normalNormalized.x(),
-                    normalNormalized.y(),
-                ),
-        )
-        .fill('transparent')
         .stroke('#000', '1px')
 }

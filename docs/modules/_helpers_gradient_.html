@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;V2D&quot; | ts-svgmanager</title>
+	<title>&quot;helpers/Gradient&quot; | ts-svgmanager</title>
 	<meta name="description" content="Documentation for ts-svgmanager">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_v2d_.html">&quot;V2D&quot;</a>
+					<a href="_helpers_gradient_.html">&quot;helpers/Gradient&quot;</a>
 				</li>
 			</ul>
-			<h1>Module &quot;V2D&quot;</h1>
+			<h1>Module &quot;helpers/Gradient&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,10 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_v2d_.v2d.html" class="tsd-kind-icon">V2D</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-not-exported"><a href="../classes/_helpers_gradient_.svggradient.html" class="tsd-kind-icon">SVGGradient</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_helpers_gradient_.svglingradient.html" class="tsd-kind-icon">SVGLin<wbr>Gradient</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_helpers_gradient_.svgradgradient.html" class="tsd-kind-icon">SVGRad<wbr>Gradient</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_helpers_gradient_.svgstops.html" class="tsd-kind-icon">SVGStops</a></li>
 							</ul>
 						</section>
 					</div>
@@ -87,47 +90,44 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="_parser_.html">&quot;<wbr>Parser&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
 						<a href="_svgmanager_.html">&quot;SVGManager&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="_svgnode_.html">&quot;SVGNode&quot;</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="_shapes_.html">&quot;<wbr>Shapes&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_helpers_animate_.html">&quot;helpers/<wbr>Animate&quot;</a>
+					</li>
 					<li class="current tsd-kind-module">
-						<a href="_v2d_.html">&quot;<wbr>V2D&quot;</a>
+						<a href="_helpers_gradient_.html">&quot;helpers/<wbr>Gradient&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="_definitions_attributes_.html">&quot;definitions/<wbr>Attributes&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_definitions_events_.html">&quot;definitions/<wbr>Events&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_definitions_tags_.html">&quot;definitions/<wbr>Tags&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_definitions_viewbox_.html">&quot;definitions/<wbr>View<wbr>Box&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_definitions_index_.html">&quot;definitions/index&quot;</a>
+						<a href="_helpers_parser_.html">&quot;helpers/<wbr>Parser&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="_helpers_pathdata_.html">&quot;helpers/<wbr>Path<wbr>Data&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="_helpers_shapes_.html">&quot;helpers/<wbr>Shapes&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="_index_.html">&quot;index&quot;</a>
+						<a href="_helpers_viewbox_.html">&quot;helpers/<wbr>View<wbr>Box&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../classes/_helpers_gradient_.svggradient.html" class="tsd-kind-icon">SVGGradient</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/_v2d_.v2d.html" class="tsd-kind-icon">V2D</a>
+						<a href="../classes/_helpers_gradient_.svglingradient.html" class="tsd-kind-icon">SVGLin<wbr>Gradient</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_helpers_gradient_.svgradgradient.html" class="tsd-kind-icon">SVGRad<wbr>Gradient</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_helpers_gradient_.svgstops.html" class="tsd-kind-icon">SVGStops</a>
 					</li>
 				</ul>
 			</nav>
@@ -139,15 +139,7 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>

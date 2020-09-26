@@ -1,17 +1,19 @@
 {
     "name": "ts-svgmanager",
-    "version": "2.0.0-beta16",
+    "version": "2.0.0",
     "description": "A Typescript SVG Manager",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "index.js",
+    "types": "index.d.ts",
     "scripts": {
         "prepublish": "tsc",
+        "pub": "cat package.json | grep -v '\"private\": true,' > ./dist/package.json ; npm publish dist",
         "test": "mocha -r ts-node/register -r jsdom-global/register tests/**/*.test.ts",
         "coverage": "nyc -r lcov -e .ts -x \"./**/*.test.ts\" npm run test",
-        "docs": "typedoc --out docs src; echo '' > ./docs/.nojekyll",
+        "docs": "typedoc --out docs src --exclude \"./src/definitions/*\" --exclude ./src/Events.ts; echo '' > ./docs/.nojekyll",
         "lint": "npx eslint ./src --ext .ts",
         "lint:tests": "eslint ./tests/**/*.ts"
     },
+    "private": true,
     "repository": {
         "type": "git",
         "url": "git+https://github.com/coastalwhite/ts-svgmanager.git"

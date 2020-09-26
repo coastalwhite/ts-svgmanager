@@ -2,7 +2,7 @@ import { assert, expect } from 'chai'
 import PathData from '../src/helpers/PathData'
 import SVGNode from '../src/SVGNode'
 import { circle, line, rect } from '../src/Shapes'
-import { SVGManagerDefinition } from '../src/SVGManager'
+import { SVGManagerDefinition } from '../src/'
 import SVGAnimate from '../src/helpers/Animate'
 import { htmlParseSVGNode } from '../src/helpers/Parser'
 

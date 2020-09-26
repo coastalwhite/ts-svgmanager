@@ -1,3 +1,4 @@
+/** See [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) */
 type SVGAttribute =
     | 'accent-height'
     | 'accumulate'

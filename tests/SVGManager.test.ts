@@ -2,8 +2,8 @@ import { assert } from 'chai'
 import PathData from '../src/helpers/PathData'
 import ViewBox from '../src/helpers/ViewBox'
 import { circle } from '../src/Shapes'
-import SVGManager, { TAG_PREFIX } from '../src/SVGManager'
-import SVGNode from '../src/SVGNode'
+import SVGManager from '../src/SVGManager'
+import SVGNode, { TAG_PREFIX } from '../src/SVGNode'
 
 document.body.innerHTML = '<div id="root"></div>'
 
@@ -11,8 +11,7 @@ const root = document.getElementById('root')
 if (root === null) throw "Can't get root"
 
 describe('SVG Manager', function () {
-    const manager = new SVGManager()
-    manager.init('root')
+    const manager = new SVGManager().init('root')
 
     describe('Basic control functions - init/size/clean/remove/viewBox', function () {
         it('init', function () {
@@ -21,7 +20,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
@@ -37,7 +36,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}">
                     <defs>
                     </defs>
                 </svg>
@@ -51,7 +50,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="700px">
                     <defs>
                     </defs>
                 </svg>
@@ -65,7 +64,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="700px" height="300px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="700px" height="300px">
                     <defs>
                     </defs>
                 </svg>
@@ -79,7 +78,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="300px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="300px">
                     <defs>
                     </defs>
                 </svg>
@@ -93,7 +92,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -109,7 +108,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -118,12 +117,12 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.ensureDefinition(new SVGNode('g'))
+            manager.define(new SVGNode('g'))
 
             assert.notEqual(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -137,7 +136,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -153,7 +152,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -167,7 +166,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="10 10 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="10 10 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -181,7 +180,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="4 6 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="4 6 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -195,7 +194,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="-6 -4 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="-6 -4 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -209,7 +208,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -225,7 +224,7 @@ describe('SVG Manager', function () {
             assert.equal(
                 root.innerHTML,
                 `
-                <svg viewBox="0 0 100 100" width="500px" height="500px" id="${manager.id}">
+                <svg viewBox="0 0 100 100" id="${manager.id}" width="500px" height="500px">
                     <defs>
                     </defs>
                 </svg>
@@ -243,10 +242,10 @@ describe('SVG Manager', function () {
     })
 
     describe('Rendering - render/renderId/ensureDefinition', function () {
-        it('ensureDefinition', function () {
+        it('define', function () {
             manager.clean()
 
-            const def = manager.ensureDefinition(new SVGNode('a'))
+            const def = manager.define(new SVGNode('a'))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -340,7 +339,7 @@ describe('SVG Manager', function () {
         it('renderId', function () {
             manager.clean()
 
-            const def = manager.ensureDefinition(new SVGNode('a').x(3).y(7))
+            const def = manager.define(new SVGNode('a').x(3).y(7))
 
             assert.equal(
                 (root.firstChild as SVGElement).innerHTML,
@@ -354,7 +353,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.renderId(def, {
+            manager.renderDef(def, {
                 attributes: [
                     { attrName: 'x', attrValue: 23 },
                     { attrName: 'y', attrValue: 55 },
@@ -422,38 +421,6 @@ describe('SVG Manager', function () {
                 `
                     .replace(/[\t\n]+/g, '')
                     .replace(/\s{2,}/g, ''),
-            )
-        })
-    })
-
-    describe('tags - addTagsToNode/getTagsFromClasses', function () {
-        it('addTagsToNode', function () {
-            assert.equal(circle(0).get('class'), undefined)
-            assert.equal(circle(0).tag('hi').get('class'), undefined)
-            assert.equal(
-                SVGManager.addTagsToNode(circle(0).tag('hi')).get('class'),
-                TAG_PREFIX + 'hi',
-            )
-            assert.equal(
-                SVGManager.addTagsToNode(
-                    SVGManager.addTagsToNode(circle(0).tag('hi')).tag('bye'),
-                ).get('class'),
-                TAG_PREFIX + 'hi ' + TAG_PREFIX + 'bye',
-            )
-        })
-
-        it('getTagsFromClassnames', function () {
-            assert.equal(
-                JSON.stringify(
-                    SVGManager.getTagsFromClasses(
-                        (
-                            SVGManager.addTagsToNode(
-                                circle(0).tag('hi').tag('bye'),
-                            ).get('class') || ''
-                        ).toString(),
-                    ),
-                ),
-                JSON.stringify(['hi', 'bye']),
             )
         })
     })

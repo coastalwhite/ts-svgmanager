@@ -10,9 +10,9 @@ import SVGNode, { AttributeValue } from '../SVGNode'
 export default class SVGAnimate extends SVGNode {
     /**
      * Create an animation
+     * @param duration Duration of the total animation in milliseconds
      * @param attr Attribute to be animated
      * @param values The key values
-     * @param duration Duration of the total animation in milliseconds
      * @param tag Tag of the animation node
      */
     public constructor(
