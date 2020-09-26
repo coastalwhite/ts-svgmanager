@@ -349,13 +349,7 @@ export default class SVGNode {
             element.addEventListener(svgEvent, (e) => {
                 groupedEvents[svgEvent].forEach(
                     (eventCall: SVGManagerEventDefinition) => {
-                        if (e.target === null)
-                            throw 'SVGNode: Event target is null'
-
-                        eventCall.func(
-                            e,
-                            new SVGLinkedNode(e.target as SVGElement),
-                        )
+                        eventCall.func(e, new SVGLinkedNode(element))
                     },
                 )
             }),
@@ -396,7 +390,7 @@ export default class SVGNode {
 }
 
 export class SVGLinkedNode extends SVGNode {
-    private _element: SVGElement
+    private _element: SVGElement | null
 
     public constructor(element: SVGElement) {
         super(element.tagName as SVGTag)
@@ -409,14 +403,14 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public get children(): SVGLinkedNode[] {
-        return Array.from(this._element.children).map(
+        return Array.from(this.element.children).map(
             (el) => new SVGLinkedNode(el as SVGElement),
         )
     }
 
     public get attributes(): AttributeMap {
         return new Map(
-            Array.from(this._element.attributes).map((attr: Attr) => [
+            Array.from(this.element.attributes).map((attr: Attr) => [
                 attr.name as SVGAttribute,
                 attr.value as AttributeValue,
             ]),
@@ -424,11 +418,11 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public get tagName(): SVGTag {
-        return this._element.tagName as SVGTag
+        return this.element.tagName as SVGTag
     }
 
     public get innerText(): string {
-        return this._element.textContent || ''
+        return this.element.textContent || ''
     }
 
     /**
@@ -439,34 +433,35 @@ export class SVGLinkedNode extends SVGNode {
      * The id attribute is used within SVG Manager and will therefore most likely be overwritten.
      */
     public set(attr: SVGAttribute, value: AttributeValue): this {
-        this._element.setAttribute(attr, value.toString())
+        this.element.setAttribute(attr, value.toString())
 
         return this
     }
 
     public get(attr: SVGAttribute): AttributeValue | undefined {
-        return this._element.getAttribute(attr) || undefined
+        return this.element.getAttribute(attr) || undefined
     }
 
     public append(child: SVGNode): this {
-        this._element.appendChild(child.toHTML())
+        this.element.appendChild(child.toHTML())
 
         return this
     }
 
     public text(s: string): this {
-        this._element.textContent = s
+        this.element.textContent = s
         return this
     }
 
     public get element(): SVGElement {
+        if (this._element === null) throw 'SVGLinkedNode: Element is destructed'
+
         return this._element
     }
 
     public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
-        this._element.addEventListener(eventName, (ev) => {
-            if (ev.target === null) throw 'SVGLinkedNode: Event target is null'
-            func(ev, new SVGLinkedNode(ev.target as SVGElement))
+        this.element.addEventListener(eventName, (ev) => {
+            func(ev, new SVGLinkedNode(this.element))
         })
         this._events.push({ eventName, func })
 
@@ -481,7 +476,7 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public removeChild(index: number): this {
-        this._element.removeChild(this.element.children[index])
+        this.element.removeChild(this.element.children[index])
 
         return this
     }
@@ -490,6 +485,11 @@ export class SVGLinkedNode extends SVGNode {
         this.element.innerHTML = this.innerText
 
         return this
+    }
+
+    public destruct(): void {
+        this.element.remove()
+        this._element = null
     }
 
     public clearEvents(eventName?: SVGEventName): this {
