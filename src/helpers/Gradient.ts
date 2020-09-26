@@ -15,9 +15,9 @@ export class SVGStops {
      * @param stopOpacity Optional opacity from 0-1 of the stop (default is 1)
      */
     public stop(
-        offset: number,
-        stopColor?: string,
-        stopOpacity?: number,
+        offset: AttributeValue,
+        stopColor?: AttributeValue,
+        stopOpacity?: AttributeValue,
     ): this {
         const node = new SVGNode('stop')
 
