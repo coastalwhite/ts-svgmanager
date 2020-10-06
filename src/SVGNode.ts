@@ -381,6 +381,12 @@ export default class SVGNode {
         return this
     }
 
+    /** Removes tag from node, if it does not exist it does nothing. */
+    public untag(tag: string): this {
+        this._tags = this._tags.filter((t) => t !== tag)
+        return this
+    }
+
     /** Animates the node using an SVGAnimate object */
     public animate(svganimate: SVGAnimate): this {
         this.append(svganimate)
@@ -596,6 +602,13 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
+    /** Removes tag from node, if it does not exist it does nothing. */
+    public untag(tag: string): this {
+        this._tags = this._tags.filter((t) => t !== tag)
+        this.element.classList.remove(SVGLinkedNode.toTagClass(tag))
+
+        return this
+    }
     public tagged(tag: string): SVGLinkedNode[] {
         return Array.from(
             this.element.getElementsByClassName(SVGLinkedNode.toTagClass(tag)),

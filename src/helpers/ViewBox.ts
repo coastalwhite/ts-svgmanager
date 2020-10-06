@@ -55,6 +55,13 @@ class ViewBox {
     }
 
     /**
+     * Fetch the ViewBox Dimension
+     */
+    public getDimension(): { x: number; y: number } {
+        return { x: this._dimensions.x(), y: this._dimensions.y() }
+    }
+
+    /**
      * Turns the ViewBox into a string
      */
     public toString(): string {
