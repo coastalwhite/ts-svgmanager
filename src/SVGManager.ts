@@ -161,11 +161,6 @@ export default class SVGManager extends SVGLinkedNode {
         this.append(useNode)
     }
 
-    /** @hidden Add child to SVGManager with tags set */
-    private addFigure(node: SVGNode): void {
-        this.append(SVGManager.addTagsToNode(node.copy()))
-    }
-
     /**
      * Constructs a empty and uninitialized SVGManager object
      */
@@ -235,18 +230,6 @@ export default class SVGManager extends SVGLinkedNode {
             throw "SVGManager: Tried to render an Id that doesn't exist"
 
         this.addUse(this.toDefId(definition), args)
-
-        return this
-    }
-
-    /**
-     * Renders a figure to the SVG using a SVGNode
-     *
-     * # Note
-     * Will add the figure to definitions if not already there.
-     */
-    public render(node: SVGNode): this {
-        this.addFigure(node)
 
         return this
     }

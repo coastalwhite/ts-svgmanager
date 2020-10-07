@@ -398,67 +398,6 @@ describe('SVG Node', function () {
                 )
             })
 
-            it('differentiate children', function () {
-                assert.isTrue(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .shallowEquals(new SVGNode('a').append(circle(5))),
-                )
-                assert.isFalse(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .shallowEquals(new SVGNode('a').append(circle(8))),
-                )
-                assert.isFalse(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .shallowEquals(
-                            new SVGNode('a').append(rect(5, 5, 7, 8)),
-                        ),
-                )
-                assert.isTrue(
-                    new SVGNode('a')
-                        .append(line(5, 6, 7, 8))
-                        .shallowEquals(
-                            new SVGNode('a').append(line(5, 6, 7, 8)),
-                        ),
-                )
-                assert.isFalse(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .shallowEquals(
-                            new SVGNode('a')
-                                .append(circle(5))
-                                .append(circle(2)),
-                        ),
-                )
-                assert.isFalse(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .shallowEquals(
-                            new SVGNode('a')
-                                .append(circle(2))
-                                .append(circle(5)),
-                        ),
-                )
-                assert.isTrue(
-                    new SVGNode('a')
-                        .append(circle(5))
-                        .append(circle(2))
-                        .shallowEquals(
-                            new SVGNode('a')
-                                .append(circle(5))
-                                .append(circle(2)),
-                        ),
-                )
-                assert.isFalse(
-                    new SVGNode('a')
-                        .append(circle(2))
-                        .append(circle(5))
-                        .shallowEquals(new SVGNode('a').append(circle(2))),
-                )
-            })
-
             it('differentiate innerText', function () {
                 assert.isTrue(
                     new SVGNode('a')

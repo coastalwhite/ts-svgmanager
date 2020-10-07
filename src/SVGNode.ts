@@ -484,6 +484,11 @@ export class SVGLinkedNode extends SVGNode {
     /** @hidden */
     protected _element: SVGElement | null
 
+    /** @hidden Add child to SVGLinkedNode with tags set */
+    private addFigure(node: SVGNode): void {
+        this.append(SVGLinkedNode.addTagsToNode(node.copy()))
+    }
+
     /** @hidden */
     protected static getTagsFromClasses(classNames: string): string[] {
         return classNames
@@ -609,6 +614,16 @@ export class SVGLinkedNode extends SVGNode {
 
         return this
     }
+
+    /**
+     * Renders a figure to the SVG using a SVGNode
+     */
+    public render(node: SVGNode): this {
+        this.addFigure(node)
+
+        return this
+    }
+
     public tagged(tag: string): SVGLinkedNode[] {
         return Array.from(
             this.element.getElementsByClassName(SVGLinkedNode.toTagClass(tag)),
