@@ -1,6 +1,7 @@
+import { SVGNode } from '..'
+import { SVGAttribute, SVGTagName } from '../definitions'
+import { AttributeValue } from '../nodes'
 import PathData from './PathData'
-import { SVGAttribute, SVGTag } from '../definitions'
-import SVGNode, { AttributeValue } from '../SVGNode'
 
 /**
  * Helper class for easy initialization of SVG Animations
@@ -19,7 +20,7 @@ export default class SVGAnimate extends SVGNode {
         duration: number,
         attr?: SVGAttribute,
         values?: AttributeValue[],
-        tag?: SVGTag,
+        tag?: SVGTagName,
     ) {
         super(tag || 'animate')
         if (attr !== undefined) this.set('attributeName', attr)

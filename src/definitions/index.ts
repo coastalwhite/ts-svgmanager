@@ -1,4 +1,14 @@
-import SVGAttribute from './SVGAttribute'
-import SVGTag from './SVGTag'
+import SVGAttribute from './Attributes'
+import SVGTagName from './TagNames'
+import SVGEventName, {
+    SVGManagerEventDefinition,
+    SVGManagerEventHandler,
+} from './Events'
 
-export { SVGTag, SVGAttribute }
+export {
+    SVGAttribute,
+    SVGTagName,
+    SVGEventName,
+    SVGManagerEventDefinition,
+    SVGManagerEventHandler,
+}

@@ -1,14 +1,16 @@
 import SVGAnimate, { SVGAnimateMotion } from './Animate'
-import { SVGLinGradient, SVGRadGradient, SVGStops } from './Gradient'
+import SVGStops from './Stops'
+import { SVGLinGradient, SVGRadGradient } from './Gradient'
 import {
-    fetchSVGNode,
-    fetchSVGNodeSync,
-    htmlParseSVGNode,
-    parseSVGNode,
-    parseSVGViewBox,
+    svgHTMLintoNode,
+    svgParseNode,
+    svgParseViewBox,
+    svgFetchNode,
+    svgFetchNodeSync,
 } from './Parser'
-import PathData from './PathData'
-import ViewBox from './ViewBox'
+import SVGPathData from './PathData'
+import SVGViewBox from './ViewBox'
+import V2D from './V2D'
 
 export {
     SVGAnimate,
@@ -16,11 +18,12 @@ export {
     SVGLinGradient,
     SVGRadGradient,
     SVGStops,
-    fetchSVGNode,
-    fetchSVGNodeSync,
-    parseSVGViewBox,
-    parseSVGNode,
-    htmlParseSVGNode,
-    PathData,
-    ViewBox,
+    svgHTMLintoNode,
+    svgParseNode,
+    svgParseViewBox,
+    svgFetchNode,
+    svgFetchNodeSync,
+    SVGPathData,
+    SVGViewBox,
+    V2D,
 }

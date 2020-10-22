@@ -1,16 +1,12 @@
-import SVGNode, { AttributeValue, SVGLinkedNode, SVGUse } from './SVGNode'
-
 import { v4 as uuidv4 } from 'uuid'
-import { SVGAttribute } from './definitions'
-import { SVGManagerEventDefinition } from './Events'
-import { SVGManagerDefinition } from '.'
-import { parseSVGViewBox, ViewBox } from './helpers'
+import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
+import { SVGAttribute, SVGManagerEventDefinition } from './definitions'
+import { svgParseViewBox, SVGViewBox } from './helpers'
+import { AttributeValue } from './nodes'
+import { SVGUse } from './nodes/Use'
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
-
-/** @hidden */
-const DEFAULT_VIEWBOX = '0 0 100 100'
 
 /**
  * A manager class for interactive SVG's
@@ -180,7 +176,6 @@ export default class SVGManager extends SVGLinkedNode {
      */
     public init(rootId: string): this {
         const svgElement = new SVGNode('svg')
-            .set('viewBox', DEFAULT_VIEWBOX)
             .set('id', this._managerid)
             .append(new SVGNode('defs'))
             .toHTML()
@@ -261,12 +256,12 @@ export default class SVGManager extends SVGLinkedNode {
     /**
      * Getter for the SVG viewBox attribute
      */
-    public get viewBox(): ViewBox | undefined {
+    public get viewBox(): SVGViewBox | undefined {
         const viewBoxStr = this.get('viewBox')
 
         if (viewBoxStr === undefined) return undefined
 
-        return parseSVGViewBox(viewBoxStr.toString())
+        return svgParseViewBox(viewBoxStr.toString())
     }
 
     /** Setter for the width attribute */

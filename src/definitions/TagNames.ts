@@ -1,5 +1,5 @@
 /** See [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Element) */
-type SVGTag =
+type SVGTagName =
     | 'a'
     | 'animate'
     | 'animateMotion'
@@ -74,4 +74,4 @@ type SVGTag =
     | 'use'
     | 'view'
 
-export default SVGTag
+export default SVGTagName

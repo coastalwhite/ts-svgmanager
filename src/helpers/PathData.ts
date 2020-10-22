@@ -1,7 +1,7 @@
 /**
  * A JS Class representing the HTML-Path D attribute
  */
-export default class PathData {
+export default class SVGPathData {
     private _inner: string
 
     public constructor() {

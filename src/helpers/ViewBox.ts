@@ -1,9 +1,9 @@
-import V2D from '../definitions/V2D'
+import V2D from './V2D'
 
 /**
  * An Helper class for for the SVG ViewBox
  */
-class ViewBox {
+export default class SVGViewBox {
     private _minPosition: V2D
     private _dimensions: V2D
 
@@ -21,7 +21,7 @@ class ViewBox {
      * Move the position of the ViewBox
      * @param by Vector to move the position of the viewbox with
      */
-    public move(byX: number, byY: number): ViewBox {
+    public move(byX: number, byY: number): SVGViewBox {
         this._minPosition = this._minPosition.add(new V2D(byX, byY))
 
         return this
@@ -31,7 +31,7 @@ class ViewBox {
      * Sets the position of the ViewBox
      * @param v New position of the viewbox
      */
-    public setPosition(x: number, y: number): ViewBox {
+    public setPosition(x: number, y: number): SVGViewBox {
         this._minPosition = new V2D(x, y)
 
         return this
@@ -41,14 +41,14 @@ class ViewBox {
      * Fetch the ViewBox Position
      */
     public getPosition(): { x: number; y: number } {
-        return { x: this._minPosition.x(), y: this._minPosition.y() }
+        return { x: this._minPosition.x, y: this._minPosition.y }
     }
 
     /**
      * Sets the dimensions of the ViewBox
      * @param v New dimensions of the ViewBox as V2D(Width, Height)
      */
-    public setDimensions(width: number, height: number): ViewBox {
+    public setDimensions(width: number, height: number): SVGViewBox {
         this._dimensions = new V2D(width, height)
 
         return this
@@ -58,7 +58,7 @@ class ViewBox {
      * Fetch the ViewBox Dimension
      */
     public getDimension(): { x: number; y: number } {
-        return { x: this._dimensions.x(), y: this._dimensions.y() }
+        return { x: this._dimensions.x, y: this._dimensions.y }
     }
 
     /**
@@ -67,8 +67,6 @@ class ViewBox {
     public toString(): string {
         const min = this._minPosition
         const dim = this._dimensions
-        return `${min.x()} ${min.y()} ${dim.x()} ${dim.y()}`
+        return `${min.x} ${min.y} ${dim.x} ${dim.y}`
     }
 }
-
-export default ViewBox

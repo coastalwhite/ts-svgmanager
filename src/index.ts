@@ -1,7 +1,7 @@
-import SVGManager from './SVGManager'
-import SVGNode from './SVGNode'
+import { SVGNode, SVGLinkedNode } from './nodes'
+import SVGManager from './Manager'
 
-export { SVGManager, SVGNode }
+export { SVGManager, SVGNode, SVGLinkedNode }
 
 /**
  * @hidden
