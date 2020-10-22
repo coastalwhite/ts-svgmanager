@@ -4,12 +4,12 @@ import V2D from '../src/definitions/V2D'
 describe('V2D', function () {
     describe('Basis tests', function () {
         it('Should return the same values as it is initiated with', function () {
-            assert.equal(new V2D(3, 5).x(), 3)
-            assert.equal(new V2D(3, 5).y(), 5)
-            assert.equal(new V2D(-1, 5).x(), -1)
-            assert.equal(new V2D(3, -2).y(), -2)
-            assert.equal(new V2D(-20, -23).x(), -20)
-            assert.equal(new V2D(-20, -23).y(), -23)
+            assert.equal(new V2D(3, 5).x, 3)
+            assert.equal(new V2D(3, 5).y, 5)
+            assert.equal(new V2D(-1, 5).x, -1)
+            assert.equal(new V2D(3, -2).y, -2)
+            assert.equal(new V2D(-20, -23).x, -20)
+            assert.equal(new V2D(-20, -23).y, -23)
         })
 
         it('Should be able to tell if vectors are equal or not', function () {

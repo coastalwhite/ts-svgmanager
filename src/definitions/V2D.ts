@@ -14,14 +14,14 @@ export default class V2D {
     /**
      * Gets the x value
      */
-    public x(): number {
+    public get x(): number {
         return this._x
     }
 
     /**
      * Gets the y value
      */
-    public y(): number {
+    public get y(): number {
         return this._y
     }
 
@@ -35,7 +35,7 @@ export default class V2D {
      * ```
      */
     public equals(v: V2D): boolean {
-        return this.x() === v.x() && this.y() === v.y()
+        return this.x === v.x && this.y === v.y
     }
 
     /**
@@ -53,7 +53,7 @@ export default class V2D {
      * ```
      */
     public add(v: V2D): V2D {
-        return new V2D(this.x() + v.x(), this.y() + v.y())
+        return new V2D(this.x + v.x, this.y + v.y)
     }
 
     /**
@@ -71,7 +71,7 @@ export default class V2D {
      * ```
      */
     public sub(v: V2D): V2D {
-        return new V2D(this.x() - v.x(), this.y() - v.y())
+        return new V2D(this.x - v.x, this.y - v.y)
     }
 
     /**
@@ -89,7 +89,25 @@ export default class V2D {
      * ```
      */
     public sca(s: number): V2D {
-        return new V2D(this.x() * s, this.y() * s)
+        return new V2D(this.x * s, this.y * s)
+    }
+
+    /**
+     * Calcualtes the point wise multiplication of with `v`
+     * V2D(x,y).times(V2D(p,q)) maps to V2D(x*p,y*q)
+     *
+     * # Note
+     * Does not mutate *this* vector
+     *
+     * ```typescript
+     * let x = new V2D(3,4);
+     *
+     * x.times(new V2D(3,4)); // Will equal V2D(9,16)!
+     * x.times(new V2D(4,-3)); // Will equal V2D(12,-12)!
+     * ```
+     */
+    public times(v: V2D): V2D {
+        return new V2D(this.x * v.x, this.y * v.y)
     }
 
     /**
@@ -107,7 +125,7 @@ export default class V2D {
      * ```
      */
     public dot(v: V2D): number {
-        return this.x() * v.x() + this.y() * v.y()
+        return this.x * v.x + this.y * v.y
     }
 
     /**
@@ -124,7 +142,7 @@ export default class V2D {
      * ```
      */
     public invert(): V2D {
-        return new V2D(this.y(), this.x())
+        return new V2D(this.y, this.x)
     }
 
     /**
@@ -142,8 +160,8 @@ export default class V2D {
      */
     public abs(): V2D {
         return new V2D(
-            this.x() < 0 ? -this.x() : this.x(),
-            this.y() < 0 ? -this.y() : this.y(),
+            this.x < 0 ? -this.x : this.x,
+            this.y < 0 ? -this.y : this.y,
         )
     }
 
@@ -161,13 +179,13 @@ export default class V2D {
      * ```
      */
     public round(sk: number): V2D {
-        const lowX = this.x() - (this.x() % sk),
-            lowY = this.y() - (this.y() % sk),
+        const lowX = this.x - (this.x % sk),
+            lowY = this.y - (this.y % sk),
             highX = lowX + sk,
             highY = lowY + sk
 
-        const iX = this.x() - lowX < highX - this.x() ? lowX : highX,
-            iY = this.y() - lowY < highY - this.y() ? lowY : highY
+        const iX = this.x - lowX < highX - this.x ? lowX : highX,
+            iY = this.y - lowY < highY - this.y ? lowY : highY
 
         return new V2D(iX, iY)
     }
@@ -237,7 +255,7 @@ export default class V2D {
      * ```
      */
     public dydx(): number {
-        return this.y() / this.x()
+        return this.y / this.x
     }
 
     /**
@@ -256,7 +274,7 @@ export default class V2D {
      * ```
      */
     public xSign(): number {
-        return this.x() < 0 ? -1 : this.x() > 0 ? 1 : 0
+        return this.x < 0 ? -1 : this.x > 0 ? 1 : 0
     }
 
     /**
@@ -275,6 +293,6 @@ export default class V2D {
      * ```
      */
     public ySign(): number {
-        return this.y() < 0 ? -1 : this.y() > 0 ? 1 : 0
+        return this.y < 0 ? -1 : this.y > 0 ? 1 : 0
     }
 }
