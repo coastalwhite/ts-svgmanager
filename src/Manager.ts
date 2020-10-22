@@ -2,8 +2,16 @@ import { v4 as uuidv4 } from 'uuid'
 import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
 import { SVGAttribute, SVGManagerEventDefinition } from './declarations'
 import { SVGViewBox } from './helpers'
+import { BGPatternAction } from './manager-utils/backgrounds/BackgroundPattern'
+import PanningAction from './manager-utils/viewbox-interaction/Panning'
+import { ZoomingAction } from './manager-utils/viewbox-interaction/Zooming'
 import { AttributeValue } from './nodes'
-import { SVGUse } from './nodes/Use'
+import { SVGUse } from './nodes'
+import {
+    ManagerAction,
+    ManagerActionName,
+    ManagerActionSpecifier,
+} from './types'
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
@@ -82,6 +90,8 @@ export default class SVGManager extends SVGLinkedNode {
     /** @hidden Saved definitions */
     private _definitions: SVGManagerDefinition[]
 
+    private _actions: ManagerAction[]
+
     /**
      * @hidden
      * Fetches the Defs Element in the SVG
@@ -108,7 +118,7 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     /** @hidden Adds a definition and returns the SVGManagerDefinition */
-    private addDefintion(node: SVGNode): SVGManagerDefinition {
+    private addDefinition(node: SVGNode): SVGManagerDefinition {
         // Fetch definition string
         const definition = this.toDefId(node.toHash())
 
@@ -158,6 +168,26 @@ export default class SVGManager extends SVGLinkedNode {
         this.append(useNode)
     }
 
+    private activateAction(specifier: ManagerActionSpecifier): void {
+        switch (specifier.action) {
+            case 'panning':
+                this._actions.push(
+                    new PanningAction(specifier.settings || {}, this),
+                )
+                break
+            case 'zooming':
+                this._actions.push(
+                    new ZoomingAction(specifier.settings || {}, this),
+                )
+                break
+            case 'bg-pattern':
+                this._actions.push(
+                    new BGPatternAction(specifier.settings || {}, this),
+                )
+                break
+        }
+    }
+
     /**
      * Constructs a empty SVGManager object
      */
@@ -168,6 +198,7 @@ export default class SVGManager extends SVGLinkedNode {
         this._managerid = uuidv4()
 
         this._definitions = []
+        this._actions = []
     }
 
     /**
@@ -196,14 +227,12 @@ export default class SVGManager extends SVGLinkedNode {
      *
      * This will be used in [[renderDef]], [[SVGNode.fillDef]] and [[SVGNode.strokeDef]]
      */
-    public define(...nodes: SVGNode[]): SVGManagerDefinition[] {
-        return nodes.map((node) => {
-            const definition = this.toDefId(node.toHash())
+    public define(node: SVGNode): SVGManagerDefinition {
+        const definition = this.toDefId(node.toHash())
 
-            if (!this.doesDefExist(definition)) this.addDefintion(node)
+        if (!this.doesDefExist(definition)) this.addDefinition(node)
 
-            return definition
-        })
+        return definition
     }
 
     /**
@@ -227,7 +256,7 @@ export default class SVGManager extends SVGLinkedNode {
         if (!this.doesDefExist(definition))
             throw "SVGManager: Tried to render an Id that doesn't exist"
 
-        this.addUse(this.toDefId(definition), args)
+        this.addUse(definition, args)
 
         return this
     }
@@ -265,15 +294,26 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     /** Setter for the width attribute */
-    public width(length: AttributeValue): SVGManager {
+    public width(length: AttributeValue): this {
         this.set('width', length)
         return this
     }
 
     /** Setter for the height attribute */
-    public height(length: AttributeValue): SVGManager {
+    public height(length: AttributeValue): this {
         this.set('height', length)
         return this
+    }
+
+    public do(...actionSpecifiers: ManagerActionSpecifier[]): this {
+        actionSpecifiers
+            .filter((specifier) => this.does(specifier.action) === undefined)
+            .forEach((specifier) => this.activateAction(specifier))
+        return this
+    }
+
+    public does(action: ManagerActionName): ManagerAction | undefined {
+        return this._actions.find((a) => a.name === action)
     }
 
     /**

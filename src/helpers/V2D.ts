@@ -110,6 +110,10 @@ export default class V2D {
         return new V2D(this.x * v.x, this.y * v.y)
     }
 
+    public apply(f: (a: number) => number): V2D {
+        return new V2D(f(this.x), f(this.y))
+    }
+
     /**
      * Calculates the dot-product between current vector and vector *v* and returns the result\
      * V2D(x,y).dot(V2D(p,q)) maps to x*p+y*q

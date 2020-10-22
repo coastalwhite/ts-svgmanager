@@ -119,6 +119,28 @@ export default class SVGLinkedNode extends SVGNode {
         return this
     }
 
+    public prepend(...children: SVGNode[]): this {
+        const currentChildren = this.children
+
+        if (currentChildren.length === 0) return this.append(...children)
+
+        if (currentChildren[0].tagName === 'defs') {
+            if (currentChildren.length === 1) return this.append(...children)
+
+            children.forEach((child) =>
+                this.element.insertBefore(
+                    child.toHTML(),
+                    this.element.children.item(1),
+                ),
+            )
+            return this
+        }
+
+        this.element.prepend(...children.map((child) => child.toHTML()))
+
+        return this
+    }
+
     // ---- Styles Mutation ----
 
     public styleSet(property: StyleProperty, value: StyleValue): this {
@@ -177,6 +199,17 @@ export default class SVGLinkedNode extends SVGNode {
     public render(...nodes: SVGNode[]): this {
         nodes.forEach((node) =>
             this.append(SVGLinkedNode.addTagsToNode(node.copy())),
+        )
+
+        return this
+    }
+
+    /**
+     * Renders a figure to the SVG using a SVGNode
+     */
+    public renderFirst(...nodes: SVGNode[]): this {
+        nodes.forEach((node) =>
+            this.prepend(SVGLinkedNode.addTagsToNode(node.copy())),
         )
 
         return this

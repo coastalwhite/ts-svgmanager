@@ -172,6 +172,12 @@ export default class SVGNode {
         return this
     }
 
+    public prepend(...children: SVGNode[]): this {
+        this._children.unshift(...children)
+
+        return this
+    }
+
     /** Remove child at certain index */
     public removeChild(index: number): this {
         if (index >= this.children.length || index < 0)
