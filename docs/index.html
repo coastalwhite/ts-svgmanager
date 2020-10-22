@@ -129,11 +129,11 @@ manager.render(circle(<span class="hljs-number">25</span>, <span class="hljs-num
 <span class="hljs-comment">// Then we render a pentagon</span>
 manager.render(
     polygon([
-        { x: <span class="hljs-number">20</span>, y: <span class="hljs-number">10</span> },
-        { x: <span class="hljs-number">80</span>, y: <span class="hljs-number">10</span> },
-        { x: <span class="hljs-number">95</span>, y: <span class="hljs-number">60</span> },
-        { x: <span class="hljs-number">50</span>, y: <span class="hljs-number">95</span> },
-        { x: <span class="hljs-number">5</span>, y: <span class="hljs-number">60</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">20</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">10</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">80</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">10</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">95</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">60</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">95</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">60</span> },
     ]),
 )</code></pre>
 				<p>This will look like:</p>
@@ -166,11 +166,11 @@ manager.render(
 <span class="hljs-comment">// Render a pentagon with a custom fill</span>
 manager.render(
     polygon([
-        { x: <span class="hljs-number">20</span>, y: <span class="hljs-number">10</span> },
-        { x: <span class="hljs-number">80</span>, y: <span class="hljs-number">10</span> },
-        { x: <span class="hljs-number">95</span>, y: <span class="hljs-number">60</span> },
-        { x: <span class="hljs-number">50</span>, y: <span class="hljs-number">95</span> },
-        { x: <span class="hljs-number">5</span>, y: <span class="hljs-number">60</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">20</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">10</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">80</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">10</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">95</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">60</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">95</span> },
+        { <span class="hljs-attr">x</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">60</span> },
     ]),
     .fillDef(blueGradient),
 )</code></pre>
@@ -348,7 +348,7 @@ manager.render(pill)</code></pre>
     .set(<span class="hljs-string">&#x27;cursor&#x27;</span>, <span class="hljs-string">&#x27;none&#x27;</span>)
 
 <span class="hljs-comment">// Rendering a circle with a radius of 5 at (0,0)</span>
-manager.render(circle(<span class="hljs-number">5</span>).tag(<span class="hljs-string">&#x27;custom-cursor&#x27;</span>).cx(<span class="hljs-number">-20</span>).cy(<span class="hljs-number">-20</span>))
+manager.render(circle(<span class="hljs-number">5</span>).tag(<span class="hljs-string">&#x27;custom-cursor&#x27;</span>).cx(-<span class="hljs-number">20</span>).cy(-<span class="hljs-number">20</span>))
 
 <span class="hljs-comment">// Adding the onmousemove listener</span>
 manager.on(<span class="hljs-string">&#x27;mousemove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">ev: MouseEvent, svgNode</span>) =&gt;</span> {
