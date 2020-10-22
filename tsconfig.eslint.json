@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "commonjs",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "lib": ["es6", "dom", "ES2017"],
+        "target": "es2015",
+        "declaration": true,
+        "outDir": "./dist"
+    },
+    "include": ["src/**/*", "tests/**/*"],
+    "exclude": ["node_modules"]
+}
