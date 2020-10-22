@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { SVGAttribute } from './definitions'
 import { SVGManagerEventDefinition } from './Events'
 import { SVGManagerDefinition } from '.'
+import { parseSVGViewBox, ViewBox } from './helpers'
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
@@ -255,10 +256,15 @@ export default class SVGManager extends SVGLinkedNode {
         return this
     }
 
-    /** Setter for the viewBox attribute */
-    public viewBox(vb: AttributeValue): SVGManager {
-        this.set('viewBox', vb)
-        return this
+    /**
+     * Getter for the SVG viewBox attribute
+     */
+    public get viewBox(): ViewBox | undefined {
+        const viewBoxStr = this.get('viewBox')
+
+        if (viewBoxStr === undefined) return undefined
+
+        return parseSVGViewBox(viewBoxStr.toString())
     }
 
     /** Setter for the width attribute */
