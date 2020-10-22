@@ -5,6 +5,8 @@ import svgLine from './Line'
 import svgLines from './Lines'
 import svgEllipse from './Ellipse'
 import svgCurve from './Curve'
+import svgGroup from './Group'
+import svgUse from './Use'
 
 export {
     svgCircle,
@@ -14,4 +16,6 @@ export {
     svgLines,
     svgEllipse,
     svgCurve,
+    svgGroup,
+    svgUse,
 }
