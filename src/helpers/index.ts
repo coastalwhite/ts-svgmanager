@@ -4,7 +4,6 @@ import { SVGLinGradient, SVGRadGradient } from './Gradient'
 import {
     svgHTMLintoNode,
     svgParseNode,
-    svgParseViewBox,
     svgFetchNode,
     svgFetchNodeSync,
 } from './Parser'
@@ -20,7 +19,6 @@ export {
     SVGStops,
     svgHTMLintoNode,
     svgParseNode,
-    svgParseViewBox,
     svgFetchNode,
     svgFetchNodeSync,
     SVGPathData,

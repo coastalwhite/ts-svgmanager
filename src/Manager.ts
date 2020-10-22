@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
 import { SVGAttribute, SVGManagerEventDefinition } from './declarations'
-import { svgParseViewBox, SVGViewBox } from './helpers'
+import { SVGViewBox } from './helpers'
 import { AttributeValue } from './nodes'
 import { SVGUse } from './nodes/Use'
 
@@ -261,7 +261,7 @@ export default class SVGManager extends SVGLinkedNode {
 
         if (viewBoxStr === undefined) return undefined
 
-        return svgParseViewBox(viewBoxStr.toString())
+        return SVGViewBox.parse(viewBoxStr.toString())
     }
 
     /** Setter for the width attribute */

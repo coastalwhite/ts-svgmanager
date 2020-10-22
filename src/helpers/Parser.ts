@@ -1,6 +1,5 @@
 import { SVGNode } from '../nodes'
 import { SVGTagName, SVGAttribute } from '../declarations'
-import { SVGViewBox } from '.'
 
 /** Parse html element into node */
 function svgHTMLintoNode(elem: HTMLElement): SVGNode {
@@ -84,24 +83,4 @@ function svgFetchNodeSync(fileUrl: string): SVGNode {
     return svgParseNode(xhr.responseText)
 }
 
-/** Parse viewbox into ViewBox class */
-function svgParseViewBox(str: string): SVGViewBox {
-    const splitted = str.split(' ')
-
-    if (splitted.length !== 4) throw new Error('Incorrect format')
-
-    return new SVGViewBox(
-        parseFloat(splitted[0]),
-        parseFloat(splitted[1]),
-        parseFloat(splitted[2]),
-        parseFloat(splitted[3]),
-    )
-}
-
-export {
-    svgParseViewBox,
-    svgParseNode,
-    svgFetchNodeSync,
-    svgFetchNode,
-    svgHTMLintoNode,
-}
+export { svgParseNode, svgFetchNodeSync, svgFetchNode, svgHTMLintoNode }

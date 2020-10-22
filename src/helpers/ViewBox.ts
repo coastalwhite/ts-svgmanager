@@ -62,6 +62,22 @@ export default class SVGViewBox {
     }
 
     /**
+     * Parses a ViewBox from a string
+     */
+    public static parse(str: string): SVGViewBox {
+        const splitted = str.split(' ')
+
+        if (splitted.length !== 4) throw 'ViewBox parsing: Incorrect format'
+
+        return new SVGViewBox(
+            parseFloat(splitted[0]),
+            parseFloat(splitted[1]),
+            parseFloat(splitted[2]),
+            parseFloat(splitted[3]),
+        )
+    }
+
+    /**
      * Turns the ViewBox into a string
      */
     public toString(): string {
