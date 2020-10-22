@@ -213,8 +213,8 @@ export default class SVGNode {
      * to the children of the current SVGNode.
      * Then, it returns itself, for easy programming.
      */
-    public append(child: SVGNode): this {
-        this._children.push(child)
+    public append(...children: SVGNode[]): this {
+        this._children.push(...children)
 
         return this
     }
