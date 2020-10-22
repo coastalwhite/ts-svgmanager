@@ -8,7 +8,7 @@ import {
     SVGAttribute,
     SVGEventName,
     SVGManagerEventHandler,
-} from '../definitions'
+} from '../declarations'
 import SVGAnimate from '../helpers/Animate'
 
 /**

@@ -1,5 +1,5 @@
 import { SVGNode } from '..'
-import { SVGAttribute, SVGTagName } from '../definitions'
+import { SVGAttribute, SVGTagName } from '../declarations'
 import { AttributeValue } from '../nodes'
 import PathData from './PathData'
 

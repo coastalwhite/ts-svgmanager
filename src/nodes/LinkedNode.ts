@@ -5,7 +5,7 @@ import {
     SVGEventName,
     SVGManagerEventHandler,
     SVGTagName,
-} from '../definitions'
+} from '../declarations'
 
 /**
  * A SVGNode linked/attached to a DOM element,

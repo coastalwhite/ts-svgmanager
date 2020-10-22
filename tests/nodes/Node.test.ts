@@ -1,10 +1,13 @@
 import { assert, expect } from 'chai'
-import PathData from '../src/helpers/PathData'
-import SVGNode from '../src/SVGNode'
-import { circle, line, rect } from '../src/Shapes'
-import { SVGManagerDefinition } from '../src/'
-import SVGAnimate from '../src/helpers/Animate'
-import { htmlParseSVGNode } from '../src/helpers/Parser'
+import { SVGManagerDefinition, SVGNode } from '../../src/'
+import {
+    SVGAnimate,
+    svgHTMLintoNode,
+    SVGPathData,
+    V2D,
+} from '../../src/helpers'
+import { circle, line } from '../../src/shapes'
+import rect from '../../src/shapes/Rectangle'
 
 describe('SVG Node', function () {
     describe('Basic settings - Constructor/get/set/append/equals/shallowEquals', function () {
@@ -41,7 +44,7 @@ describe('SVG Node', function () {
                 assert.equal(new SVGNode('a').set('x', 123).get('x'), '123')
                 assert.equal(
                     new SVGNode('path')
-                        .set('d', new PathData().moveTo(10, 10))
+                        .set('d', new SVGPathData().moveTo(10, 10))
                         .get('d'),
                     'M 10 10',
                 )
@@ -61,7 +64,7 @@ describe('SVG Node', function () {
                     Array.from(
                         new SVGNode('path').set(
                             'd',
-                            new PathData().moveTo(10, 10),
+                            new SVGPathData().moveTo(10, 10),
                         ).attributes,
                     ).length,
                     1,
@@ -129,7 +132,7 @@ describe('SVG Node', function () {
 
             it('Append multiple elements', function () {
                 const el1 = circle(5)
-                const el2 = rect(5, 5, 10, 10)
+                const el2 = rect(new V2D(5, 5), new V2D(10, 10))
                 const el3 = circle(100)
 
                 assert.equal(new SVGNode('a').append(el1).children.length, 1)
@@ -254,12 +257,20 @@ describe('SVG Node', function () {
                 assert.isFalse(
                     new SVGNode('a')
                         .append(circle(5))
-                        .equals(new SVGNode('a').append(rect(5, 5, 7, 8))),
+                        .equals(
+                            new SVGNode('a').append(
+                                rect(new V2D(5, 5), new V2D(7, 8)),
+                            ),
+                        ),
                 )
                 assert.isTrue(
                     new SVGNode('a')
-                        .append(line(5, 6, 7, 8))
-                        .equals(new SVGNode('a').append(line(5, 6, 7, 8))),
+                        .append(line(new V2D(5, 6), new V2D(7, 8)))
+                        .equals(
+                            new SVGNode('a').append(
+                                line(new V2D(5, 6), new V2D(7, 8)),
+                            ),
+                        ),
                 )
                 assert.isFalse(
                     new SVGNode('a')
@@ -852,19 +863,19 @@ describe('SVG Node', function () {
             const el1 = circle(5)
             assert.isTrue(
                 el1.equals(
-                    htmlParseSVGNode((el1.toHTML() as unknown) as HTMLElement),
+                    svgHTMLintoNode((el1.toHTML() as unknown) as HTMLElement),
                 ),
             )
             assert.isFalse(
                 el1.equals(
-                    htmlParseSVGNode(
+                    svgHTMLintoNode(
                         (el1.copy().x(2).toHTML() as unknown) as HTMLElement,
                     ),
                 ),
             )
             assert.isFalse(
                 el1.equals(
-                    htmlParseSVGNode(
+                    svgHTMLintoNode(
                         (el1
                             .copy()
                             .append(circle(4))

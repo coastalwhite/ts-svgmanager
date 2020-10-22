@@ -1,4 +1,4 @@
-import SVGAttribute from '../definitions/Attributes'
+import SVGAttribute from '../declarations/Attributes'
 
 /** @hidden type for value of attributes */
 export interface AttributeValue {

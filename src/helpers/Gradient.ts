@@ -1,6 +1,6 @@
 import { AttributeValue } from '../nodes/types'
 import SVGNode from '../nodes/Node'
-import SVGTag from '../definitions/TagNames'
+import SVGTag from '../declarations/TagNames'
 import { SVGStops } from '.'
 
 class SVGGradient extends SVGNode {

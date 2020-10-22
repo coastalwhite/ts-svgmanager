@@ -1,5 +1,5 @@
 import { SVGNode } from '../nodes'
-import { SVGTagName, SVGAttribute } from '../definitions'
+import { SVGTagName, SVGAttribute } from '../declarations'
 import { SVGViewBox } from '.'
 
 /** Parse html element into node */

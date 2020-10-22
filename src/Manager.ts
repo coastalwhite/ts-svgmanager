@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
-import { SVGAttribute, SVGManagerEventDefinition } from './definitions'
+import { SVGAttribute, SVGManagerEventDefinition } from './declarations'
 import { svgParseViewBox, SVGViewBox } from './helpers'
 import { AttributeValue } from './nodes'
 import { SVGUse } from './nodes/Use'
