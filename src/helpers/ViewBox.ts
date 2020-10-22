@@ -21,8 +21,14 @@ export default class SVGViewBox {
      * Move the position of the ViewBox
      * @param by Vector to move the position of the viewbox with
      */
-    public move(byX: number, byY: number): SVGViewBox {
-        this._minPosition = this._minPosition.add(new V2D(byX, byY))
+    public move(by: V2D): SVGViewBox {
+        this._minPosition = this._minPosition.add(by)
+
+        return this
+    }
+
+    public resize(by: V2D): SVGViewBox {
+        this._dimensions = this._dimensions.add(by)
 
         return this
     }
@@ -31,8 +37,8 @@ export default class SVGViewBox {
      * Sets the position of the ViewBox
      * @param v New position of the viewbox
      */
-    public setPosition(x: number, y: number): SVGViewBox {
-        this._minPosition = new V2D(x, y)
+    public setPosition(position: V2D): SVGViewBox {
+        this._minPosition = position
 
         return this
     }
@@ -40,16 +46,16 @@ export default class SVGViewBox {
     /**
      * Fetch the ViewBox Position
      */
-    public getPosition(): { x: number; y: number } {
-        return { x: this._minPosition.x, y: this._minPosition.y }
+    public getPosition(): V2D {
+        return this._minPosition
     }
 
     /**
      * Sets the dimensions of the ViewBox
      * @param v New dimensions of the ViewBox as V2D(Width, Height)
      */
-    public setDimensions(width: number, height: number): SVGViewBox {
-        this._dimensions = new V2D(width, height)
+    public setDimensions(dimensions: V2D): SVGViewBox {
+        this._dimensions = dimensions
 
         return this
     }
@@ -57,8 +63,8 @@ export default class SVGViewBox {
     /**
      * Fetch the ViewBox Dimension
      */
-    public getDimension(): { x: number; y: number } {
-        return { x: this._dimensions.x, y: this._dimensions.y }
+    public getDimension(): V2D {
+        return this._dimensions
     }
 
     /**
