@@ -2,7 +2,7 @@ import { SVGNode } from '../nodes'
 import { SVGTagName, SVGAttribute } from '../declarations'
 
 /** Parse html element into node */
-function svgHTMLintoNode(elem: HTMLElement): SVGNode {
+function svgXMLtoNode(elem: HTMLElement): SVGNode {
     const tag = elem.tagName as SVGTagName
     if (tag === undefined) throw new Error('Tag not recognized!')
     const node = new SVGNode(tag)
@@ -14,7 +14,7 @@ function svgHTMLintoNode(elem: HTMLElement): SVGNode {
     })
 
     Array.from(elem.children).forEach((child: Element) => {
-        node.append(svgHTMLintoNode(child as HTMLElement))
+        node.append(svgXMLtoNode(child as HTMLElement))
     })
 
     if (elem.firstChild !== null && elem.firstChild.nodeValue !== null)
@@ -41,7 +41,7 @@ function svgParseNode(str: string): SVGNode {
     if (parsed.children.length === 0) throw new Error('Parsed is empty')
     if (parsed.children.length > 1) throw new Error('Too many heads')
 
-    return svgHTMLintoNode(parsed.firstChild as HTMLElement)
+    return svgXMLtoNode(parsed.firstChild as HTMLElement)
 }
 
 /**
@@ -83,4 +83,4 @@ function svgFetchNodeSync(fileUrl: string): SVGNode {
     return svgParseNode(xhr.responseText)
 }
 
-export { svgParseNode, svgFetchNodeSync, svgFetchNode, svgHTMLintoNode }
+export { svgParseNode, svgFetchNodeSync, svgFetchNode, svgXMLtoNode }

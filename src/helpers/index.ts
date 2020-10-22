@@ -2,7 +2,7 @@ import SVGAnimate, { SVGAnimateMotion } from './Animate'
 import SVGStops from './Stops'
 import { SVGLinGradient, SVGRadGradient } from './Gradient'
 import {
-    svgHTMLintoNode,
+    svgXMLtoNode,
     svgParseNode,
     svgFetchNode,
     svgFetchNodeSync,
@@ -17,7 +17,7 @@ export {
     SVGLinGradient,
     SVGRadGradient,
     SVGStops,
-    svgHTMLintoNode,
+    svgXMLtoNode,
     svgParseNode,
     svgFetchNode,
     svgFetchNodeSync,
