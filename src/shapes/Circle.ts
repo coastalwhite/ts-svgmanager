@@ -7,7 +7,7 @@ import { SVGNode } from '../nodes'
  * Optional args are `cx`: center x and `cy`: center y
  *
  */
-export default function circle(r: number, center?: V2D): SVGNode {
+export default function svgCircle(r: number, center?: V2D): SVGNode {
     return new SVGNode('circle')
         .cx(center !== undefined ? center.x : 0)
         .cy(center !== undefined ? center.y : 0)

@@ -1,12 +1,7 @@
 import { assert, expect } from 'chai'
 import { SVGManagerDefinition, SVGNode } from '../../src/'
-import {
-    SVGAnimate,
-    svgHTMLintoNode,
-    SVGPathData,
-    V2D,
-} from '../../src/helpers'
-import { circle, line } from '../../src/shapes'
+import { SVGAnimate, svgXMLtoNode, SVGPathData, V2D } from '../../src/helpers'
+import { svgCircle, svgLine } from '../../src/shapes'
 import rect from '../../src/shapes/Rectangle'
 
 describe('SVG Node', function () {
@@ -95,7 +90,7 @@ describe('SVG Node', function () {
 
         describe('append', function () {
             it('Append one element', function () {
-                const el1 = circle(5)
+                const el1 = svgCircle(5)
 
                 assert.isTrue(
                     new SVGNode('a').append(el1).children[0].equals(el1),
@@ -107,7 +102,7 @@ describe('SVG Node', function () {
                     new SVGNode('svg').append(el1).children[0].equals(el1),
                 )
 
-                const el2 = circle(100)
+                const el2 = svgCircle(100)
 
                 assert.isTrue(
                     new SVGNode('a').append(el2).children[0].equals(el2),
@@ -131,9 +126,9 @@ describe('SVG Node', function () {
             })
 
             it('Append multiple elements', function () {
-                const el1 = circle(5)
+                const el1 = svgCircle(5)
                 const el2 = rect(new V2D(5, 5), new V2D(10, 10))
-                const el3 = circle(100)
+                const el3 = svgCircle(100)
 
                 assert.equal(new SVGNode('a').append(el1).children.length, 1)
                 assert.equal(
@@ -180,17 +175,23 @@ describe('SVG Node', function () {
 
             it('Other properties are not affected', function () {
                 assert.equal(
-                    new SVGNode('a').append(circle(5)).attributes.entries
+                    new SVGNode('a').append(svgCircle(5)).attributes.entries
                         .length,
                     0,
                 )
-                assert.equal(new SVGNode('a').append(circle(5)).tags.length, 0)
                 assert.equal(
-                    new SVGNode('a').append(circle(5)).events.length,
+                    new SVGNode('a').append(svgCircle(5)).tags.length,
                     0,
                 )
-                assert.equal(new SVGNode('a').append(circle(5)).tagName, 'a')
-                assert.equal(new SVGNode('a').append(circle(5)).innerText, '')
+                assert.equal(
+                    new SVGNode('a').append(svgCircle(5)).events.length,
+                    0,
+                )
+                assert.equal(new SVGNode('a').append(svgCircle(5)).tagName, 'a')
+                assert.equal(
+                    new SVGNode('a').append(svgCircle(5)).innerText,
+                    '',
+                )
             })
         })
 
@@ -246,17 +247,17 @@ describe('SVG Node', function () {
             it('differentiate children', function () {
                 assert.isTrue(
                     new SVGNode('a')
-                        .append(circle(5))
-                        .equals(new SVGNode('a').append(circle(5))),
+                        .append(svgCircle(5))
+                        .equals(new SVGNode('a').append(svgCircle(5))),
                 )
                 assert.isFalse(
                     new SVGNode('a')
-                        .append(circle(5))
-                        .equals(new SVGNode('a').append(circle(8))),
+                        .append(svgCircle(5))
+                        .equals(new SVGNode('a').append(svgCircle(8))),
                 )
                 assert.isFalse(
                     new SVGNode('a')
-                        .append(circle(5))
+                        .append(svgCircle(5))
                         .equals(
                             new SVGNode('a').append(
                                 rect(new V2D(5, 5), new V2D(7, 8)),
@@ -265,46 +266,46 @@ describe('SVG Node', function () {
                 )
                 assert.isTrue(
                     new SVGNode('a')
-                        .append(line(new V2D(5, 6), new V2D(7, 8)))
+                        .append(svgLine(new V2D(5, 6), new V2D(7, 8)))
                         .equals(
                             new SVGNode('a').append(
-                                line(new V2D(5, 6), new V2D(7, 8)),
+                                svgLine(new V2D(5, 6), new V2D(7, 8)),
                             ),
                         ),
                 )
                 assert.isFalse(
                     new SVGNode('a')
-                        .append(circle(5))
+                        .append(svgCircle(5))
                         .equals(
                             new SVGNode('a')
-                                .append(circle(5))
-                                .append(circle(2)),
+                                .append(svgCircle(5))
+                                .append(svgCircle(2)),
                         ),
                 )
                 assert.isFalse(
                     new SVGNode('a')
-                        .append(circle(5))
+                        .append(svgCircle(5))
                         .equals(
                             new SVGNode('a')
-                                .append(circle(2))
-                                .append(circle(5)),
+                                .append(svgCircle(2))
+                                .append(svgCircle(5)),
                         ),
                 )
                 assert.isTrue(
                     new SVGNode('a')
-                        .append(circle(5))
-                        .append(circle(2))
+                        .append(svgCircle(5))
+                        .append(svgCircle(2))
                         .equals(
                             new SVGNode('a')
-                                .append(circle(5))
-                                .append(circle(2)),
+                                .append(svgCircle(5))
+                                .append(svgCircle(2)),
                         ),
                 )
                 assert.isFalse(
                     new SVGNode('a')
-                        .append(circle(2))
-                        .append(circle(5))
-                        .equals(new SVGNode('a').append(circle(2))),
+                        .append(svgCircle(2))
+                        .append(svgCircle(5))
+                        .equals(new SVGNode('a').append(svgCircle(2))),
                 )
             })
 
@@ -462,39 +463,42 @@ describe('SVG Node', function () {
         describe('removeChild', function () {
             it('Removing one element', function () {
                 assert.equal(
-                    circle(1).append(circle(2)).removeChild(0).children.length,
+                    svgCircle(1).append(svgCircle(2)).removeChild(0).children
+                        .length,
                     0,
                 )
 
                 assert.equal(
-                    circle(1).append(circle(2)).append(circle(6)).removeChild(0)
-                        .children.length,
+                    svgCircle(1)
+                        .append(svgCircle(2))
+                        .append(svgCircle(6))
+                        .removeChild(0).children.length,
                     1,
                 )
 
                 assert.equal(
-                    circle(1)
-                        .append(circle(2))
-                        .append(circle(6))
-                        .append(circle(7))
+                    svgCircle(1)
+                        .append(svgCircle(2))
+                        .append(svgCircle(6))
+                        .append(svgCircle(7))
                         .removeChild(0).children.length,
                     2,
                 )
 
                 assert.equal(
-                    circle(1)
-                        .append(circle(2))
-                        .append(circle(6))
-                        .append(circle(7))
+                    svgCircle(1)
+                        .append(svgCircle(2))
+                        .append(svgCircle(6))
+                        .append(svgCircle(7))
                         .removeChild(1).children.length,
                     2,
                 )
 
                 assert.equal(
-                    circle(1)
-                        .append(circle(2))
-                        .append(circle(6))
-                        .append(circle(7))
+                    svgCircle(1)
+                        .append(svgCircle(2))
+                        .append(svgCircle(6))
+                        .append(svgCircle(7))
                         .removeChild(2).children.length,
                     2,
                 )
@@ -502,21 +506,21 @@ describe('SVG Node', function () {
 
             it('Removing with no children', function () {
                 expect(function () {
-                    circle(1).removeChild(0)
+                    svgCircle(1).removeChild(0)
                 }).to.throw('removeChild: index out of range')
             })
 
             it('Removing with not enough children', function () {
                 expect(function () {
-                    circle(1).append(circle(0)).removeChild(1)
+                    svgCircle(1).append(svgCircle(0)).removeChild(1)
                 }).to.throw('removeChild: index out of range')
 
                 expect(function () {
-                    circle(1).append(circle(0)).removeChild(6)
+                    svgCircle(1).append(svgCircle(0)).removeChild(6)
                 }).to.throw('removeChild: index out of range')
 
                 expect(function () {
-                    circle(1).removeChild(-1)
+                    svgCircle(1).removeChild(-1)
                 }).to.throw('removeChild: index out of range')
             })
         })
@@ -524,7 +528,7 @@ describe('SVG Node', function () {
         describe('removeChildren', function () {
             it('Removing one element', function () {
                 assert.equal(
-                    circle(1).append(circle(2)).removeChildren().children
+                    svgCircle(1).append(svgCircle(2)).removeChildren().children
                         .length,
                     0,
                 )
@@ -532,10 +536,10 @@ describe('SVG Node', function () {
 
             it('Removing with multiple children', function () {
                 assert.equal(
-                    circle(1)
-                        .append(circle(2))
-                        .append(circle(6))
-                        .append(circle(4))
+                    svgCircle(1)
+                        .append(svgCircle(2))
+                        .append(svgCircle(6))
+                        .append(svgCircle(4))
                         .removeChildren().children.length,
                     0,
                 )
@@ -546,60 +550,65 @@ describe('SVG Node', function () {
     describe('Other setters - on/text/animate/class/name/tag', function () {
         it('on', function () {
             const f = (): string => 'hi'
-            assert.equal(circle(0).on('click', f).events.length, 1)
-            assert.equal(circle(0).on('click', f).events[0].eventName, 'click')
-            assert.equal(circle(0).on('click', f).events[0].func, f)
+            assert.equal(svgCircle(0).on('click', f).events.length, 1)
+            assert.equal(
+                svgCircle(0).on('click', f).events[0].eventName,
+                'click',
+            )
+            assert.equal(svgCircle(0).on('click', f).events[0].func, f)
 
             const g = (): string => 'bye'
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events.length,
+                svgCircle(0).on('click', f).on('mouseover', g).events.length,
                 2,
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[0].eventName,
+                svgCircle(0).on('click', f).on('mouseover', g).events[0]
+                    .eventName,
                 'click',
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[0].func,
+                svgCircle(0).on('click', f).on('mouseover', g).events[0].func,
                 f,
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[1].eventName,
+                svgCircle(0).on('click', f).on('mouseover', g).events[1]
+                    .eventName,
                 'mouseover',
             )
             assert.equal(
-                circle(0).on('click', f).on('mouseover', g).events[1].func,
+                svgCircle(0).on('click', f).on('mouseover', g).events[1].func,
                 g,
             )
         })
 
         it('text', function () {
-            assert.equal(circle(0).text('hi!').innerText, 'hi!')
-            assert.notEqual(circle(0).text('bye!').innerText, 'hi!')
+            assert.equal(svgCircle(0).text('hi!').innerText, 'hi!')
+            assert.notEqual(svgCircle(0).text('bye!').innerText, 'hi!')
         })
 
         it('animate', function () {
             const animate = new SVGAnimate(3000, 'r', [3, 4, 5])
-            assert.equal(circle(0).animate(animate).children.length, 1)
+            assert.equal(svgCircle(0).animate(animate).children.length, 1)
             assert.isTrue(
-                circle(0).animate(animate).children[0].equals(animate),
+                svgCircle(0).animate(animate).children[0].equals(animate),
             )
         })
 
         it('class', function () {
-            assert.equal(circle(0).class('class1').get('class'), 'class1')
+            assert.equal(svgCircle(0).class('class1').get('class'), 'class1')
             assert.equal(
-                circle(0).class('class1').class('class2').get('class'),
+                svgCircle(0).class('class1').class('class2').get('class'),
                 'class1 class2',
             )
         })
 
         it('tag', function () {
-            assert.equal(circle(0).tag('tag1').tags.length, 1)
-            assert.equal(circle(0).tag('tag1').tags[0], 'tag1')
-            assert.equal(circle(0).tag('tag1').tag('tag2').tags.length, 2)
-            assert.equal(circle(0).tag('tag1').tag('tag2').tags[0], 'tag1')
-            assert.equal(circle(0).tag('tag1').tag('tag2').tags[1], 'tag2')
+            assert.equal(svgCircle(0).tag('tag1').tags.length, 1)
+            assert.equal(svgCircle(0).tag('tag1').tags[0], 'tag1')
+            assert.equal(svgCircle(0).tag('tag1').tag('tag2').tags.length, 2)
+            assert.equal(svgCircle(0).tag('tag1').tag('tag2').tags[0], 'tag1')
+            assert.equal(svgCircle(0).tag('tag1').tag('tag2').tags[1], 'tag2')
 
             assert.equal(
                 Array.from(new SVGNode('a').tag('test').attributes).length,
@@ -610,92 +619,120 @@ describe('SVG Node', function () {
 
     describe('attribute methods', function () {
         it('x', function () {
-            assert.isTrue(circle(1).x(543).equals(circle(1).set('x', 543)))
-            assert.isFalse(circle(1).x(543).equals(circle(1).set('x', 456)))
+            assert.isTrue(
+                svgCircle(1).x(543).equals(svgCircle(1).set('x', 543)),
+            )
+            assert.isFalse(
+                svgCircle(1).x(543).equals(svgCircle(1).set('x', 456)),
+            )
         })
 
         it('y', function () {
-            assert.isTrue(circle(1).y(543).equals(circle(1).set('y', 543)))
-            assert.isFalse(circle(1).y(543).equals(circle(1).set('y', 456)))
+            assert.isTrue(
+                svgCircle(1).y(543).equals(svgCircle(1).set('y', 543)),
+            )
+            assert.isFalse(
+                svgCircle(1).y(543).equals(svgCircle(1).set('y', 456)),
+            )
         })
 
         it('cx', function () {
-            assert.isTrue(circle(1).cx(543).equals(circle(1).set('cx', 543)))
-            assert.isFalse(circle(1).cx(543).equals(circle(1).set('cx', 456)))
+            assert.isTrue(
+                svgCircle(1).cx(543).equals(svgCircle(1).set('cx', 543)),
+            )
+            assert.isFalse(
+                svgCircle(1).cx(543).equals(svgCircle(1).set('cx', 456)),
+            )
         })
 
         it('cy', function () {
-            assert.isTrue(circle(1).cy(543).equals(circle(1).set('cy', 543)))
-            assert.isFalse(circle(1).cy(543).equals(circle(1).set('cy', 456)))
+            assert.isTrue(
+                svgCircle(1).cy(543).equals(svgCircle(1).set('cy', 543)),
+            )
+            assert.isFalse(
+                svgCircle(1).cy(543).equals(svgCircle(1).set('cy', 456)),
+            )
         })
 
         it('r', function () {
-            assert.isTrue(circle(1).r(543).equals(circle(1).set('r', 543)))
-            assert.isFalse(circle(1).r(543).equals(circle(1).set('r', 456)))
+            assert.isTrue(
+                svgCircle(1).r(543).equals(svgCircle(1).set('r', 543)),
+            )
+            assert.isFalse(
+                svgCircle(1).r(543).equals(svgCircle(1).set('r', 456)),
+            )
         })
 
         it('fill', function () {
             assert.isTrue(
-                circle(1).fill(543).equals(circle(1).set('fill', 543)),
+                svgCircle(1).fill(543).equals(svgCircle(1).set('fill', 543)),
             )
             assert.isFalse(
-                circle(1).fill(543).equals(circle(1).set('fill', 456)),
+                svgCircle(1).fill(543).equals(svgCircle(1).set('fill', 456)),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .fill(543, 123)
                     .equals(
-                        circle(1).set('fill', 543).set('fill-opacity', 123),
+                        svgCircle(1).set('fill', 543).set('fill-opacity', 123),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .fill(543, 123)
                     .equals(
-                        circle(1).set('fill', 543).set('fill-opacity', 321),
+                        svgCircle(1).set('fill', 543).set('fill-opacity', 321),
                     ),
             )
         })
 
         it('stroke', function () {
             assert.isTrue(
-                circle(1).stroke(543).equals(circle(1).set('stroke', 543)),
+                svgCircle(1)
+                    .stroke(543)
+                    .equals(svgCircle(1).set('stroke', 543)),
             )
             assert.isFalse(
-                circle(1).stroke(543).equals(circle(1).set('stroke', 456)),
+                svgCircle(1)
+                    .stroke(543)
+                    .equals(svgCircle(1).set('stroke', 456)),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .stroke(543, 123)
                     .equals(
-                        circle(1).set('stroke', 543).set('stroke-width', 123),
+                        svgCircle(1)
+                            .set('stroke', 543)
+                            .set('stroke-width', 123),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .stroke(543, 123)
                     .equals(
-                        circle(1).set('stroke', 543).set('stroke-width', 321),
+                        svgCircle(1)
+                            .set('stroke', 543)
+                            .set('stroke-width', 321),
                     ),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .stroke(543, 123, 789)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 543)
                             .set('stroke-width', 123)
                             .set('stroke-opacity', 789),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .stroke(543, 123, 789)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 543)
                             .set('stroke-width', 321)
                             .set('stroke-opacity', 987),
@@ -705,30 +742,30 @@ describe('SVG Node', function () {
 
         it('fillDef', function () {
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .fillDef('abcdef' as SVGManagerDefinition)
-                    .equals(circle(1).set('fill', 'url(#abcdef)')),
+                    .equals(svgCircle(1).set('fill', 'url(#abcdef)')),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .fillDef('fedcba' as SVGManagerDefinition)
-                    .equals(circle(1).set('fill', 'url(#abcdef)')),
+                    .equals(svgCircle(1).set('fill', 'url(#abcdef)')),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .fillDef('abcdef' as SVGManagerDefinition, 123)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('fill', 'url(#abcdef)')
                             .set('fill-opacity', 123),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .fillDef('fedcba' as SVGManagerDefinition, 123)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('fill', 'url(#abcdef)')
                             .set('fill-opacity', 321),
                     ),
@@ -737,50 +774,50 @@ describe('SVG Node', function () {
 
         it('stroke', function () {
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('abcdef' as SVGManagerDefinition)
-                    .equals(circle(1).set('stroke', 'url(#abcdef)')),
+                    .equals(svgCircle(1).set('stroke', 'url(#abcdef)')),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('fedcba' as SVGManagerDefinition)
-                    .equals(circle(1).set('stroke', 'url(#abcdef)')),
+                    .equals(svgCircle(1).set('stroke', 'url(#abcdef)')),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('abcdef' as SVGManagerDefinition, 123)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 'url(#abcdef)')
                             .set('stroke-width', 123),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('fedcba' as SVGManagerDefinition, 123)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 'url(#abcdef)')
                             .set('stroke-width', 321),
                     ),
             )
 
             assert.isTrue(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('abcdef' as SVGManagerDefinition, 123, 789)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 'url(#abcdef)')
                             .set('stroke-width', 123)
                             .set('stroke-opacity', 789),
                     ),
             )
             assert.isFalse(
-                circle(1)
+                svgCircle(1)
                     .strokeDef('fedcba' as SVGManagerDefinition, 123, 789)
                     .equals(
-                        circle(1)
+                        svgCircle(1)
                             .set('stroke', 'url(#abcdef)')
                             .set('stroke-width', 321)
                             .set('stroke-opacity', 987),
@@ -792,7 +829,7 @@ describe('SVG Node', function () {
     describe('advanced functions - copy/toHash/toHTML', function () {
         describe('copy', function () {
             it('attributes', function () {
-                const el1 = circle(0)
+                const el1 = svgCircle(0)
                 const el2 = el1
                 const el1Copy = el1.copy()
                 assert.isTrue(el1.x(1).equals(el2))
@@ -800,7 +837,7 @@ describe('SVG Node', function () {
             })
 
             it('children', function () {
-                const el1 = circle(0).append(circle(1))
+                const el1 = svgCircle(0).append(svgCircle(1))
                 const el2 = el1
                 const el1Copy = el1.copy()
                 assert.isTrue(el1.children[0].x(1).equals(el2.children[0]))
@@ -808,7 +845,7 @@ describe('SVG Node', function () {
             })
 
             it('events', function () {
-                const el1 = circle(0)
+                const el1 = svgCircle(0)
                 const el2 = el1
                 const el1Copy = el1.copy()
                 assert.isTrue(
@@ -828,7 +865,7 @@ describe('SVG Node', function () {
             })
 
             it('tags', function () {
-                const el1 = circle(0)
+                const el1 = svgCircle(0)
                 const el2 = el1
                 const el1Copy = el1.copy()
 
@@ -838,7 +875,7 @@ describe('SVG Node', function () {
             })
 
             it('innerText', function () {
-                const el1 = circle(0)
+                const el1 = svgCircle(0)
                 const el2 = el1
                 const el1Copy = el1.copy()
                 assert.isTrue(el1.text('hi!').equals(el2))
@@ -847,11 +884,14 @@ describe('SVG Node', function () {
         })
 
         it('toHash', function () {
-            const el1 = circle(5)
+            const el1 = svgCircle(5)
             assert.equal(el1.toHash(), el1.toHash())
             assert.equal(el1.toHash(), el1.copy().toHash())
             assert.notEqual(el1.toHash(), el1.copy().x(10).toHash())
-            assert.notEqual(el1.toHash(), el1.copy().append(circle(2)).toHash())
+            assert.notEqual(
+                el1.toHash(),
+                el1.copy().append(svgCircle(2)).toHash(),
+            )
             assert.notEqual(el1.toHash(), el1.copy().tag('tag1').toHash())
             assert.notEqual(
                 new SVGNode('a').toHash(),
@@ -860,25 +900,25 @@ describe('SVG Node', function () {
         })
 
         it('toHTML', function () {
-            const el1 = circle(5)
+            const el1 = svgCircle(5)
             assert.isTrue(
                 el1.equals(
-                    svgHTMLintoNode((el1.toHTML() as unknown) as HTMLElement),
+                    svgXMLtoNode((el1.toHTML() as unknown) as HTMLElement),
                 ),
             )
             assert.isFalse(
                 el1.equals(
-                    svgHTMLintoNode(
+                    svgXMLtoNode(
                         (el1.copy().x(2).toHTML() as unknown) as HTMLElement,
                     ),
                 ),
             )
             assert.isFalse(
                 el1.equals(
-                    svgHTMLintoNode(
+                    svgXMLtoNode(
                         (el1
                             .copy()
-                            .append(circle(4))
+                            .append(svgCircle(4))
                             .toHTML() as unknown) as HTMLElement,
                     ),
                 ),

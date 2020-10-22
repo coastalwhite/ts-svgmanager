@@ -1,9 +1,17 @@
-import circle from './Circle'
-import rectangle from './Rectangle'
-import polygon from './Polygon'
-import line from './Line'
-import lines from './Lines'
-import ellipse from './Ellipse'
-import curve from './Curve'
+import svgCircle from './Circle'
+import svgRect from './Rectangle'
+import svgPolygon from './Polygon'
+import svgLine from './Line'
+import svgLines from './Lines'
+import svgEllipse from './Ellipse'
+import svgCurve from './Curve'
 
-export { circle, rectangle, polygon, line, lines, ellipse, curve }
+export {
+    svgCircle,
+    svgRect,
+    svgPolygon,
+    svgLine,
+    svgLines,
+    svgEllipse,
+    svgCurve,
+}

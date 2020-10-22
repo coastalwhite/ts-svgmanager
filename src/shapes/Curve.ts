@@ -4,7 +4,7 @@ import { SVGNode } from '../nodes'
 /**
  * Draws a curve from one point to another using a control point
  */
-export default function curve(from: V2D, to: V2D, control: V2D): SVGNode {
+export default function svgCurve(from: V2D, to: V2D, control: V2D): SVGNode {
     return new SVGNode('path')
         .set(
             'd',

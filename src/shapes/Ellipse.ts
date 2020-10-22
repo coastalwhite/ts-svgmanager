@@ -6,7 +6,7 @@ import { SVGNode } from '../nodes'
  *
  * Optional arguments are center-X (cx) and center-Y (cy)
  */
-export default function ellipse(radii: V2D, center?: V2D): SVGNode {
+export default function svgEllipse(radii: V2D, center?: V2D): SVGNode {
     return new SVGNode('ellipse')
         .cx(center !== undefined ? center.x : 0)
         .cy(center !== undefined ? center.y : 0)

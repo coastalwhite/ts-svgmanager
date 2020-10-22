@@ -4,7 +4,7 @@ import { SVGNode } from '../nodes'
 /**
  * Creates a rectangle using x, y, width and height
  */
-export default function rect(position: V2D, size: V2D): SVGNode {
+export default function svgRect(position: V2D, size: V2D): SVGNode {
     return new SVGNode('rect')
         .x(position.x)
         .y(position.y)

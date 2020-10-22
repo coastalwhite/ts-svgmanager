@@ -4,7 +4,7 @@ import { SVGNode } from '../nodes'
 /**
  * Create a number of connecting lines given by a array of x and y coordinates
  */
-export default function lines(points: V2D[]): SVGNode {
+export default function svgLines(points: V2D[]): SVGNode {
     const pathData = new SVGPathData().moveTo(points[0].x, points[0].y)
 
     points.shift()

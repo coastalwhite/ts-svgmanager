@@ -4,7 +4,7 @@ import { SVGNode } from '../nodes'
 /**
  * Create a line from one point to another
  */
-export default function line(from: V2D, to: V2D): SVGNode {
+export default function svgLine(from: V2D, to: V2D): SVGNode {
     return new SVGNode('line')
         .set('x1', from.x)
         .set('y1', from.y)
