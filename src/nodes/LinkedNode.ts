@@ -6,6 +6,7 @@ import {
     SVGManagerEventHandler,
     SVGTagName,
 } from '../declarations'
+import { StyleMap, StyleProperty, StyleValue } from './types'
 
 /**
  * A SVGNode linked/attached to a DOM element,
@@ -89,6 +90,19 @@ export default class SVGLinkedNode extends SVGNode {
         return this.element.firstChild.nodeValue
     }
 
+    public get styles(): StyleMap {
+        const styleMap = new Map()
+
+        const styleDeclaration = this.element.style
+
+        for (let i = 0; i < styleDeclaration.length; i++) {
+            const property = styleDeclaration.item(i)
+            styleMap.set(property, styleDeclaration.getPropertyValue(property))
+        }
+
+        return styleMap
+    }
+
     public set(attr: SVGAttribute, value: AttributeValue): this {
         this.element.setAttribute(attr, value.toString())
 
@@ -103,6 +117,17 @@ export default class SVGLinkedNode extends SVGNode {
         children.forEach((child) => this.element.appendChild(child.toHTML()))
 
         return this
+    }
+
+    // ---- Styles Mutation ----
+
+    public styleSet(property: StyleProperty, value: StyleValue): this {
+        this.element.style.setProperty(property, value.toString())
+        return this
+    }
+
+    public styleGet(property: StyleProperty): StyleValue | undefined {
+        return this.element.style.getPropertyValue(property)
     }
 
     public text(s: string): this {

@@ -10,6 +10,7 @@ import {
     SVGManagerEventHandler,
 } from '../declarations'
 import SVGAnimate from '../helpers/Animate'
+import { StyleMap, StyleProperty, StyleValue } from './types'
 
 /**
  * A JS Representation of a HTML-Node.
@@ -55,6 +56,9 @@ export default class SVGNode {
     /** @hidden */
     protected _tags: string[]
 
+    /** @hidden */
+    protected _styles: StyleMap
+
     /**
      * Construct a SVGNode respresenting the *tagName* element
      * with no attributes, children or inner text.
@@ -70,11 +74,15 @@ export default class SVGNode {
         this._events = []
 
         this._tags = []
+
+        this._styles = new Map()
     }
 
-    /** Fetch the current children */
-    public get children(): SVGNode[] {
-        return this._children
+    // ---- Getters ----
+
+    /** Fetch the tagName of the node */
+    public get tagName(): SVGTagName {
+        return this._tagName
     }
 
     /** Fetch the current attributes */
@@ -82,9 +90,9 @@ export default class SVGNode {
         return this._attributes
     }
 
-    /** Fetch the tagName of the node */
-    public get tagName(): SVGTagName {
-        return this._tagName
+    /** Fetch the current children */
+    public get children(): SVGNode[] {
+        return this._children
     }
 
     /** Fetch the innerText of the node */
@@ -102,10 +110,182 @@ export default class SVGNode {
         return this._tags
     }
 
+    public get styles(): StyleMap {
+        return this._styles
+    }
+
+    // ---- InnerText Mutation ----
+
     /** Sets the innerText of the node */
     public text(s: string): this {
         this._innerText = s
         return this
+    }
+
+    // ---- Attribute mutation ----
+
+    /**
+     * Mutates the SVGNode to add/change an attribute *attr* to *value*.
+     * Then, it returns itself, for easy programming.
+     */
+    public set(attr: SVGAttribute, value: AttributeValue): this {
+        this._attributes.set(attr, value)
+
+        return this
+    }
+
+    /**
+     * Mutates the SVGNode to change an attribute *attr*
+     * by putting its value through the function *f*.
+     * Then, it returns itself, for easy programming.
+     *
+     * # Note
+     * If the attribute was not set, the call still succeeds but does nothing.
+     */
+    public map(
+        attr: SVGAttribute,
+        f: (_value: AttributeValue) => AttributeValue,
+    ): SVGNode {
+        const value = this.get(attr)
+        if (value === undefined) return this
+
+        this.set(attr, f(value))
+
+        return this
+    }
+
+    /** Fetch a specific attribute's value */
+    public get(attr: SVGAttribute): AttributeValue | undefined {
+        return this._attributes.get(attr)
+    }
+
+    // ---- Children mutation ----
+
+    /**
+     * Mutates the SVGNode to append an child SVGNode *child*
+     * to the children of the current SVGNode.
+     * Then, it returns itself, for easy programming.
+     */
+    public append(...children: SVGNode[]): this {
+        this._children.push(...children)
+
+        return this
+    }
+
+    /** Remove child at certain index */
+    public removeChild(index: number): this {
+        if (index >= this.children.length || index < 0)
+            throw 'removeChild: index out of range'
+
+        this._children = [
+            ...this._children.slice(0, index),
+            ...this._children.slice(index + 1),
+        ]
+
+        return this
+    }
+
+    /** Remove all children */
+    public removeChildren(): this {
+        this._children = []
+
+        return this
+    }
+
+    /** Animates the node using an SVGAnimate object */
+    public animate(svgAnimate: SVGAnimate): this {
+        this.append(svgAnimate)
+        return this
+    }
+
+    // ---- Event Mutation ----
+
+    /**
+     * Mutates the SVGNode to add an event.
+     * Multiple functions can be set for the same event.
+     * Then, it returns itself, for easy programming.
+     */
+    public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
+        this._events.push({ eventName, func })
+
+        return this
+    }
+
+    /** Remove either all events from 1 SVGEventName, or all if not given a name */
+    public clearEvents(eventName?: SVGEventName): this {
+        if (eventName === undefined) this._events = []
+        else
+            this._events = this.events.filter(
+                ({ eventName: evName }) => evName !== eventName,
+            )
+
+        return this
+    }
+
+    // ---- Tags Mutation ----
+
+    /**
+     * Give tag to the SVGNode to mention later
+     * @param tag Tag given to SVGNode
+     */
+    public tag(tag: string): this {
+        this._tags.push(tag)
+
+        return this
+    }
+
+    /** Removes tag from node, if it does not exist it does nothing. */
+    public untag(tag: string): this {
+        this._tags = this._tags.filter((t) => t !== tag)
+        return this
+    }
+
+    // ---- Styles Mutation ----
+
+    public styleSet(property: StyleProperty, value: StyleValue): this {
+        this._styles.set(property, value)
+        return this
+    }
+
+    public styleGet(property: StyleProperty): StyleValue | undefined {
+        return this._styles.get(property)
+    }
+
+    // ---- Extra attribute setters ----
+
+    /** Adds a class to a SVGNode */
+    public class(className: string): this {
+        let currentClass = (this.get('class') || '').toString()
+        if (currentClass.length > 0) currentClass += ' '
+
+        this.set('class', currentClass + className)
+
+        return this
+    }
+
+    /** Setter for the x attribute */
+    public x(val: AttributeValue): this {
+        return this.set('x', val)
+    }
+
+    /** Setter for the y attribute */
+    public y(val: AttributeValue): this {
+        return this.set('y', val)
+    }
+
+    /** Setter for the cx attribute */
+    public cx(val: AttributeValue): this {
+        return this.set('cx', val)
+    }
+
+    /** Setter for the cy attribute */
+    public cy(val: AttributeValue): this {
+        return this.set('cy', val)
+    }
+
+    /** Setter for the r attribute */
+    public r(radius: AttributeValue): this {
+        return this.set('r', radius)
     }
 
     /** Shortcut for setting stroke attributes */
@@ -148,129 +328,6 @@ export default class SVGNode {
         return this.fill('url(#' + definition + ')', opacity)
     }
 
-    /** Setter for the x attribute */
-    public x(val: AttributeValue): this {
-        return this.set('x', val)
-    }
-
-    /** Setter for the y attribute */
-    public y(val: AttributeValue): this {
-        return this.set('y', val)
-    }
-
-    /** Setter for the cx attribute */
-    public cx(val: AttributeValue): this {
-        return this.set('cx', val)
-    }
-
-    /** Setter for the cy attribute */
-    public cy(val: AttributeValue): this {
-        return this.set('cy', val)
-    }
-
-    /** Setter for the r attribute */
-    public r(radius: AttributeValue): this {
-        return this.set('r', radius)
-    }
-
-    /**
-     * Mutates the SVGNode to add/change an attribute *attr* to *value*.
-     * Then, it returns itself, for easy programming.
-     */
-    public set(attr: SVGAttribute, value: AttributeValue): this {
-        this._attributes.set(attr, value)
-
-        return this
-    }
-
-    /** Fetch a specific attribute's value */
-    public get(attr: SVGAttribute): AttributeValue | undefined {
-        return this._attributes.get(attr)
-    }
-
-    /**
-     * Mutates the SVGNode to change an attribute *attr*
-     * by putting its value through the function *f*.
-     * Then, it returns itself, for easy programming.
-     *
-     * # Note
-     * If the attribute was not set, the call still succeeds but does nothing.
-     */
-    public map(
-        attr: SVGAttribute,
-        f: (_value: AttributeValue) => AttributeValue,
-    ): SVGNode {
-        const value = this.get(attr)
-        if (value === undefined) return this
-
-        this.set(attr, f(value))
-
-        return this
-    }
-
-    /**
-     * Mutates the SVGNode to append an child SVGNode *child*
-     * to the children of the current SVGNode.
-     * Then, it returns itself, for easy programming.
-     */
-    public append(...children: SVGNode[]): this {
-        this._children.push(...children)
-
-        return this
-    }
-
-    /**
-     * Mutates the SVGNode to add an event.
-     * Multiple functions can be set for the same event.
-     * Then, it returns itself, for easy programming.
-     */
-    public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
-        this._events.push({ eventName, func })
-
-        return this
-    }
-
-    /**
-     * Give tag to the SVGNode to mention later
-     * @param tag Tag given to SVGNode
-     */
-    public tag(tag: string): this {
-        this._tags.push(tag)
-
-        return this
-    }
-
-    /** Adds a class to a SVGNode */
-    public class(className: string): this {
-        let currentClass = (this.get('class') || '').toString()
-        if (currentClass.length > 0) currentClass += ' '
-
-        this.set('class', currentClass + className)
-
-        return this
-    }
-
-    /** Creates a deepcopy from current SVGNode */
-    public copy(): SVGNode {
-        const node = new SVGNode(this.tagName)
-        this.attributes.forEach((value, key) => node.set(key, value))
-        this.children.forEach((child) => node.append(child.copy()))
-        this.tags.forEach((tag) => node.tag(tag))
-        this.events.forEach((event) => node.on(event.eventName, event.func))
-        node.text(this.innerText)
-
-        return node
-    }
-
-    /** Checks deeply whether two nodes are equal */
-    public equals(node: SVGNode): boolean {
-        return (
-            this.shallowEquals(node) &&
-            this.areTagsEqual(node.tags) &&
-            this.areChildrenEqual(node.children)
-        )
-    }
-
     /** @hidden */
     private areTagsEqual(tags: string[]): boolean {
         if (this.tags.length !== tags.length) return false
@@ -289,6 +346,30 @@ export default class SVGNode {
         }
 
         return true
+    }
+
+    // ---- Control Methods ----
+
+    /** Creates a deepcopy from current SVGNode */
+    public copy(): SVGNode {
+        const node = new SVGNode(this.tagName)
+
+        this.attributes.forEach((value, key) => node.set(key, value))
+        this.children.forEach((child) => node.append(child.copy()))
+        this.tags.forEach((tag) => node.tag(tag))
+        this.events.forEach((event) => node.on(event.eventName, event.func))
+        node.text(this.innerText)
+
+        return node
+    }
+
+    /** Checks deeply whether two nodes are equal */
+    public deepEquals(node: SVGNode): boolean {
+        return (
+            this.equals(node) &&
+            this.areTagsEqual(node.tags) &&
+            this.areChildrenEqual(node.children)
+        )
     }
 
     /** @hidden */
@@ -334,55 +415,12 @@ export default class SVGNode {
     }
 
     /** Checks shallowly whether two nodes are equal */
-    public shallowEquals(node: SVGNode): boolean {
+    public equals(node: SVGNode): boolean {
         return (
             this.tagName === node.tagName &&
             this.innerText === node.innerText &&
             this.areAttributeMapsEqual(node.attributes)
         )
-    }
-
-    /** Remove child at certain index */
-    public removeChild(index: number): this {
-        if (index >= this.children.length || index < 0)
-            throw 'removeChild: index out of range'
-
-        this._children = [
-            ...this._children.slice(0, index),
-            ...this._children.slice(index + 1),
-        ]
-
-        return this
-    }
-
-    /** Remove all children */
-    public removeChildren(): this {
-        this._children = []
-
-        return this
-    }
-
-    /** Remove either all events from 1 SVGEventName, or all if not given a name */
-    public clearEvents(eventName?: SVGEventName): this {
-        if (eventName === undefined) this._events = []
-        else
-            this._events = this.events.filter(
-                ({ eventName: evName }) => evName !== eventName,
-            )
-
-        return this
-    }
-
-    /** Removes tag from node, if it does not exist it does nothing. */
-    public untag(tag: string): this {
-        this._tags = this._tags.filter((t) => t !== tag)
-        return this
-    }
-
-    /** Animates the node using an SVGAnimate object */
-    public animate(svganimate: SVGAnimate): this {
-        this.append(svganimate)
-        return this
     }
 
     /**
@@ -398,6 +436,10 @@ export default class SVGNode {
         element.innerHTML = this.innerText
 
         this.children.forEach((child) => element.appendChild(child.toHTML()))
+
+        this.styles.forEach((value, property) =>
+            element.style.setProperty(property, value.toString()),
+        )
 
         // Group all events together by type
         const groupedEvents = this.events.reduce((r, a) => {
