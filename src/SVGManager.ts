@@ -163,7 +163,7 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     /**
-     * Constructs a empty and uninitialized SVGManager object
+     * Constructs a empty SVGManager object
      */
     public constructor() {
         super(new SVGNode('svg').toHTML())
@@ -175,7 +175,7 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     /**
-     * Initialize the SVGManager
+     * Initialize a SVGManager
      * @param rootId container-id in which to put the SVG
      */
     public init(rootId: string): this {
@@ -201,12 +201,14 @@ export default class SVGManager extends SVGLinkedNode {
      *
      * This will be used in [[renderDef]], [[SVGNode.fillDef]] and [[SVGNode.strokeDef]]
      */
-    public define(node: SVGNode): SVGManagerDefinition {
-        const definition = this.toDefId(node.toHash())
+    public define(...nodes: SVGNode[]): SVGManagerDefinition[] {
+        return nodes.map((node) => {
+            const definition = this.toDefId(node.toHash())
 
-        if (!this.doesDefExist(definition)) this.addDefintion(node)
+            if (!this.doesDefExist(definition)) this.addDefintion(node)
 
-        return definition
+            return definition
+        })
     }
 
     /**

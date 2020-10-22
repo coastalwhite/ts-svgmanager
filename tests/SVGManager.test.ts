@@ -161,7 +161,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.viewBox(new ViewBox(10, 10, 100, 100))
+            manager.set('viewBox', new ViewBox(10, 10, 100, 100))
 
             assert.equal(
                 root.innerHTML,
@@ -175,7 +175,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.viewBox(new ViewBox(4, 6, 100, 100))
+            manager.set('viewBox', new ViewBox(4, 6, 100, 100))
 
             assert.equal(
                 root.innerHTML,
@@ -189,7 +189,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.viewBox(new ViewBox(-6, -4, 100, 100))
+            manager.set('viewBox', new ViewBox(-6, -4, 100, 100))
 
             assert.equal(
                 root.innerHTML,
@@ -203,7 +203,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.viewBox(new ViewBox(0, 0, 100, 100))
+            manager.set('viewBox', new ViewBox(0, 0, 100, 100))
 
             assert.equal(
                 root.innerHTML,
@@ -353,7 +353,7 @@ describe('SVG Manager', function () {
                     .replace(/\s{2,}/g, ''),
             )
 
-            manager.renderDef(def, {
+            manager.renderDef(def[0], {
                 attributes: [
                     { attrName: 'x', attrValue: 23 },
                     { attrName: 'y', attrValue: 55 },

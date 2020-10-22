@@ -484,11 +484,6 @@ export class SVGLinkedNode extends SVGNode {
     /** @hidden */
     protected _element: SVGElement | null
 
-    /** @hidden Add child to SVGLinkedNode with tags set */
-    private addFigure(node: SVGNode): void {
-        this.append(SVGLinkedNode.addTagsToNode(node.copy()))
-    }
-
     /** @hidden */
     protected static getTagsFromClasses(classNames: string): string[] {
         return classNames
@@ -568,8 +563,8 @@ export class SVGLinkedNode extends SVGNode {
         return this.element.getAttribute(attr) || undefined
     }
 
-    public append(child: SVGNode): this {
-        this.element.appendChild(child.toHTML())
+    public append(...children: SVGNode[]): this {
+        children.forEach((child) => this.element.appendChild(child.toHTML()))
 
         return this
     }
@@ -618,8 +613,10 @@ export class SVGLinkedNode extends SVGNode {
     /**
      * Renders a figure to the SVG using a SVGNode
      */
-    public render(node: SVGNode): this {
-        this.addFigure(node)
+    public render(...nodes: SVGNode[]): this {
+        nodes.forEach((node) =>
+            this.append(SVGLinkedNode.addTagsToNode(node.copy())),
+        )
 
         return this
     }
