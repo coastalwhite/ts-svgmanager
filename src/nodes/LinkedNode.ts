@@ -196,12 +196,14 @@ export default class SVGLinkedNode extends SVGNode {
     /**
      * Renders a figure to the SVG using a SVGNode
      */
-    public render(...nodes: SVGNode[]): this {
-        nodes.forEach((node) =>
-            this.append(SVGLinkedNode.addTagsToNode(node.copy())),
-        )
+    public render(node: SVGNode): SVGLinkedNode {
+        this.append(SVGLinkedNode.addTagsToNode(node.copy()))
 
-        return this
+        const lastChild = this.element.lastChild
+
+        if (lastChild === null) throw 'appending failed'
+
+        return new SVGLinkedNode(lastChild as SVGElement)
     }
 
     /**

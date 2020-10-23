@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from 'uuid'
 import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
+import Component from './components/Component'
+import { ComponentInstanceId } from './components/component-actions/types'
 import { SVGAttribute, SVGManagerEventDefinition } from './declarations'
-import { SVGViewBox } from './helpers'
+import { SVGViewBox, V2D } from './helpers'
 import { BGPatternAction } from './manager-utils/backgrounds/BackgroundPattern'
 import PanningAction from './manager-utils/viewbox-interaction/Panning'
 import { ZoomingAction } from './manager-utils/viewbox-interaction/Zooming'
@@ -15,6 +17,10 @@ import {
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
+
+export interface ComponentInstances {
+    [key: string]: SVGLinkedNode
+}
 
 /**
  * A manager class for interactive SVG's
@@ -89,8 +95,12 @@ export default class SVGManager extends SVGLinkedNode {
 
     /** @hidden Saved definitions */
     private _definitions: SVGManagerDefinition[]
-
     private _actions: ManagerAction[]
+
+    private _componentInstances: {
+        component: Component
+        instances: ComponentInstances
+    }[]
 
     /**
      * @hidden
@@ -169,6 +179,8 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     private activateAction(specifier: ManagerActionSpecifier): void {
+        if (this.does(specifier.action) !== undefined) throw 'Cannot redefine'
+
         switch (specifier.action) {
             case 'panning':
                 this._actions.push(
@@ -199,6 +211,7 @@ export default class SVGManager extends SVGLinkedNode {
 
         this._definitions = []
         this._actions = []
+        this._componentInstances = []
     }
 
     /**
@@ -335,5 +348,69 @@ export default class SVGManager extends SVGLinkedNode {
         if (elem === null)
             throw 'SVGManager: Cannot find SVG element, maybe initialize the SVGManager?'
         return elem
+    }
+
+    private findCI(
+        componentName: string,
+    ): { component: Component; instances: ComponentInstances } | undefined {
+        return this._componentInstances.find(
+            (ci) => ci.component.name === componentName,
+        )
+    }
+
+    private findInstance(
+        instanceId: ComponentInstanceId,
+    ): { component: Component; container: SVGLinkedNode } | undefined {
+        const ci = this._componentInstances.find((ci) =>
+            Object.keys(ci.instances).includes(instanceId),
+        )
+
+        if (ci === undefined) return undefined
+
+        const container = this.tagged(Component.toComponentTag(instanceId))
+
+        if (container.length === 0) return undefined
+
+        return {
+            component: ci.component,
+            container: container[0],
+        }
+    }
+
+    public declare(component: Component): boolean {
+        if (this.findCI(component.name) !== undefined) return false
+
+        this._componentInstances.push({ component, instances: {} })
+
+        return true
+    }
+
+    public instantiate(componentName: string): ComponentInstanceId {
+        const ci = this.findCI(componentName)
+
+        if (ci === undefined) throw 'Component name is unknown'
+
+        const instance = ci.component.instantiate(this)
+        ci.instances[instance.id] = instance.container
+
+        return instance.id
+    }
+
+    public update(id: ComponentInstanceId): void {
+        const instance = this.findInstance(id)
+        if (instance === undefined) throw 'undefined component not found'
+
+        instance.component.update(instance.container, this)
+    }
+
+    public fetch(id: ComponentInstanceId): SVGLinkedNode {
+        return this.tagged(Component.toComponentTag(id))[0]
+    }
+
+    public move(id: ComponentInstanceId, to: V2D): void {
+        const instance = this.findInstance(id)
+        if (instance === undefined) throw 'sdkjfal'
+
+        instance.component.moveTo(instance.container, to)
     }
 }

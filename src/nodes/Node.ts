@@ -364,6 +364,7 @@ export default class SVGNode {
         this.children.forEach((child) => node.append(child.copy()))
         this.tags.forEach((tag) => node.tag(tag))
         this.events.forEach((event) => node.on(event.eventName, event.func))
+        this.styles.forEach((value, key) => node.styleSet(key, value))
         node.text(this.innerText)
 
         return node
@@ -418,6 +419,16 @@ export default class SVGNode {
         return this.children.every((child, index) =>
             child.equals(children[index]),
         )
+    }
+
+    public tagged(tag: string): SVGNode[] {
+        const taggedItems = ([] as SVGNode[]).concat(
+            ...this.children.map((child) => child.tagged(tag)),
+        )
+
+        if (this.tags.includes(tag)) taggedItems.push(this)
+
+        return taggedItems
     }
 
     /** Checks shallowly whether two nodes are equal */
