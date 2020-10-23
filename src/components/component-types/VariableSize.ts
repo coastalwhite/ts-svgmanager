@@ -1,12 +1,12 @@
-import { SVGNode, SVGManager } from '..'
-import { V2D } from '../helpers'
-import { SVGLinkedNode } from '../nodes'
-import { MovingAction } from './component-actions/Moving'
-import { ResizeAction } from './component-actions/Resize'
+import { SVGNode, SVGManager } from '../..'
+import { V2D } from '../../helpers'
+import { SVGLinkedNode } from '../../nodes'
+import { MovingAction } from '../component-actions/Moving'
+import { ResizeAction } from '../component-actions/Resize'
 import {
     ComponentActionSpecifier,
     ComponentInstanceId,
-} from './component-actions/types'
+} from '../component-actions/types'
 import ResizableComponent from './Resizeable'
 
 export default class VariableSizeComponent extends ResizableComponent {

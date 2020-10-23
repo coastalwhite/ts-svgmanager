@@ -1,6 +1,6 @@
-import { V2D } from '../helpers'
-import { SVGNode } from '../nodes'
-import Component from './Component'
+import { V2D } from '../../helpers'
+import { SVGNode } from '../../nodes'
+import Component from '../Component'
 
 export default abstract class ResizableComponent extends Component {
     constructor(name: string) {

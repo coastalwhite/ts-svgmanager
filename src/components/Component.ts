@@ -20,6 +20,10 @@ export default abstract class Component {
         this._actions = []
     }
 
+    public get utilizations(): ComponentAction[] {
+        return this._actions
+    }
+
     protected addAction(action: ComponentAction): void {
         this._actions.push(action)
     }
@@ -29,12 +33,6 @@ export default abstract class Component {
     }
 
     protected createGroups(): { id: ComponentInstanceId; container: SVGGroup } {
-        const id = uuidv4() as ComponentInstanceId
-
-        const container = svgGroup(svgGroup().tag(COMPONENT_SHAPE_TAG))
-            .tag(Component.toComponentTag(id))
-            .set('style', 'pointer-events: all;')
-
         return { id, container }
     }
 

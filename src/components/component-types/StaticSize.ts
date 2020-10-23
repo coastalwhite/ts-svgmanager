@@ -1,11 +1,11 @@
-import { SVGManager } from '..'
-import { SVGLinkedNode, SVGNode } from '../nodes'
-import Component from './Component'
-import { MovingAction } from './component-actions/Moving'
+import { SVGManager } from '../..'
+import { SVGLinkedNode, SVGNode } from '../../nodes'
+import Component from '../Component'
+import { MovingAction } from '../component-actions/Moving'
 import {
     ComponentActionSpecifier,
     ComponentInstanceId,
-} from './component-actions/types'
+} from '../component-actions/types'
 
 export default class StaticSizeComponent extends Component {
     private _shape: () => SVGNode

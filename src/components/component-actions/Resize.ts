@@ -5,7 +5,7 @@ import { SVGLinkedNode, SVGNode } from '../../nodes'
 import { svgGroup, svgRect } from '../../shapes'
 import limit from '../../util/limit'
 import Component from '../Component'
-import ResizableComponent from '../Resizeable'
+import ResizableComponent from '../component-types/Resizeable'
 import {
     ComponentAction,
     ComponentActionSettings,
