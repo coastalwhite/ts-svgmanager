@@ -4,7 +4,7 @@ import { svgGroup } from '../../shapes'
 import Component from '../Component'
 import { ComponentInstance } from '../Instance'
 
-export default class PointsSizeComponent extends Component {
+export default class PolygonComponent extends Component {
     private _shape: (points: V2D[]) => SVGNode
 
     constructor(name: string, shape: (points: V2D[]) => SVGNode) {

@@ -1,7 +1,7 @@
 import { SVGNode } from '../..'
 import Component from '../Component'
 
-export default class StaticSizeComponent extends Component {
+export default class StaticComponent extends Component {
     private _shape: SVGNode
 
     constructor(name: string, shape: SVGNode) {

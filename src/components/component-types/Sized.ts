@@ -3,7 +3,7 @@ import { V2D } from '../../helpers'
 import Component from '../Component'
 import { ComponentInstance } from '../Instance'
 
-export default class VariableSizeComponent extends Component {
+export default class SizedComponent extends Component {
     private _shape: (size: V2D) => SVGNode
 
     constructor(name: string, shape: (size: V2D) => SVGNode) {

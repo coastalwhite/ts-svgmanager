@@ -1,7 +1,94 @@
-import { SVGNode, SVGLinkedNode } from './nodes'
+import {
+    SVGNode,
+    SVGLinkedNode,
+    AttributeMap,
+    AttributeValue,
+    SVGGroup,
+    SVGManagerTag,
+    SVGUse,
+} from './nodes'
 import SVGManager from './Manager'
+import {
+    SVGAnimate,
+    SVGAnimateMotion,
+    SVGLinGradient,
+    SVGRadGradient,
+    SVGStops,
+    svgXMLtoNode,
+    svgParseNode,
+    svgFetchNode,
+    svgFetchNodeSync,
+    SVGPathData,
+    SVGViewBox,
+    V2D,
+} from './helpers'
+import {
+    svgCircle,
+    svgRect,
+    svgPolygon,
+    svgLine,
+    svgLines,
+    svgEllipse,
+    svgCurve,
+    svgGroup,
+    svgUse,
+} from './shapes'
+import {
+    Component,
+    ComponentInstance,
+    ComponentUtil,
+    hightlighting,
+    moving,
+    PolygonComponent,
+    resizing,
+    SizedComponent,
+    StaticComponent,
+} from './components'
+import { panning, zooming, bgPattern } from './manager-utils'
 
-export { SVGManager, SVGNode, SVGLinkedNode }
+export {
+    SVGManager,
+    SVGNode,
+    SVGLinkedNode,
+    SVGUse,
+    SVGGroup,
+    AttributeValue,
+    AttributeMap,
+    SVGManagerTag,
+    SVGAnimate,
+    SVGAnimateMotion,
+    SVGLinGradient,
+    SVGRadGradient,
+    SVGStops,
+    svgXMLtoNode,
+    svgParseNode,
+    svgFetchNode,
+    svgFetchNodeSync,
+    SVGPathData,
+    SVGViewBox,
+    V2D,
+    svgCircle,
+    svgRect,
+    svgPolygon,
+    svgLine,
+    svgLines,
+    svgEllipse,
+    svgCurve,
+    svgGroup,
+    svgUse,
+    Component,
+    ComponentInstance,
+    ComponentUtil,
+    moving,
+    resizing,
+    hightlighting,
+    StaticComponent,
+    SizedComponent,
+    PolygonComponent,
+    panning,
+    zooming,
+    bgPattern,
+}
 
 /**
  * @hidden
