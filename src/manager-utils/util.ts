@@ -1,5 +1,5 @@
-import { SVGManager } from '../..'
-import { SVGViewBox, V2D } from '../../helpers'
+import { SVGManager } from '..'
+import { SVGViewBox, V2D } from '../helpers'
 
 export function getClientSVGRect(manager: SVGManager): SVGViewBox {
     const domRect = manager.element.getBoundingClientRect()

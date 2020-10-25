@@ -1,28 +1,22 @@
-// import { SVGNode, SVGManager } from '..'
-// import { V2D } from '../helpers'
-// import Component from './Component'
+import { SVGNode } from '../..'
+import { V2D } from '../../helpers'
+import { svgGroup } from '../../shapes'
+import Component from '../Component'
+import { ComponentInstance } from '../Instance'
 
-// export default class VariableSizeComponent extends Component {
-//     private _shape: (points: V2D[]) => SVGNode
-//     private _points: V2D[]
+export default class PointsSizeComponent extends Component {
+    private _shape: (points: V2D[]) => SVGNode
 
-//     constructor(
-//         manager: SVGManager,
-//         shape: (points: V2D[]) => SVGNode,
-//         points: V2D[],
-//     ) {
+    constructor(name: string, shape: (points: V2D[]) => SVGNode) {
+        super(name)
 
-//         this._shape = shape
-//         this._points = points
+        this._shape = shape
+    }
 
-//         this.update(manager)
-//     }
-
-//     public get shape(): SVGNode {
-//         return this._shape(this._points)
-//     }
-
-//     protected reshape(newPoints: V2D[]): void {
-//         this._points = newPoints
-//     }
-// }
+    public shape(instance: ComponentInstance): SVGNode {
+        return svgGroup(this._shape(instance.points)).set(
+            'transform',
+            `translate(${-instance.size.x / 2},${-instance.size.y / 2})`,
+        )
+    }
+}

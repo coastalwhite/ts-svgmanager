@@ -299,4 +299,8 @@ export default class V2D {
     public ySign(): number {
         return this.y < 0 ? -1 : this.y > 0 ? 1 : 0
     }
+
+    public clone(): V2D {
+        return new V2D(this.x, this.y)
+    }
 }
