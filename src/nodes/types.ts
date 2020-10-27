@@ -17,8 +17,3 @@ export type StyleProperty = string
 
 /** @hidden type for SVGNode.attributes */
 export type StyleMap = Map<StyleProperty, StyleValue>
-
-/**
- * @hidden
- */
-export type SVGManagerTag = string & { isSvgManagerTag: true }

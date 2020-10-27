@@ -1,4 +1,4 @@
-import { SVG_NAMESPACE, TAG_PREFIX } from '../constants'
+import { SVG_NAMESPACE } from '../constants'
 import { SVGAttribute } from '../declarations/Attributes'
 import { SVGEventName } from '../declarations/Events'
 import { SVGTagName } from '../declarations/TagNames'
@@ -9,13 +9,13 @@ import {
 } from '../types/EventHandlers'
 import { mapEquality, sortedEquality } from '../util/arrayEquality'
 import { Id } from '../util/Id'
+import { getTagsFromClasses, toTagClass } from '../util/tags'
 import {
     AttributeMap,
     StyleMap,
     AttributeValue,
     StyleProperty,
     StyleValue,
-    SVGManagerTag,
 } from './types'
 
 /**
@@ -394,6 +394,10 @@ export class SVGNode {
             element.setAttribute(attr, value.toString())
         })
 
+        this.tags.forEach((tag) => {
+            element.classList.add(toTagClass(tag))
+        })
+
         element.innerHTML = this.innerText
 
         this.children.forEach((child) => element.appendChild(child.toHTML()))
@@ -428,56 +432,15 @@ export class SVGLinkedNode extends SVGNode {
     /** @hidden */
     protected _element: SVGElement | null
 
-    /** @hidden */
-    protected static getTagsFromClasses(classNames: string): string[] {
-        return classNames
-            .split(' ')
-            .filter((className) => className.startsWith(TAG_PREFIX))
-            .map((name) => name.substr(TAG_PREFIX.length))
-    }
-
-    /** @hidden */
-    protected static addTagsToNode(node: SVGNode): SVGNode {
-        node.children.forEach((child) => this.addTagsToNode(child))
-
-        if (node.tags.length === 0) return node
-
-        const classNames = (node.get('class') || '').toString()
-        const nodeTags = this.getTagsFromClasses(classNames)
-        const classNamesMinusTags = classNames
-            .split(' ')
-            .filter((className) => nodeTags.includes(className))
-
-        node.tags.forEach((tag) => {
-            classNamesMinusTags.push(this.toTagClass(tag))
-        })
-
-        if (classNamesMinusTags.length !== 0)
-            node.set('class', classNamesMinusTags.join(' '))
-
-        return node
-    }
-
-    /** @hidden */
-    protected static toTagClass(tag: string): SVGManagerTag {
-        return (TAG_PREFIX + tag) as SVGManagerTag
-    }
-
     /** Construct a SVGLinkedNode using a DOM element */
     public constructor(element: SVGElement) {
         super(element.tagName as SVGTagName)
 
-        this._tags = SVGLinkedNode.getTagsFromClasses(
-            element.getAttribute('class') || '',
-        )
-
         this._element = element
     }
 
-    public get children(): SVGLinkedNode[] {
-        return Array.from(this.element.children).map(
-            (el) => new SVGLinkedNode(el as SVGElement),
-        )
+    public get tagName(): SVGTagName {
+        return this.element.tagName as SVGTagName
     }
 
     public get attributes(): AttributeMap {
@@ -489,8 +452,10 @@ export class SVGLinkedNode extends SVGNode {
         )
     }
 
-    public get tagName(): SVGTagName {
-        return this.element.tagName as SVGTagName
+    public get children(): SVGLinkedNode[] {
+        return Array.from(this.element.children).map(
+            (el) => new SVGLinkedNode(el as SVGElement),
+        )
     }
 
     public get innerText(): string {
@@ -499,6 +464,10 @@ export class SVGLinkedNode extends SVGNode {
         if (this.element.firstChild.nodeValue === null) return ''
 
         return this.element.firstChild.nodeValue
+    }
+
+    public get tags(): string[] {
+        return getTagsFromClasses(this.element.getAttribute('class') || '')
     }
 
     public get styles(): StyleMap {
@@ -558,8 +527,14 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public tag(tag: string): this {
-        this._tags.push(tag)
-        SVGLinkedNode.addTagsToNode(this)
+        this.element.classList.add(toTagClass(tag))
+
+        return this
+    }
+
+    /** Removes tag from node, if it does not exist it does nothing. */
+    public untag(tag: string): this {
+        this.element.classList.remove(toTagClass(tag))
 
         return this
     }
@@ -576,19 +551,11 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    /** Removes tag from node, if it does not exist it does nothing. */
-    public untag(tag: string): this {
-        this._tags = this._tags.filter((t) => t !== tag)
-        this.element.classList.remove(SVGLinkedNode.toTagClass(tag))
-
-        return this
-    }
-
     /**
      * Renders a figure to the SVG using a SVGNode
      */
     public render(node: SVGNode): SVGLinkedNode {
-        this.append(SVGLinkedNode.addTagsToNode(node.copy()))
+        this.append(node.copy())
 
         const lastChild = this.element.lastChild
 
@@ -601,7 +568,7 @@ export class SVGLinkedNode extends SVGNode {
      * Renders a figure to the SVG using a SVGNode
      */
     public renderBefore(node: SVGNode): SVGLinkedNode {
-        this.prepend(SVGLinkedNode.addTagsToNode(node.copy()))
+        this.prepend(node.copy())
 
         const firstChild = this.element.firstChild
 
@@ -612,7 +579,7 @@ export class SVGLinkedNode extends SVGNode {
 
     public tagged(tag: string): SVGLinkedNode[] {
         return Array.from(
-            this.element.getElementsByClassName(SVGLinkedNode.toTagClass(tag)),
+            this.element.getElementsByClassName(toTagClass(tag)),
         ).map((el) => new SVGLinkedNode(el as SVGElement))
     }
 
