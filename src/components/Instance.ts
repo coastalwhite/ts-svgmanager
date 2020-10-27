@@ -22,7 +22,7 @@ export class ComponentInstance {
         component: Component,
         position?: V2D,
         points?: V2D[],
-        containerTag?: string,
+        zIndex?: number,
     ) {
         this._manager = manager
         this._component = component
@@ -33,10 +33,7 @@ export class ComponentInstance {
 
         const container = svgGroup(svgGroup(shape).tag(COMPONENT_SHAPE_TAG))
 
-        if (containerTag === undefined)
-            this._container = manager.render(container)
-        else
-            this._container = manager.tagged(containerTag)[0]?.append(container)
+        this._container = manager.render(container, zIndex)
 
         if (points === undefined)
             this._container

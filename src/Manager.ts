@@ -120,26 +120,6 @@ export class SVGManager extends SVGLinkedNode {
         return new Id(`${this._managerid}-${DEFINITION_PREFIX}${hash}`)
     }
 
-    /** @hidden Adds a definition and returns the SVGManagerDefinition */
-    private addDefinition(
-        node: SVGNode,
-    ): { id: Id<SVGNode>; link: SVGLinkedNode } {
-        // Fetch definition string
-        const definition = this.toDefId(nanoid())
-
-        // Add definition to saved defs
-        this._definitions.push(definition)
-
-        // Append node to defs
-
-        return {
-            id: definition,
-            link: this.defsElement().append(
-                node.copy().set('id', definition.val),
-            ),
-        }
-    }
-
     private isValidZIndex(zIndex: number): boolean {
         return zIndex >= 0 && zIndex <= 999
     }
@@ -157,10 +137,10 @@ export class SVGManager extends SVGLinkedNode {
         if (zIndicesContainer === undefined)
             throw 'SVGManager: ZIndices container is undefined'
 
-        const biggerIndices = this._zIndices.filter((index) => index < zIndex)
         const zIndexContainer = svgGroup()
             .tag(ZINDICES_PREFIX + zIndex.toString())
             .toHTML()
+        const biggerIndices = this._zIndices.filter((index) => zIndex < index)
 
         if (this._zIndices.length === 0 || biggerIndices.length === 0) {
             this._zIndices.push(zIndex)
@@ -180,7 +160,7 @@ export class SVGManager extends SVGLinkedNode {
         ]
 
         const nextZIndexContainer = zIndicesContainer.getElementsByClassName(
-            ZINDICES_PREFIX + zIndex.toString(),
+            toTagClass(ZINDICES_PREFIX + biggerIndices[0].toString()),
         )[0] as SVGElement
 
         if (nextZIndexContainer === undefined)
@@ -202,7 +182,7 @@ export class SVGManager extends SVGLinkedNode {
             throw 'SVGManager: ZIndices container is undefined'
 
         const nextZIndexContainer = zIndicesContainer.getElementsByClassName(
-            ZINDICES_PREFIX + zIndex.toString(),
+            toTagClass(ZINDICES_PREFIX + zIndex.toString()),
         )[0] as SVGElement
 
         if (nextZIndexContainer === undefined)
@@ -254,7 +234,19 @@ export class SVGManager extends SVGLinkedNode {
      * This will be used in [[renderDef]], [[SVGNode.fillDef]] and [[SVGNode.strokeDef]]
      */
     public define(node: SVGNode): { id: Id<SVGNode>; link: SVGLinkedNode } {
-        return this.addDefinition(node)
+        // Fetch definition string
+        const definition = this.toDefId(nanoid())
+
+        // Add definition to saved defs
+        this._definitions.push(definition)
+
+        // Append node to defs
+        return {
+            id: definition,
+            link: this.defsElement().returnAppend(
+                node.copy().set('id', definition.val),
+            ),
+        }
     }
 
     /**
@@ -364,7 +356,7 @@ export class SVGManager extends SVGLinkedNode {
         componentName: string,
         position: V2D,
         points?: V2D[],
-        containerTag?: string,
+        zIndex?: number,
     ): ComponentInstance {
         const ci = this._components.find(
             (c) => c.component.name === componentName,
@@ -377,7 +369,7 @@ export class SVGManager extends SVGLinkedNode {
             ci.component,
             position,
             points,
-            containerTag,
+            zIndex,
         )
         ci.instances.push(instance)
 
