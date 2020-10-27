@@ -254,13 +254,9 @@ export class SVGNode {
 
     // ---- Styles Mutation ----
 
-    public styleSet(property: StyleProperty, value: StyleValue): this {
+    public style(property: StyleProperty, value: StyleValue): this {
         this._styles.set(property, value)
         return this
-    }
-
-    public styleGet(property: StyleProperty): StyleValue | undefined {
-        return this._styles.get(property)
     }
 
     // ---- Extra attribute setters ----
@@ -347,7 +343,7 @@ export class SVGNode {
         this.children.forEach((child) => node.append(child.copy()))
         this.tags.forEach((tag) => node.tag(tag))
         this.events.forEach((event) => node.on(event.eventName, event.func))
-        this.styles.forEach((value, key) => node.styleSet(key, value))
+        this.styles.forEach((value, key) => node.style(key, value))
         node.text(this.innerText)
 
         return node
@@ -359,7 +355,8 @@ export class SVGNode {
             this.tagName === node.tagName &&
             this.innerText === node.innerText &&
             sortedEquality(this.tags, node.tags) &&
-            mapEquality(this.attributes, node.attributes)
+            mapEquality(this.attributes, node.attributes) &&
+            mapEquality(this.styles, node.styles)
         )
     }
 
@@ -517,18 +514,12 @@ export class SVGLinkedNode extends SVGNode {
         return styleMap
     }
 
-    public set(attr: SVGAttribute, value: AttributeValue): this {
-        this.element.setAttribute(attr, value.toString())
-
-        return this
-    }
-
     public get(attr: SVGAttribute): AttributeValue | undefined {
         return this.element.getAttribute(attr) || undefined
     }
 
-    public append(...children: SVGNode[]): this {
-        children.forEach((child) => this.element.appendChild(child.toHTML()))
+    public set(attr: SVGAttribute, value: AttributeValue): this {
+        this.element.setAttribute(attr, value.toString())
 
         return this
     }
@@ -539,15 +530,17 @@ export class SVGLinkedNode extends SVGNode {
         return this
     }
 
-    // ---- Styles Mutation ----
+    public append(...children: SVGNode[]): this {
+        children.forEach((child) => this.element.appendChild(child.toHTML()))
 
-    public styleSet(property: StyleProperty, value: StyleValue): this {
-        this.element.style.setProperty(property, value.toString())
         return this
     }
 
-    public styleGet(property: StyleProperty): StyleValue | undefined {
-        return this.element.style.getPropertyValue(property)
+    // ---- Styles Mutation ----
+
+    public style(property: StyleProperty, value: StyleValue): this {
+        this.element.style.setProperty(property, value.toString())
+        return this
     }
 
     public text(s: string): this {
