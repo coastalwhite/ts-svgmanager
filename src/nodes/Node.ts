@@ -7,6 +7,7 @@ import {
     SVGManagerEventDefinition,
     SVGManagerEventHandler,
 } from '../types/EventHandlers'
+import { mapEquality, sortedEquality } from '../util/arrayEquality'
 import { Id } from '../util/Id'
 import {
     AttributeMap,
@@ -336,26 +337,6 @@ export class SVGNode {
         return this.fill('url(#' + definition.val + ')', opacity)
     }
 
-    /** @hidden */
-    private areTagsEqual(tags: string[]): boolean {
-        if (this.tags.length !== tags.length) return false
-
-        let sortedThisArray = this.tags.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-        let sortedNodeArray = tags.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-
-        while (sortedThisArray.length !== 0) {
-            if (sortedThisArray[0] !== sortedNodeArray[0]) return false
-            sortedThisArray = sortedThisArray.slice(1)
-            sortedNodeArray = sortedNodeArray.slice(1)
-        }
-
-        return true
-    }
-
     // ---- Control Methods ----
 
     /** Creates a deepcopy from current SVGNode */
@@ -372,46 +353,14 @@ export class SVGNode {
         return node
     }
 
-    /** Checks deeply whether two nodes are equal */
-    public deepEquals(node: SVGNode): boolean {
+    /** Checks shallowly whether two nodes are equal */
+    public equals(node: SVGNode): boolean {
         return (
-            this.equals(node) &&
-            this.areTagsEqual(node.tags) &&
-            this.areChildrenEqual(node.children)
+            this.tagName === node.tagName &&
+            this.innerText === node.innerText &&
+            sortedEquality(this.tags, node.tags) &&
+            mapEquality(this.attributes, node.attributes)
         )
-    }
-
-    /** @hidden */
-    private areAttributeMapsEqual(attrMap: AttributeMap): boolean {
-        const thisArray = Array.from(this.attributes).map(([attr, value]) => [
-            attr,
-            value.toString(),
-        ])
-        const nodeArray = Array.from(attrMap).map(([attr, value]) => [
-            attr,
-            value.toString(),
-        ])
-
-        if (thisArray.length !== nodeArray.length) return false
-
-        const sortedThisArray = thisArray.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-        const sortedNodeArray = nodeArray.sort((a, b) =>
-            a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0,
-        )
-
-        while (sortedThisArray.length !== 0) {
-            const thisPop = sortedThisArray.pop()
-            const nodePop = sortedNodeArray.pop()
-
-            if (thisPop === undefined || nodePop === undefined) return false
-
-            if (!(thisPop[0] === nodePop[0] && thisPop[1] === nodePop[1]))
-                return false
-        }
-
-        return true
     }
 
     /** @hidden */
@@ -423,6 +372,11 @@ export class SVGNode {
         )
     }
 
+    /** Checks deeply whether two nodes are equal */
+    public deepEquals(node: SVGNode): boolean {
+        return this.equals(node) && this.areChildrenEqual(node.children)
+    }
+
     public tagged(tag: string): SVGNode[] {
         const taggedItems = ([] as SVGNode[]).concat(
             ...this.children.map((child) => child.tagged(tag)),
@@ -431,15 +385,6 @@ export class SVGNode {
         if (this.tags.includes(tag)) taggedItems.push(this)
 
         return taggedItems
-    }
-
-    /** Checks shallowly whether two nodes are equal */
-    public equals(node: SVGNode): boolean {
-        return (
-            this.tagName === node.tagName &&
-            this.innerText === node.innerText &&
-            this.areAttributeMapsEqual(node.attributes)
-        )
     }
 
     /**
