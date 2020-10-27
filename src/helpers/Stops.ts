@@ -1,5 +1,5 @@
-import { SVGNode } from '@/nodes/Node'
-import { AttributeValue } from '@/nodes/types'
+import { SVGNode } from '../nodes/Node'
+import { AttributeValue } from '../nodes/types'
 
 /**
  * An easy way to create multiple `stop` elements

@@ -1,5 +1,5 @@
-import { SVGNode } from '../..'
-import { Component } from '@/components/Component'
+import { SVGNode } from '../../nodes/Node'
+import { Component } from '../Component'
 
 export class StaticComponent extends Component {
     private _shape: SVGNode

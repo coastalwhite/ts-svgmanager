@@ -1,5 +1,5 @@
-import { V2D } from '@/helpers/V2D'
-import { SVGNode } from '@/nodes/Node'
+import { V2D } from '../helpers/V2D'
+import { SVGNode } from '../nodes/Node'
 
 /**
  * Creates a ellipse with a certain radius-X (rx) and radius-Y (ry)

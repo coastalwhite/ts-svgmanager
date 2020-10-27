@@ -1,5 +1,5 @@
-import { Id } from '@/util/Id'
-import { SVGNode } from '@/nodes/Node'
+import { Id } from '../util/Id'
+import { SVGNode } from './Node'
 
 /** Shortcut for creating a `use` SVGNode for a certain SVGManagerDefinition */
 export class SVGUse extends SVGNode {

@@ -1,5 +1,5 @@
-import { UtilEventHandlers } from '@/types/EventedUtils'
-import { ManagerUtil } from '@/Utility'
+import { UtilEventHandlers } from '../types/EventedUtils'
+import { ManagerUtil } from '../Utility'
 
 export default abstract class ManagerEventedUtil<
     N extends string,

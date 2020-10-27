@@ -1,10 +1,10 @@
-import { alternatively } from '@/util/alternatively'
-import { limit } from '@/util/limit'
-import { DOMVectorToSVGVector } from '@/util/svg-coordinates/DOMToSVG'
-import ManagerEventedUtil from '@/manager-utils/EventedUtil'
-import { getViewBoxScale, readViewBox } from '@/manager-utils/util'
-import { SVGManager } from '@/Manager'
-import { V2D } from '@/helpers/V2D'
+import { V2D } from '../helpers/V2D'
+import { SVGManager } from '../Manager'
+import { alternatively } from '../util/alternatively'
+import { limit } from '../util/limit'
+import { DOMVectorToSVGVector } from '../util/svg-coordinates/DOMToSVG'
+import ManagerEventedUtil from './EventedUtil'
+import { getViewBoxScale, readViewBox } from './util'
 
 export const zooming = (settings?: Partial<ZoomUtilSettings>): ZoomUtil =>
     new ZoomUtil(settings)

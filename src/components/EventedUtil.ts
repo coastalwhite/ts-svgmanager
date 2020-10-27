@@ -1,5 +1,5 @@
-import { UtilEventHandlers } from '@/types/EventedUtils'
-import { ComponentUtil } from '@/components/Utility'
+import { UtilEventHandlers } from '../types/EventedUtils'
+import { ComponentUtil } from './Utility'
 
 export abstract class ComponentEventedUtil<
     N extends string,

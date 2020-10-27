@@ -1,7 +1,7 @@
-import { SVGNode } from '@/nodes/Node'
-import { SVGStops } from '@/helpers/Stops'
-import { AttributeValue } from '@/nodes/types'
-import { SVGTagName } from '@/declarations/TagNames'
+import { SVGTagName } from '../declarations/TagNames'
+import { SVGNode } from '../nodes/Node'
+import { AttributeValue } from '../nodes/types'
+import { SVGStops } from './Stops'
 
 class SVGGradient extends SVGNode {
     /**

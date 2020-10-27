@@ -1,4 +1,4 @@
-import { V2D } from '@/helpers/V2D'
+import { V2D } from './V2D'
 
 /**
  * An Helper class for for the SVG ViewBox

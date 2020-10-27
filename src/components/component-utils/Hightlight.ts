@@ -1,11 +1,11 @@
-import { ComponentEventedUtil } from '@/components/EventedUtil'
-import { ComponentInstance } from '@/components/Instance'
-import { V2D } from '@/helpers/V2D'
-import { SVGManager } from '@/Manager'
-import { SVGGroup } from '@/nodes/Group'
-import { SVGNode } from '@/nodes/Node'
-import { svgRect } from '@/shapes/Rectangle'
-import { alternatively } from '@/util/alternatively'
+import { V2D } from '../../helpers/V2D'
+import { SVGManager } from '../../Manager'
+import { SVGGroup } from '../../nodes/Group'
+import { SVGNode } from '../../nodes/Node'
+import { svgRect } from '../../shapes/Rectangle'
+import { alternatively } from '../../util/alternatively'
+import { ComponentEventedUtil } from '../EventedUtil'
+import { ComponentInstance } from '../Instance'
 
 export const hightlighting = (
     settings?: Partial<HightlightUtilSettings>,

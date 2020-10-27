@@ -1,20 +1,21 @@
-import { AttributeMap, AttributeValue } from '@/nodes/types'
-import { SVG_NAMESPACE, TAG_PREFIX } from '@/constants'
-import {
-    StyleMap,
-    StyleProperty,
-    StyleValue,
-    SVGManagerTag,
-} from '@/nodes/types'
-import { Id } from '@/util/Id'
-import { SVGAttribute } from '@/declarations/Attributes'
-import { SVGEventName } from '@/declarations/Events'
-import { SVGTagName } from '@/declarations/TagNames'
+import { SVG_NAMESPACE, TAG_PREFIX } from '../constants'
+import { SVGAttribute } from '../declarations/Attributes'
+import { SVGEventName } from '../declarations/Events'
+import { SVGTagName } from '../declarations/TagNames'
+import { SVGAnimate } from '../helpers/Animate'
 import {
     SVGManagerEventDefinition,
     SVGManagerEventHandler,
-} from '@/types/EventHandlers'
-import { SVGAnimate } from '..'
+} from '../types/EventHandlers'
+import { Id } from '../util/Id'
+import {
+    AttributeMap,
+    StyleMap,
+    AttributeValue,
+    StyleProperty,
+    StyleValue,
+    SVGManagerTag,
+} from './types'
 
 /**
  * A JS Representation of a HTML-Node.

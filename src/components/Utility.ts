@@ -1,10 +1,10 @@
-import { Id } from '@/util/Id'
-import { ComponentInstance } from '@/components/Instance'
-import { SVGLinkedNode, SVGNode } from '@/nodes/Node'
-import { SVGGroup } from '@/nodes/Group'
-import { svgGroup } from '@/shapes/Group'
-import { SVGManager } from '@/Manager'
-import { V2D } from '@/helpers/V2D'
+import { V2D } from '../helpers/V2D'
+import { SVGManager } from '../Manager'
+import { SVGGroup } from '../nodes/Group'
+import { SVGLinkedNode, SVGNode } from '../nodes/Node'
+import { svgGroup } from '../shapes/Group'
+import { Id } from '../util/Id'
+import { ComponentInstance } from './Instance'
 
 export abstract class ComponentUtil {
     protected abstract readonly UTIL_IDENTIFIER: string

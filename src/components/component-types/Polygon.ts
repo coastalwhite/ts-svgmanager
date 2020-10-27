@@ -1,8 +1,8 @@
-import { Component } from '@/components/Component'
-import { V2D } from '@/helpers/V2D'
-import { SVGNode } from '@/nodes/Node'
-import { ComponentInstance } from '@/components/Instance'
-import { svgGroup } from '@/shapes/Group'
+import { V2D } from '../../helpers/V2D'
+import { SVGNode } from '../../nodes/Node'
+import { svgGroup } from '../../shapes/Group'
+import { Component } from '../Component'
+import { ComponentInstance } from '../Instance'
 
 export class PolygonComponent extends Component {
     private _shape: (points: V2D[]) => SVGNode

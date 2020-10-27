@@ -1,6 +1,6 @@
-import { SVGPathData } from '@/helpers/PathData'
-import { V2D } from '@/helpers/V2D'
-import { SVGNode } from '@/nodes/Node'
+import { SVGPathData } from '../helpers/PathData'
+import { V2D } from '../helpers/V2D'
+import { SVGNode } from '../nodes/Node'
 
 /**
  * Draws a curve from one point to another using a control point

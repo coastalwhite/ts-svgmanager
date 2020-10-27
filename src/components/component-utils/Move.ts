@@ -1,9 +1,9 @@
-import { ComponentEventedUtil } from '@/components/EventedUtil'
-import { ComponentInstance } from '@/components/Instance'
-import { V2D } from '@/helpers/V2D'
-import { SVGManager } from '@/Manager'
-import { alternatively } from '@/util/alternatively'
-import { DOMVectorToSVGVector } from '@/util/svg-coordinates/DOMToSVG'
+import { V2D } from '../../helpers/V2D'
+import { SVGManager } from '../../Manager'
+import { alternatively } from '../../util/alternatively'
+import { DOMVectorToSVGVector } from '../../util/svg-coordinates/DOMToSVG'
+import { ComponentEventedUtil } from '../EventedUtil'
+import { ComponentInstance } from '../Instance'
 
 export const moving = (settings?: Partial<MoveUtilSettings>): MoveUtil =>
     new MoveUtil(settings)

@@ -1,13 +1,13 @@
-import { V2D } from '@/helpers/V2D'
-import { SVGManager } from '@/Manager'
-import { SVGNode } from '@/nodes/Node'
-import { svgCircle } from '@/shapes/Circle'
-import { alternatively } from '@/util/alternatively'
-import { componentUtilRequirement } from '@/util/requirements'
-import { getTransform, setTransform } from '@/util/transform'
-import { ComponentEventedUtil } from '@/components/EventedUtil'
-import { ComponentInstance } from '@/components/Instance'
-import { HightlightUtil } from '@/components/component-utils/Hightlight'
+import { V2D } from '../../helpers/V2D'
+import { SVGManager } from '../../Manager'
+import { SVGNode } from '../../nodes/Node'
+import { svgCircle } from '../../shapes/Circle'
+import { alternatively } from '../../util/alternatively'
+import { componentUtilRequirement } from '../../util/requirements'
+import { getTransform, setTransform } from '../../util/transform'
+import { ComponentEventedUtil } from '../EventedUtil'
+import { ComponentInstance } from '../Instance'
+import { HightlightUtil } from './Hightlight'
 
 export const rotating = (settings?: Partial<RotateUtilSettings>): RotateUtil =>
     new RotateUtil(settings)

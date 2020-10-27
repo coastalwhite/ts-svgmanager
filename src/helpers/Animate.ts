@@ -1,8 +1,8 @@
-import { SVGNode } from '@/nodes/Node'
-import { SVGPathData } from '@/helpers/PathData'
-import { SVGAttribute } from '@/declarations/Attributes'
-import { SVGTagName } from '@/declarations/TagNames'
-import { AttributeValue } from '@/nodes/types'
+import { SVGAttribute } from '../declarations/Attributes'
+import { SVGTagName } from '../declarations/TagNames'
+import { SVGNode } from '../nodes/Node'
+import { AttributeValue } from '../nodes/types'
+import { SVGPathData } from './PathData'
 
 /**
  * Helper class for easy initialization of SVG Animations

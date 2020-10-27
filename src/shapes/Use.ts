@@ -1,6 +1,6 @@
-import { SVGNode } from '@/nodes/Node'
-import { SVGUse } from '@/nodes/Use'
-import { Id } from '@/util/Id'
+import { SVGNode } from '../nodes/Node'
+import { SVGUse } from '../nodes/Use'
+import { Id } from '../util/Id'
 
 /**
  * Create a group with children

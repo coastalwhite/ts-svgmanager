@@ -1,6 +1,6 @@
-import { SVGPathData } from '@/helpers/PathData'
-import { V2D } from '@/helpers/V2D'
-import { SVGNode } from '@/nodes/Node'
+import { SVGPathData } from '../helpers/PathData'
+import { V2D } from '../helpers/V2D'
+import { SVGNode } from '../nodes/Node'
 
 /**
  * Create a number of connecting lines given by a array of x and y coordinates

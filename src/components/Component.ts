@@ -1,7 +1,7 @@
-import { ComponentUtil } from '@/components/Utility'
-import { SVGNode } from '@/nodes/Node'
-import { ComponentInstance } from '@/components/Instance'
-import { SVGManager } from '@/Manager'
+import { SVGManager } from '../Manager'
+import { SVGNode } from '../nodes/Node'
+import { ComponentInstance } from './Instance'
+import { ComponentUtil } from './Utility'
 
 export abstract class Component {
     private _name: string

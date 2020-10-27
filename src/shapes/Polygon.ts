@@ -1,5 +1,5 @@
-import { V2D } from '@/helpers/V2D'
-import { SVGNode } from '@/nodes/Node'
+import { V2D } from '../helpers/V2D'
+import { SVGNode } from '../nodes/Node'
 
 /**
  * Creates a polygon using the given points

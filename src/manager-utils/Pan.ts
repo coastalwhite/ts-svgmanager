@@ -1,11 +1,11 @@
-import { CursorType } from '@/declarations/Cursors'
-import { alternatively } from '@/util/alternatively'
-import { DOMDistanceToSVGDistance } from '@/util/svg-coordinates/DOMToSVG'
-import ManagerEventedUtil from '@/manager-utils/EventedUtil'
-import { readViewBox } from '@/manager-utils/util'
-import { SVGManager } from '@/Manager'
-import { SVGViewBox } from '@/helpers/ViewBox'
-import { V2D } from '@/helpers/V2D'
+import { CursorType } from '../declarations/Cursors'
+import { V2D } from '../helpers/V2D'
+import { SVGViewBox } from '../helpers/ViewBox'
+import { SVGManager } from '../Manager'
+import { alternatively } from '../util/alternatively'
+import { DOMDistanceToSVGDistance } from '../util/svg-coordinates/DOMToSVG'
+import ManagerEventedUtil from './EventedUtil'
+import { readViewBox } from './util'
 
 export interface PanUtilSettings {
     cursor: CursorType

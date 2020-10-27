@@ -1,13 +1,13 @@
-import { SVGManager } from '@/Manager'
 import { nanoid } from 'nanoid'
-import { Component } from '@/components/Component'
-import { SVGLinkedNode } from '@/nodes/Node'
-import { Id } from '@/util/Id'
-import { V2D } from '@/helpers/V2D'
-import { svgGroup } from '@/shapes/Group'
-import { COMPONENT_SHAPE_TAG } from '@/constants'
-import { DOMDistanceToSVGDistance } from '@/util/svg-coordinates/DOMToSVG'
-import { setTransform } from '@/util/transform'
+import { COMPONENT_SHAPE_TAG } from '../constants'
+import { V2D } from '../helpers/V2D'
+import { SVGManager } from '../Manager'
+import { SVGLinkedNode } from '../nodes/Node'
+import { svgGroup } from '../shapes/Group'
+import { Id } from '../util/Id'
+import { DOMDistanceToSVGDistance } from '../util/svg-coordinates/DOMToSVG'
+import { setTransform } from '../util/transform'
+import { Component } from './Component'
 
 export class ComponentInstance {
     private _manager: SVGManager
