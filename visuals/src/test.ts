@@ -20,6 +20,7 @@
 
 import {
     bgPattern,
+    ComponentInstance,
     hightlighting,
     moving,
     panning,
@@ -33,7 +34,7 @@ import {
     SVGViewBox,
     V2D,
     zooming,
-} from 'ts-svgmanager'
+} from '@coastalwhite/ts-svgmanager'
 
 // Initialize the SVGManager
 const manager = new SVGManager()
@@ -54,13 +55,15 @@ const variableComponent = new SizedComponent('variable', (size: V2D) =>
 )
 variableComponent.utilize(
     moving(),
-    resizing().on('resizeEnd', (_i, oldSize, _oldPos, newSize, _newPos) =>
-        console.log(
-            'old: ' +
-                JSON.stringify(oldSize) +
-                ', new: ' +
-                JSON.stringify(newSize),
-        ),
+    resizing().on(
+        'resizeEnd',
+        (_i: ComponentInstance, oldSize: V2D, _oldPos: V2D, newSize: V2D) =>
+            console.log(
+                'old: ' +
+                    JSON.stringify(oldSize) +
+                    ', new: ' +
+                    JSON.stringify(newSize),
+            ),
     ),
     rotating(),
 )

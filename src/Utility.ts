@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
-import { Id } from '@/util/Id'
-import { SVGManager } from '@/Manager'
+import { SVGManager } from '.'
+import { Id } from './util/Id'
 
 export abstract class ManagerUtil {
     private _id: Id<ManagerUtil>

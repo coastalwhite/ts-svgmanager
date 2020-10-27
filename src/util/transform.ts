@@ -1,4 +1,4 @@
-import { SVGNode } from '@/nodes/Node'
+import { SVGNode } from '../nodes/Node'
 
 export function getTransform(node: SVGNode, functionType: string): number[] {
     const transform = node.get('transform')

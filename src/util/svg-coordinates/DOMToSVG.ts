@@ -1,6 +1,6 @@
-import { SVGManager } from '@/Manager'
-import { V2D } from '@/helpers/V2D'
-import { getViewBoxRatio } from '@/manager-utils/util'
+import { SVGManager } from '../..'
+import { V2D } from '../../helpers/V2D'
+import { getViewBoxRatio } from '../../manager-utils/util'
 
 export function DOMVectorToSVGVector(DOMVector: V2D, manager: SVGManager): V2D {
     const boundingBox = manager.element.getBoundingClientRect()

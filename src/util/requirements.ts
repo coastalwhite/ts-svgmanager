@@ -1,5 +1,5 @@
-import { ComponentUtil } from '@/components/Utility'
-import { Id } from '@/util/Id'
+import { ComponentUtil } from '../components/Utility'
+import { Id } from './Id'
 
 export function componentUtilRequirement(
     construct: () => ComponentUtil,

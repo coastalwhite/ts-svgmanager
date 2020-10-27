@@ -9,10 +9,6 @@
         "target": "es2015",
         "declaration": true,
         "outDir": "./dist",
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        }
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

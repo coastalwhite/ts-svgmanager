@@ -1,15 +1,15 @@
 import { nanoid } from 'nanoid'
-import { ManagerUtil } from '@/Utility'
-import { SVGLinkedNode, SVGNode } from '@/nodes/Node'
-import { Id } from '@/util/Id'
-import { SVGAttribute } from '@/declarations/Attributes'
-import { SVGManagerEventDefinition } from '@/types/EventHandlers'
-import { Component } from '@/components/Component'
-import { ComponentInstance } from '@/components/Instance'
-import { AttributeValue } from '@/nodes/types'
-import { SVGUse } from '@/nodes/Use'
-import { SVGViewBox } from '@/helpers/ViewBox'
-import { V2D } from '@/helpers/V2D'
+import { Component } from './components/Component'
+import { ComponentInstance } from './components/Instance'
+import { SVGAttribute } from './declarations/Attributes'
+import { V2D } from './helpers/V2D'
+import { SVGViewBox } from './helpers/ViewBox'
+import { SVGLinkedNode, SVGNode } from './nodes/Node'
+import { AttributeValue } from './nodes/types'
+import { SVGUse } from './nodes/Use'
+import { SVGManagerEventDefinition } from './types/EventHandlers'
+import { Id } from './util/Id'
+import { ManagerUtil } from './Utility'
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
@@ -133,7 +133,9 @@ export class SVGManager extends SVGLinkedNode {
 
         return {
             id: definition,
-            link: this.defsElement().render(node.copy().set('id', definition)),
+            link: this.defsElement().render(
+                node.copy().set('id', definition.val),
+            ),
         }
     }
 

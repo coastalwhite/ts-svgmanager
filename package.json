@@ -1,9 +1,10 @@
 {
-    "name": "ts-svgmanager",
-    "version": "2.0.3-beta3",
+    "name": "@coastalwhite/ts-svgmanager",
+    "version": "0.1.1",
     "description": "A Typescript SVG Manager",
     "browser": "dist/index.js",
     "types": "dist/index.d.ts",
+    "publishConfig": { "registry": "https://npm.pkg.github.com/" },
     "scripts": {
         "distpkg": "sed 's/\"dist\\/index.js\"/\"index.js\"/g; s/\"dist\\/index.d.ts\"/\"index.d.ts\"/g' package.json | grep -v '\"private\": true,' > dist/package.json",
         "pub": "npm run build:clean ; npm run distpkg ; npm publish dist",
@@ -15,7 +16,6 @@
         "lint": "npx eslint ./src --ext .ts",
         "lint:tests": "eslint ./tests/**/*.ts"
     },
-    "private": true,
     "repository": {
         "type": "git",
         "url": "git+https://github.com/coastalwhite/ts-svgmanager.git"

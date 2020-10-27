@@ -1,5 +1,5 @@
-import { SVGEventName } from '@/declarations/Events'
-import { SVGLinkedNode } from '@/nodes/Node'
+import { SVGEventName } from '../declarations/Events'
+import { SVGLinkedNode } from '../nodes/Node'
 
 /** A EventHandler for SVGManager */
 export type SVGManagerEventHandler = (
