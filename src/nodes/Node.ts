@@ -494,15 +494,24 @@ export class SVGLinkedNode extends SVGNode {
     }
 
     public prepend(...children: SVGNode[]): this {
-        this.element.prepend(...children.map((child) => child.toHTML()))
+        children.forEach((child) => this.returnPrepend(child))
 
         return this
     }
 
     public append(...children: SVGNode[]): this {
-        children.forEach((child) => this.element.appendChild(child.toHTML()))
+        children.forEach((child) => this.returnAppend(child))
 
         return this
+    }
+
+    public returnPrepend(child: SVGNode): SVGLinkedNode {
+        return new SVGLinkedNode(
+            this.element.insertBefore(child.toHTML(), this.element.firstChild),
+        )
+    }
+    public returnAppend(child: SVGNode): SVGLinkedNode {
+        return new SVGLinkedNode(this.element.appendChild(child.toHTML()))
     }
 
     // ---- Styles Mutation ----
@@ -549,32 +558,6 @@ export class SVGLinkedNode extends SVGNode {
         this.element.innerHTML = this.innerText
 
         return this
-    }
-
-    /**
-     * Renders a figure to the SVG using a SVGNode
-     */
-    public render(node: SVGNode): SVGLinkedNode {
-        this.append(node.copy())
-
-        const lastChild = this.element.lastChild
-
-        if (lastChild === null) throw 'appending failed'
-
-        return new SVGLinkedNode(lastChild as SVGElement)
-    }
-
-    /**
-     * Renders a figure to the SVG using a SVGNode
-     */
-    public renderBefore(node: SVGNode): SVGLinkedNode {
-        this.prepend(node.copy())
-
-        const firstChild = this.element.firstChild
-
-        if (firstChild === null) throw 'prepending failed'
-
-        return new SVGLinkedNode(firstChild as SVGElement)
     }
 
     public tagged(tag: string): SVGLinkedNode[] {

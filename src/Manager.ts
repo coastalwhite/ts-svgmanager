@@ -1,18 +1,21 @@
 import { nanoid } from 'nanoid'
+import { SVGGroup } from './nodes/Group'
 import { Component } from './components/Component'
 import { ComponentInstance } from './components/Instance'
-import { SVGAttribute } from './declarations/Attributes'
 import { V2D } from './helpers/V2D'
 import { SVGViewBox } from './helpers/ViewBox'
 import { SVGLinkedNode, SVGNode } from './nodes/Node'
 import { AttributeValue } from './nodes/types'
-import { SVGUse } from './nodes/Use'
-import { SVGManagerEventDefinition } from './types/EventHandlers'
 import { Id } from './util/Id'
 import { ManagerUtil } from './Utility'
-
-/** @hidden */
-const DEFINITION_PREFIX = 'figure-'
+import {
+    DEFAULT_ZINDEX,
+    DEFINITION_PREFIX,
+    ZINDICES_CONTAINER_TAG,
+    ZINDICES_PREFIX,
+} from './constants'
+import { toTagClass } from './util/tags'
+import { svgGroup } from './shapes/Group'
 
 /**
  * A manager class for interactive SVG's
@@ -89,6 +92,9 @@ export class SVGManager extends SVGLinkedNode {
     private _definitions: Id<SVGNode>[]
     private _utils: ManagerUtil[]
 
+    /** @hidden Should be sorted */
+    private _zIndices: number[]
+
     private _components: {
         component: Component
         instances: ComponentInstance[]
@@ -114,11 +120,6 @@ export class SVGManager extends SVGLinkedNode {
         return new Id(`${this._managerid}-${DEFINITION_PREFIX}${hash}`)
     }
 
-    /** @hidden Returns whether a definition already exists or not */
-    private doesDefExist(definition: Id<SVGNode>): boolean {
-        return this._definitions.includes(definition)
-    }
-
     /** @hidden Adds a definition and returns the SVGManagerDefinition */
     private addDefinition(
         node: SVGNode,
@@ -133,45 +134,81 @@ export class SVGManager extends SVGLinkedNode {
 
         return {
             id: definition,
-            link: this.defsElement().render(
+            link: this.defsElement().append(
                 node.copy().set('id', definition.val),
             ),
         }
     }
 
-    /** @hidden Add a use of a definition to the SVGManager */
-    private addUse(
-        definition: Id<SVGNode>,
-        args?: {
-            tags?: string[]
-            attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
-            events?: SVGManagerEventDefinition[]
-        },
-    ): SVGLinkedNode {
-        // Create use with def id
-        const useNode = new SVGUse(definition)
+    private isValidZIndex(zIndex: number): boolean {
+        return zIndex >= 0 && zIndex <= 999
+    }
 
-        // If arguments are given
-        if (args !== undefined) {
-            // If args.tags are given add them them to the useNode
-            if (args.tags !== undefined)
-                args.tags.forEach((tag) => useNode.tag(tag))
+    private addZIndexContainer(zIndex: number): SVGLinkedNode {
+        if (!this.isValidZIndex(zIndex))
+            throw 'SVGManager: Invalid ZIndex given as ' + zIndex
 
-            // If args.attributes are given add them them to the useNode
-            if (args.attributes !== undefined)
-                args.attributes.forEach((attribute) =>
-                    useNode.set(attribute.attrName, attribute.attrValue),
-                )
+        if (this._zIndices.includes(zIndex))
+            throw 'Trying to add a container which already exists'
 
-            // If args.events are given add them them to the useNode
-            if (args.events !== undefined)
-                args.events.forEach((event) =>
-                    useNode.on(event.eventName, event.func),
-                )
+        const zIndicesContainer = this.element.getElementsByClassName(
+            toTagClass(ZINDICES_CONTAINER_TAG),
+        )[0]
+        if (zIndicesContainer === undefined)
+            throw 'SVGManager: ZIndices container is undefined'
+
+        const biggerIndices = this._zIndices.filter((index) => index < zIndex)
+        const zIndexContainer = svgGroup()
+            .tag(ZINDICES_PREFIX + zIndex.toString())
+            .toHTML()
+
+        if (this._zIndices.length === 0 || biggerIndices.length === 0) {
+            this._zIndices.push(zIndex)
+
+            return new SVGLinkedNode(
+                zIndicesContainer.appendChild(zIndexContainer),
+            )
         }
 
-        // Append Use to Manager
-        return this.render(useNode)
+        this._zIndices = [
+            ...this._zIndices.slice(
+                0,
+                this._zIndices.length - biggerIndices.length,
+            ),
+            zIndex,
+            ...biggerIndices,
+        ]
+
+        const nextZIndexContainer = zIndicesContainer.getElementsByClassName(
+            ZINDICES_PREFIX + zIndex.toString(),
+        )[0] as SVGElement
+
+        if (nextZIndexContainer === undefined)
+            throw 'Mismatch of internal zIndices and DOM zIndices'
+
+        return new SVGLinkedNode(
+            zIndicesContainer.insertBefore(
+                zIndexContainer,
+                nextZIndexContainer,
+            ),
+        )
+    }
+
+    private fetchZIndexContainer(zIndex: number): SVGLinkedNode {
+        const zIndicesContainer = this.element.getElementsByClassName(
+            toTagClass(ZINDICES_CONTAINER_TAG),
+        )[0]
+        if (zIndicesContainer === undefined)
+            throw 'SVGManager: ZIndices container is undefined'
+
+        const nextZIndexContainer = zIndicesContainer.getElementsByClassName(
+            ZINDICES_PREFIX + zIndex.toString(),
+        )[0] as SVGElement
+
+        if (nextZIndexContainer === undefined)
+            return this.addZIndexContainer(zIndex)
+
+        return new SVGLinkedNode(nextZIndexContainer)
     }
 
     /**
@@ -185,6 +222,7 @@ export class SVGManager extends SVGLinkedNode {
 
         this._definitions = []
         this._utils = []
+        this._zIndices = []
         this._components = []
     }
 
@@ -196,6 +234,7 @@ export class SVGManager extends SVGLinkedNode {
         const svgElement = new SVGNode('svg')
             .set('id', this._managerid)
             .append(new SVGNode('defs'))
+            .append(new SVGGroup().tag(ZINDICES_CONTAINER_TAG))
             .toHTML()
 
         const rootElement = document.getElementById(rootId)
@@ -226,17 +265,6 @@ export class SVGManager extends SVGLinkedNode {
         this.removeChildren()
         this.text('')
         this.render(new SVGNode('defs'))
-    }
-
-    /**
-     * A raw append, only use when you know what is going on
-     *
-     * **Recommended to use [[render]] instead**
-     * */
-    public append(child: SVGNode): this {
-        this.element.appendChild(child.toHTML())
-
-        return this
     }
 
     /**
@@ -296,16 +324,25 @@ export class SVGManager extends SVGLinkedNode {
     }
 
     /**
+     * Renders a figure to the SVG using a SVGNode
+     */
+    public render(node: SVGNode, zIndex?: number): SVGLinkedNode {
+        if (zIndex === undefined) zIndex = DEFAULT_ZINDEX
+
+        return this.fetchZIndexContainer(zIndex).returnAppend(node)
+    }
+
+    /**
      * The actual SVG element on the DOM
      */
-    public get element(): SVGElement {
+    public get element(): SVGSVGElement {
         const elem = document.getElementById(
             this._managerid,
         ) as SVGElement | null
 
         if (elem === null)
             throw 'SVGManager: Cannot find SVG element, maybe initialize the SVGManager?'
-        return elem
+        return elem as SVGSVGElement
     }
 
     public declare(...components: Component[]): void {
