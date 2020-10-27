@@ -1,50 +1,42 @@
+import { Component } from '@/components/Component'
+import { PolygonComponent } from '@/components/component-types/Polygon'
+import { SizedComponent } from '@/components/component-types/Sized'
+import { StaticComponent } from '@/components/component-types/Static'
+import { hightlighting } from '@/components/component-utils/Hightlight'
+import { moving } from '@/components/component-utils/Move'
+import { resizing } from '@/components/component-utils/Resize'
+import { rotating } from '@/components/component-utils/Rotate'
+import { ComponentInstance } from '@/components/Instance'
+import { ComponentUtil } from '@/components/Utility'
+import { SVGAnimate, SVGAnimateMotion } from '@/helpers/Animate'
+import { SVGLinGradient, SVGRadGradient } from '@/helpers/Gradient'
 import {
-    SVGNode,
-    SVGLinkedNode,
-    AttributeMap,
-    AttributeValue,
-    SVGGroup,
-    SVGManagerTag,
-    SVGUse,
-} from './nodes'
-import SVGManager from './Manager'
-import {
-    SVGAnimate,
-    SVGAnimateMotion,
-    SVGLinGradient,
-    SVGRadGradient,
-    SVGStops,
     svgXMLtoNode,
     svgParseNode,
     svgFetchNode,
     svgFetchNodeSync,
-    SVGPathData,
-    SVGViewBox,
-    V2D,
-} from './helpers'
-import {
-    svgCircle,
-    svgRect,
-    svgPolygon,
-    svgLine,
-    svgLines,
-    svgEllipse,
-    svgCurve,
-    svgGroup,
-    svgUse,
-} from './shapes'
-import {
-    Component,
-    ComponentInstance,
-    ComponentUtil,
-    hightlighting,
-    moving,
-    PolygonComponent,
-    resizing,
-    SizedComponent,
-    StaticComponent,
-} from './components'
-import { panning, zooming, bgPattern } from './manager-utils'
+} from '@/helpers/Parser'
+import { SVGPathData } from '@/helpers/PathData'
+import { SVGStops } from '@/helpers/Stops'
+import { V2D } from '@/helpers/V2D'
+import { SVGViewBox } from '@/helpers/ViewBox'
+import { SVGManager } from '@/Manager'
+import { bgPattern } from '@/manager-utils/BGPattern'
+import { panning } from '@/manager-utils/Pan'
+import { zooming } from '@/manager-utils/Zoom'
+import { SVGGroup } from '@/nodes/Group'
+import { SVGNode, SVGLinkedNode } from '@/nodes/Node'
+import { AttributeValue, AttributeMap, SVGManagerTag } from '@/nodes/types'
+import { SVGUse } from '@/nodes/Use'
+import { svgCircle } from '@/shapes/Circle'
+import { svgCurve } from '@/shapes/Curve'
+import { svgEllipse } from '@/shapes/Ellipse'
+import { svgGroup } from '@/shapes/Group'
+import { svgLine } from '@/shapes/Line'
+import { svgLines } from '@/shapes/Lines'
+import { svgPolygon } from '@/shapes/Polygon'
+import { svgRect } from '@/shapes/Rectangle'
+import { svgUse } from '@/shapes/Use'
 
 export {
     SVGManager,
@@ -81,6 +73,7 @@ export {
     ComponentUtil,
     moving,
     resizing,
+    rotating,
     hightlighting,
     StaticComponent,
     SizedComponent,
@@ -89,47 +82,3 @@ export {
     zooming,
     bgPattern,
 }
-
-/**
- * @hidden
- * The DOM-id of a SVG Defs item.
- *
- * # Usage
- * Returned by SVGManager.define. \\
- * Used by SVGManager.renderDef, SVGNode.fillDef and SVGNode.strokeDef
- *
- * # Examples
- *
- * ## Example 1 - Rendering a definition
- * ```ts
- * import { SVGManager } from 'ts-svgmanager'
- * import { circle } from 'ts-svgmanager/Shapes'
- *
- * // Initialize manager
- * const manager = new SVGManager().init('svg-root')
- *
- * // Define a Circle with radius 10
- * const definition = manager.define(circle(10))
- *
- * manager.renderDef(definition)
- * ```
- *
- * # Example 2 - Rendering a gradient as a background
- * ```ts
- * import { SVGManager } from 'ts-svgmanager'
- * import { SVGStops, SVGLinGradient } from 'ts-svgmanager/helpers/Gradient'
- * import { circle } from 'ts-svgmanager/Shapes'
- * 
- * // Initialize manager
- * const manager = new SVGManager().init('svg-root')
- * 
- * // Define a Linear Gradient with 2 stops
- * const gradient = manager.define(
- *     new SVGLinGradient(new SVGStops().stop(0, '#ccc').stop(1, '#333')),
- * )
-
- * // Render a circle with radius 5 and the gradient as a background
- * manager.render(circle(5).fillDef(gradient).stroke('none'))
- * ```
- */
-export type SVGManagerDefinition = string & { isSvgManagerDef: true }

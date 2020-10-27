@@ -1,13 +1,13 @@
-import { v4 as uuidv4 } from 'uuid'
-import SVGManager from './Manager'
-import Id from './util/Id'
+import { nanoid } from 'nanoid'
+import { Id } from '@/util/Id'
+import { SVGManager } from '@/Manager'
 
 export abstract class ManagerUtil {
     private _id: Id<ManagerUtil>
     private _manager: SVGManager | null
 
     constructor() {
-        this._id = new Id<ManagerUtil>(uuidv4())
+        this._id = new Id<ManagerUtil>(nanoid())
         this._manager = null
     }
 

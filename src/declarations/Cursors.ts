@@ -1,3 +1,1 @@
-type CursorType = 'pointer' | 'grab' | 'grabbing'
-
-export default CursorType
+export type CursorType = 'pointer' | 'grab' | 'grabbing'

@@ -1,16 +1,20 @@
-import { Md5 } from 'ts-md5/dist/md5'
-import { AttributeMap, AttributeValue, SVGLinkedNode } from '.'
-import { SVGManagerDefinition } from '..'
-import { SVG_NAMESPACE } from '../constants'
+import { AttributeMap, AttributeValue } from '@/nodes/types'
+import { SVG_NAMESPACE, TAG_PREFIX } from '@/constants'
 import {
-    SVGTagName,
+    StyleMap,
+    StyleProperty,
+    StyleValue,
+    SVGManagerTag,
+} from '@/nodes/types'
+import { Id } from '@/util/Id'
+import { SVGAttribute } from '@/declarations/Attributes'
+import { SVGEventName } from '@/declarations/Events'
+import { SVGTagName } from '@/declarations/TagNames'
+import {
     SVGManagerEventDefinition,
-    SVGAttribute,
-    SVGEventName,
     SVGManagerEventHandler,
-} from '../declarations'
-import SVGAnimate from '../helpers/Animate'
-import { StyleMap, StyleProperty, StyleValue } from './types'
+} from '@/types/EventHandlers'
+import { SVGAnimate } from '..'
 
 /**
  * A JS Representation of a HTML-Node.
@@ -40,7 +44,7 @@ import { StyleMap, StyleProperty, StyleValue } from './types'
  * ### [[SVGNode.text]]
  * Which allows you to set the innerText
  */
-export default class SVGNode {
+export class SVGNode {
     /** @hidden */
     protected _tagName: SVGTagName
     /** @hidden */
@@ -310,11 +314,11 @@ export default class SVGNode {
 
     /** Shortcut for setting stroke attributes to a definition (See more at [[SVGManager.define]]) */
     public strokeDef(
-        definition: SVGManagerDefinition,
+        definition: Id<SVGNode>,
         width?: AttributeValue,
         opacity?: AttributeValue,
     ): this {
-        return this.stroke('url(#' + definition + ')', width, opacity)
+        return this.stroke('url(#' + definition.val + ')', width, opacity)
     }
 
     /** Shortcut for setting fill attributes */
@@ -327,11 +331,8 @@ export default class SVGNode {
     }
 
     /** Shortcut for setting fill attributes to a definition (See more at [[SVGManager.define]]) */
-    public fillDef(
-        definition: SVGManagerDefinition,
-        opacity?: AttributeValue,
-    ): this {
-        return this.fill('url(#' + definition + ')', opacity)
+    public fillDef(definition: Id<SVGNode>, opacity?: AttributeValue): this {
+        return this.fill('url(#' + definition.val + ')', opacity)
     }
 
     /** @hidden */
@@ -478,34 +479,225 @@ export default class SVGNode {
 
         return element
     }
+}
+
+export class SVGLinkedNode extends SVGNode {
+    /** @hidden */
+    protected _element: SVGElement | null
+
+    /** @hidden */
+    protected static getTagsFromClasses(classNames: string): string[] {
+        return classNames
+            .split(' ')
+            .filter((className) => className.startsWith(TAG_PREFIX))
+            .map((name) => name.substr(TAG_PREFIX.length))
+    }
+
+    /** @hidden */
+    protected static addTagsToNode(node: SVGNode): SVGNode {
+        node.children.forEach((child) => this.addTagsToNode(child))
+
+        if (node.tags.length === 0) return node
+
+        const classNames = (node.get('class') || '').toString()
+        const nodeTags = this.getTagsFromClasses(classNames)
+        const classNamesMinusTags = classNames
+            .split(' ')
+            .filter((className) => nodeTags.includes(className))
+
+        node.tags.forEach((tag) => {
+            classNamesMinusTags.push(this.toTagClass(tag))
+        })
+
+        if (classNamesMinusTags.length !== 0)
+            node.set('class', classNamesMinusTags.join(' '))
+
+        return node
+    }
+
+    /** @hidden */
+    protected static toTagClass(tag: string): SVGManagerTag {
+        return (TAG_PREFIX + tag) as SVGManagerTag
+    }
+
+    /** Construct a SVGLinkedNode using a DOM element */
+    public constructor(element: SVGElement) {
+        super(element.tagName as SVGTagName)
+
+        this._tags = SVGLinkedNode.getTagsFromClasses(
+            element.getAttribute('class') || '',
+        )
+
+        this._element = element
+    }
+
+    public get children(): SVGLinkedNode[] {
+        return Array.from(this.element.children).map(
+            (el) => new SVGLinkedNode(el as SVGElement),
+        )
+    }
+
+    public get attributes(): AttributeMap {
+        return new Map(
+            Array.from(this.element.attributes).map((attr: Attr) => [
+                attr.name as SVGAttribute,
+                attr.value as AttributeValue,
+            ]),
+        )
+    }
+
+    public get tagName(): SVGTagName {
+        return this.element.tagName as SVGTagName
+    }
+
+    public get innerText(): string {
+        if (this.element.firstChild === null) return ''
+
+        if (this.element.firstChild.nodeValue === null) return ''
+
+        return this.element.firstChild.nodeValue
+    }
+
+    public get styles(): StyleMap {
+        const styleMap = new Map()
+
+        const styleDeclaration = this.element.style
+
+        for (let i = 0; i < styleDeclaration.length; i++) {
+            const property = styleDeclaration.item(i)
+            styleMap.set(property, styleDeclaration.getPropertyValue(property))
+        }
+
+        return styleMap
+    }
+
+    public set(attr: SVGAttribute, value: AttributeValue): this {
+        this.element.setAttribute(attr, value.toString())
+
+        return this
+    }
+
+    public get(attr: SVGAttribute): AttributeValue | undefined {
+        return this.element.getAttribute(attr) || undefined
+    }
+
+    public append(...children: SVGNode[]): this {
+        children.forEach((child) => this.element.appendChild(child.toHTML()))
+
+        return this
+    }
+
+    public prepend(...children: SVGNode[]): this {
+        this.element.prepend(...children.map((child) => child.toHTML()))
+
+        return this
+    }
+
+    // ---- Styles Mutation ----
+
+    public styleSet(property: StyleProperty, value: StyleValue): this {
+        this.element.style.setProperty(property, value.toString())
+        return this
+    }
+
+    public styleGet(property: StyleProperty): StyleValue | undefined {
+        return this.element.style.getPropertyValue(property)
+    }
+
+    public text(s: string): this {
+        this.element.textContent = s
+        return this
+    }
+
+    public on(eventName: SVGEventName, func: SVGManagerEventHandler): this {
+        this.element.addEventListener(eventName, (ev) => {
+            func(ev, new SVGLinkedNode(this.element))
+        })
+        this._events.push({ eventName, func })
+
+        return this
+    }
+
+    public tag(tag: string): this {
+        this._tags.push(tag)
+        SVGLinkedNode.addTagsToNode(this)
+
+        return this
+    }
+
+    public removeChild(index: number): this {
+        this.element.removeChild(this.element.children[index])
+
+        return this
+    }
+
+    public removeChildren(): this {
+        this.element.innerHTML = this.innerText
+
+        return this
+    }
+
+    /** Removes tag from node, if it does not exist it does nothing. */
+    public untag(tag: string): this {
+        this._tags = this._tags.filter((t) => t !== tag)
+        this.element.classList.remove(SVGLinkedNode.toTagClass(tag))
+
+        return this
+    }
 
     /**
-     * Returns the hashstring of SVGNode
+     * Renders a figure to the SVG using a SVGNode
      */
-    public toHash(): string {
-        const md5 = new Md5()
+    public render(node: SVGNode): SVGLinkedNode {
+        this.append(SVGLinkedNode.addTagsToNode(node.copy()))
 
-        md5.appendStr('tag' + this.tagName)
-        md5.appendStr('innertext' + this.innerText)
+        const lastChild = this.element.lastChild
 
-        Array.from(this.attributes)
-            .map(([value, key]) => `${key} - ${value}`)
-            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
-            .forEach((attributeString) => {
-                md5.appendStr('attribute' + attributeString)
-            })
+        if (lastChild === null) throw 'appending failed'
 
-        this.children
-            .map((child) => child.toHash())
-            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
-            .forEach((childHash) => md5.appendStr('child' + childHash))
+        return new SVGLinkedNode(lastChild as SVGElement)
+    }
 
-        this.tags
-            .sort((a, b) => (a < b ? 1 : a === b ? 0 : -1))
-            .forEach((tag) => {
-                md5.appendStr('tag' + tag)
-            })
+    /**
+     * Renders a figure to the SVG using a SVGNode
+     */
+    public renderBefore(node: SVGNode): SVGLinkedNode {
+        this.prepend(SVGLinkedNode.addTagsToNode(node.copy()))
 
-        return md5.end() as string
+        const firstChild = this.element.firstChild
+
+        if (firstChild === null) throw 'prepending failed'
+
+        return new SVGLinkedNode(firstChild as SVGElement)
+    }
+
+    public tagged(tag: string): SVGLinkedNode[] {
+        return Array.from(
+            this.element.getElementsByClassName(SVGLinkedNode.toTagClass(tag)),
+        ).map((el) => new SVGLinkedNode(el as SVGElement))
+    }
+
+    public clearEvents(eventName?: SVGEventName): this {
+        if (eventName !== undefined)
+            throw 'SVGLinkedNode: Unable remove elements from certain type in Linked Nodes'
+
+        this._events = []
+
+        this.element.replaceWith(this.element.cloneNode(true))
+
+        return this
+    }
+
+    /** Fetch the raw element on the DOM */
+    public get element(): SVGElement {
+        if (this._element === null) throw 'SVGLinkedNode: Element is destructed'
+
+        return this._element
+    }
+
+    /** Will remove the element from the DOM and deactivate this variable */
+    public destruct(): void {
+        this.element.remove()
+        this._element = null
     }
 }

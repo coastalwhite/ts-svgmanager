@@ -4,3 +4,4 @@ coverage
 package-lock.json
 .DS_STORE
 .nyc_output
+tests/**/*.test.js

@@ -1,4 +1,4 @@
-export default class Id<Entity> {
+export class Id<Entity> {
     private readonly _value: string
     private readonly _!: Entity
     public constructor(value: string) {

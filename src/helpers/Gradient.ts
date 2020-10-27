@@ -1,14 +1,14 @@
-import { AttributeValue } from '../nodes/types'
-import SVGNode from '../nodes/Node'
-import SVGTag from '../declarations/TagNames'
-import { SVGStops } from '.'
+import { SVGNode } from '@/nodes/Node'
+import { SVGStops } from '@/helpers/Stops'
+import { AttributeValue } from '@/nodes/types'
+import { SVGTagName } from '@/declarations/TagNames'
 
 class SVGGradient extends SVGNode {
     /**
      * Create a Linear Gradient
      * @param stops Stops of the gradient
      */
-    public constructor(tagName: SVGTag, stops: SVGStops) {
+    public constructor(tagName: SVGTagName, stops: SVGStops) {
         super(tagName)
         stops.forEach((stop) => this.append(stop))
     }

@@ -1,13 +1,15 @@
 {
     "name": "ts-svgmanager",
-    "version": "2.0.2",
+    "version": "2.0.3-beta3",
     "description": "A Typescript SVG Manager",
-    "main": "index.js",
-    "types": "index.d.ts",
+    "browser": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
-        "prepublish": "tsc",
-        "pub": "cat package.json | grep -v '\"private\": true,' > ./dist/package.json ; npm publish dist",
-        "test": "mocha -r ts-node/register -r jsdom-global/register tests/**/*.test.ts",
+        "distpkg": "sed 's/\"dist\\/index.js\"/\"index.js\"/g; s/\"dist\\/index.d.ts\"/\"index.d.ts\"/g' package.json | grep -v '\"private\": true,' > dist/package.json",
+        "pub": "npm run build:clean ; npm run distpkg ; npm publish dist",
+        "build": "tsc",
+        "build:clean": "rm -rf dist/* ; npm run build",
+        "test": "mocha -r ts-node/register tests/**/*.test.ts",
         "coverage": "nyc -r lcov -e .ts -x \"./**/*.test.ts\" npm run test",
         "docs": "typedoc --out docs src --exclude \"./src/definitions/*\" --exclude ./src/Events.ts; echo '' > ./docs/.nojekyll",
         "lint": "npx eslint ./src --ext .ts",
@@ -19,30 +21,28 @@
         "url": "git+https://github.com/coastalwhite/ts-svgmanager.git"
     },
     "author": "Gijs Burghoorn",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/coastalwhite/ts-svgmanager/issues"
     },
     "homepage": "https://github.com/coastalwhite/ts-svgmanager#readme",
     "dependencies": {
-        "ts-md5": "^1.2.7",
-        "uuid": "^8.3.0"
+        "nanoid": "3.1.9"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.12",
-        "@types/mocha": "^8.0.3",
-        "@types/uuid": "^8.3.0",
-        "@typescript-eslint/eslint-plugin": "^4.2.0",
-        "@typescript-eslint/parser": "^4.2.0",
         "chai": "^4.2.0",
+        "mocha": "^8.2.0",
+        "puppeteer": "^5.4.0",
+        "@types/chai": "^4.2.14",
+        "@types/mocha": "^8.0.3",
+        "@types/puppeteer": "^3.0.2",
+        "@typescript-eslint/eslint-plugin": "^4.2.0",
+        "@typescript-eslint/parser": "^4.0.0",
         "eslint": "^7.9.0",
         "eslint-plugin-unused-imports": "^0.1.3",
-        "jsdom": "16.4.0",
-        "jsdom-global": "3.0.2",
-        "mocha": "^8.1.3",
         "nyc": "^15.1.0",
-        "ts-node": "^9.0.0",
         "typedoc": "^0.19.1",
-        "typescript": "^4.0.2"
+        "typescript": "^4.0.2",
+        "ts-node": "9.0.0"
     }
 }

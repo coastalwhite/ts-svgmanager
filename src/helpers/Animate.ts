@@ -1,14 +1,15 @@
-import { SVGNode } from '..'
-import { SVGAttribute, SVGTagName } from '../declarations'
-import { AttributeValue } from '../nodes'
-import PathData from './PathData'
+import { SVGNode } from '@/nodes/Node'
+import { SVGPathData } from '@/helpers/PathData'
+import { SVGAttribute } from '@/declarations/Attributes'
+import { SVGTagName } from '@/declarations/TagNames'
+import { AttributeValue } from '@/nodes/types'
 
 /**
  * Helper class for easy initialization of SVG Animations
  *
  * Handy to be used with the SVGNode.animate() method
  */
-export default class SVGAnimate extends SVGNode {
+export class SVGAnimate extends SVGNode {
     /**
      * Create an animation
      * @param duration Duration of the total animation in milliseconds
@@ -120,7 +121,7 @@ export class SVGAnimateMotion extends SVGAnimate {
      * @param path Path to move along
      * @param duration Duration of motion in milliseconds
      */
-    public constructor(path: PathData, duration: number) {
+    public constructor(path: SVGPathData, duration: number) {
         super(duration, undefined, undefined, 'animateMotion')
         this.set('path', path.toString())
     }

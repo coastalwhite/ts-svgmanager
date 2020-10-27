@@ -23,13 +23,12 @@ import {
     hightlighting,
     moving,
     panning,
-    PolygonComponent,
     resizing,
+    rotating,
     SizedComponent,
     StaticComponent,
     svgCircle,
     svgEllipse,
-    svgLines,
     SVGManager,
     SVGViewBox,
     V2D,
@@ -48,32 +47,43 @@ const staticComponent = new StaticComponent(
     'static',
     svgCircle(10).fill('lightblue'),
 )
-staticComponent.utilize(moving(), hightlighting())
+staticComponent.utilize(hightlighting(), moving())
 
 const variableComponent = new SizedComponent('variable', (size: V2D) =>
     svgEllipse(new V2D(size.x / 2, size.y / 2)).fill('coral'),
 )
-variableComponent.utilize(moving(), resizing())
-
-const pointsComponent = new PolygonComponent('points', (points: V2D[]) =>
-    svgLines(points),
+variableComponent.utilize(
+    moving(),
+    resizing().on('resizeEnd', (_i, oldSize, _oldPos, newSize, _newPos) =>
+        console.log(
+            'old: ' +
+                JSON.stringify(oldSize) +
+                ', new: ' +
+                JSON.stringify(newSize),
+        ),
+    ),
+    rotating(),
 )
-pointsComponent.utilize(moving(), resizing())
+
+// const pointsComponent = new PolygonComponent('points', (points: V2D[]) =>
+//     svgLines(points),
+// )
+// pointsComponent.utilize(moving(), resizing())
 
 manager.declare(staticComponent)
 manager.declare(variableComponent)
-manager.declare(pointsComponent)
+// manager.declare(pointsComponent)
 
-manager.create('points', new V2D(15, 15), [
-    new V2D(0, 0),
-    new V2D(10, 10),
-    new V2D(20, 0),
-])
+// manager.create('points', new V2D(15, 15), [
+//     new V2D(0, 0),
+//     new V2D(10, 10),
+//     new V2D(20, 0),
+// ])
 
 manager.create('variable', new V2D(15, 15), [new V2D(10, 10)])
 
 manager.create('static', new V2D(20, 30))
-manager.create('static', new V2D(60, 30))
+// manager.create('static', new V2D(60, 30))
 
 // const instance = manager.instantiate('static')
 // manager.move(instance, new V2D(50, 25))

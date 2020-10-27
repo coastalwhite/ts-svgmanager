@@ -1,8 +1,10 @@
-import { SVGManager } from '..'
-import { ComponentInstance } from './Instance'
-import Id from '../util/Id'
-import { SVGGroup, SVGLinkedNode, SVGNode } from '../nodes'
-import { svgGroup } from '../shapes'
+import { Id } from '@/util/Id'
+import { ComponentInstance } from '@/components/Instance'
+import { SVGLinkedNode, SVGNode } from '@/nodes/Node'
+import { SVGGroup } from '@/nodes/Group'
+import { svgGroup } from '@/shapes/Group'
+import { SVGManager } from '@/Manager'
+import { V2D } from '@/helpers/V2D'
 
 export abstract class ComponentUtil {
     protected abstract readonly UTIL_IDENTIFIER: string
@@ -88,6 +90,10 @@ export abstract class ComponentUtil {
         return needed
     }
 
+    public abstract transformRelativePoints(
+        instance: ComponentInstance,
+        point: V2D,
+    ): V2D
     public abstract useInit(manager: SVGManager): void
 
     public abstract applyTo(

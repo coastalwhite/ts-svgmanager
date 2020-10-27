@@ -1,9 +1,9 @@
-import V2D from './V2D'
+import { V2D } from '@/helpers/V2D'
 
 /**
  * An Helper class for for the SVG ViewBox
  */
-export default class SVGViewBox {
+export class SVGViewBox {
     private _minPosition: V2D
     private _dimensions: V2D
 

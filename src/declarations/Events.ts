@@ -1,10 +1,8 @@
-import { SVGLinkedNode } from '../nodes'
-
 /**
  * All documentation can be found on
  * [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/Events)
  */
-type SVGEventName =
+export type SVGEventName =
     | 'begin'
     | 'end'
     | 'repeat'
@@ -74,17 +72,3 @@ type SVGEventName =
     | 'activate'
     | 'focusin'
     | 'focusout'
-
-export default SVGEventName
-
-/** A EventHandler for SVGManager */
-export type SVGManagerEventHandler = (
-    event: Event,
-    node: SVGLinkedNode,
-) => unknown
-
-/** The combination of an eventName and a handler */
-export interface SVGManagerEventDefinition {
-    eventName: SVGEventName
-    func: SVGManagerEventHandler
-}

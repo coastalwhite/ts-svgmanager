@@ -1,9 +1,14 @@
-import { SVGViewBox, V2D } from '../helpers'
-import { SVGLinkedNode, SVGNode } from '../nodes'
-import { svgRect } from '../shapes'
-import { alternatively } from '../util/alternatively'
-import { DOMDistanceToSVGDistance } from '../util/svg-coordinates/DOMToSVG'
-import { ManagerUtil } from '../Utility'
+import { V2D } from '@/helpers/V2D'
+import { SVGViewBox } from '@/helpers/ViewBox'
+import { SVGLinkedNode, SVGNode } from '@/nodes/Node'
+import { svgRect } from '@/shapes/Rectangle'
+import { alternatively } from '@/util/alternatively'
+import { DOMDistanceToSVGDistance } from '@/util/svg-coordinates/DOMToSVG'
+import { ManagerUtil } from '@/Utility'
+
+export const bgPattern = (
+    settings?: Partial<BGPatternUtilSettings>,
+): BGPatternUtil => new BGPatternUtil(settings)
 
 type BGPatternType = 'dotted' | 'grid' | 'rows' | 'columns'
 

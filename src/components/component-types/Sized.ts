@@ -1,9 +1,9 @@
-import { SVGNode } from '../..'
-import { V2D } from '../../helpers'
-import Component from '../Component'
-import { ComponentInstance } from '../Instance'
+import { V2D } from '@/helpers/V2D'
+import { Component } from '@/components/Component'
+import { SVGNode } from '@/nodes/Node'
+import { ComponentInstance } from '@/components/Instance'
 
-export default class SizedComponent extends Component {
+export class SizedComponent extends Component {
     private _shape: (size: V2D) => SVGNode
 
     constructor(name: string, shape: (size: V2D) => SVGNode) {

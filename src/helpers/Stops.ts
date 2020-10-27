@@ -1,11 +1,12 @@
-import { AttributeValue, SVGNode } from '../nodes'
+import { SVGNode } from '@/nodes/Node'
+import { AttributeValue } from '@/nodes/types'
 
 /**
  * An easy way to create multiple `stop` elements
  *
  * Basically an stack with the `stop` method to add a new `stop`
  */
-export default class SVGStops {
+export class SVGStops {
     private _stops: SVGNode[]
 
     /** Creates an empty stack */

@@ -1,7 +1,7 @@
-import { SVGNode } from '.'
+import { SVGNode } from './Node'
 
 /** Shortcut for creating a `g` SVGNode */
-export default class SVGGroup extends SVGNode {
+export class SVGGroup extends SVGNode {
     public constructor(...children: SVGNode[]) {
         super('g')
         this.append(...children)

@@ -2,7 +2,7 @@
  * # V2D
  * A 2 Dimensional Vector
  */
-export default class V2D {
+export class V2D {
     private _x: number
     private _y: number
 

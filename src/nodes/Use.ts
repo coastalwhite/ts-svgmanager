@@ -1,10 +1,10 @@
-import { SVGNode } from '.'
-import { SVGManagerDefinition } from '..'
+import { Id } from '@/util/Id'
+import { SVGNode } from '@/nodes/Node'
 
 /** Shortcut for creating a `use` SVGNode for a certain SVGManagerDefinition */
-export default class SVGUse extends SVGNode {
-    public constructor(definition: SVGManagerDefinition) {
+export class SVGUse extends SVGNode {
+    public constructor(definition: Id<SVGNode>) {
         super('use')
-        this.set('href', '#' + definition)
+        this.set('href', '#' + definition.val)
     }
 }

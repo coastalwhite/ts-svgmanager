@@ -1,16 +1,24 @@
-import { SVGManager } from '../..'
-import { V2D } from '../../helpers'
-import { DOMVectorToSVGVector } from '../../util/svg-coordinates/DOMToSVG'
-import { alternatively } from '../../util/alternatively'
-import { ComponentInstance } from '../Instance'
-import { ComponentUtil } from '../Utility'
+import { ComponentEventedUtil } from '@/components/EventedUtil'
+import { ComponentInstance } from '@/components/Instance'
+import { V2D } from '@/helpers/V2D'
+import { SVGManager } from '@/Manager'
+import { alternatively } from '@/util/alternatively'
+import { DOMVectorToSVGVector } from '@/util/svg-coordinates/DOMToSVG'
+
+export const moving = (settings?: Partial<MoveUtilSettings>): MoveUtil =>
+    new MoveUtil(settings)
 
 export interface MoveUtilSettings {
     hoverCursor: string
     activeCursor: string
 }
 
-export default class MovingUtil extends ComponentUtil {
+export type MoveUtilEventName = 'moveStart' | 'moveEnd' | 'moving'
+
+export class MoveUtil extends ComponentEventedUtil<
+    MoveUtilEventName,
+    (instance: ComponentInstance, oldPosition: V2D, newPosition: V2D) => void
+> {
     protected readonly UTIL_IDENTIFIER = 'component-move'
     protected readonly requirements = []
 
@@ -18,9 +26,16 @@ export default class MovingUtil extends ComponentUtil {
 
     public readonly settings: MoveUtilSettings
 
+    private startPositions: {
+        instance: ComponentInstance
+        startPosition: V2D
+    }[]
+
     constructor(settings?: Partial<MoveUtilSettings>) {
         super()
         this._prevPosition = new V2D(0, 0)
+
+        this.startPositions = []
 
         const givenSettings = settings === undefined ? {} : settings
 
@@ -38,10 +53,22 @@ export default class MovingUtil extends ComponentUtil {
                     manager,
                 )
 
-                instance.position = instance.position.add(
+                const oldPosition = instance.position.clone()
+                const newPosition = instance.position.add(
                     eventPosition.sub(this._prevPosition),
                 )
+
+                instance.position = newPosition
                 this._prevPosition = eventPosition
+
+                this.startPositions.forEach((startPosition) =>
+                    this.trigger(
+                        'moving',
+                        startPosition.instance,
+                        oldPosition,
+                        newPosition,
+                    ),
+                )
 
                 instance.update()
             })
@@ -62,6 +89,18 @@ export default class MovingUtil extends ComponentUtil {
 
             instance.container.set('cursor', this.settings.activeCursor)
             this.startHandling(instance)
+
+            this.trigger(
+                'moveStart',
+                instance,
+                instance.position.clone(),
+                instance.position.clone(),
+            )
+
+            this.startPositions.push({
+                instance,
+                startPosition: instance.position.clone(),
+            })
         }
     }
 
@@ -71,8 +110,23 @@ export default class MovingUtil extends ComponentUtil {
                 instance.container.set('cursor', this.settings.hoverCursor),
             )
 
+            this.startPositions.forEach((startPosition) =>
+                this.trigger(
+                    'moveEnd',
+                    startPosition.instance,
+                    startPosition.startPosition,
+                    startPosition.instance.position,
+                ),
+            )
             this.stopHandlingAll()
         }
+    }
+
+    public transformRelativePoints(
+        _instance: ComponentInstance,
+        point: V2D,
+    ): V2D {
+        return point
     }
 
     public useInit(manager: SVGManager): void {

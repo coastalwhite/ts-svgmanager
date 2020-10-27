@@ -1,9 +1,15 @@
-import { SVGManager } from '../..'
-import { SVGGroup, SVGNode } from '../../nodes'
-import { svgRect } from '../../shapes'
-import { alternatively } from '../../util/alternatively'
-import { ComponentInstance } from '../Instance'
-import { ComponentUtil } from '../Utility'
+import { ComponentEventedUtil } from '@/components/EventedUtil'
+import { ComponentInstance } from '@/components/Instance'
+import { V2D } from '@/helpers/V2D'
+import { SVGManager } from '@/Manager'
+import { SVGGroup } from '@/nodes/Group'
+import { SVGNode } from '@/nodes/Node'
+import { svgRect } from '@/shapes/Rectangle'
+import { alternatively } from '@/util/alternatively'
+
+export const hightlighting = (
+    settings?: Partial<HightlightUtilSettings>,
+): HightlightUtil => new HightlightUtil(settings)
 
 export interface HightlightUtilSettings {
     color: string
@@ -11,7 +17,15 @@ export interface HightlightUtilSettings {
     strokeOpacity: number
 }
 
-export default class HightlightUtil extends ComponentUtil {
+export type HightlightUtilEventName =
+    | 'startHightlight'
+    | 'stopHightlight'
+    | 'toggleHightlight'
+
+export class HightlightUtil extends ComponentEventedUtil<
+    HightlightUtilEventName,
+    (instance: ComponentInstance, wasHighlighting: boolean) => void
+> {
     protected readonly UTIL_IDENTIFIER = 'component-hightlight'
     protected readonly requirements = []
 
@@ -49,20 +63,36 @@ export default class HightlightUtil extends ComponentUtil {
     private mouseDown(instance: ComponentInstance): (event: Event) => void {
         return (event: Event): void => {
             event.stopPropagation()
-            this.currentlyHandling.forEach((i) => this.hide(i))
+            if (!this.isHandling(instance))
+                this.trigger('startHightlight', instance, false)
+
+            this.currentlyHandling.forEach((i) => {
+                this.hide(i)
+                this.trigger('stopHightlight', i, true)
+            })
             this.startHandling(instance)
             this.show(instance)
         }
     }
 
-    public useInit(manager: SVGManager): void {
+    public transformRelativePoints(
+        _instance: ComponentInstance,
+        point: V2D,
+    ): V2D {
+        return point
+    }
+
+    public useInit(): void {
         document.addEventListener('mousedown', () => {
-            this.currentlyHandling.forEach((i) => this.hide(i))
+            this.currentlyHandling.forEach((instance) => {
+                this.hide(instance)
+                this.trigger('stopHightlight', instance, true)
+            })
             this.stopHandlingAll()
         })
     }
 
-    public applyTo(manager: SVGManager, instance: ComponentInstance): void {
+    public applyTo(_manager: SVGManager, instance: ComponentInstance): void {
         instance.container.render(
             this.createContainer(this.shape(instance)).styleSet(
                 'visibility',
@@ -73,7 +103,7 @@ export default class HightlightUtil extends ComponentUtil {
         instance.container.on('mousedown', this.mouseDown(instance).bind(this))
     }
 
-    public update(manager: SVGManager, instance: ComponentInstance): void {
+    public update(_manager: SVGManager, instance: ComponentInstance): void {
         const container = this.container(instance)
 
         container?.removeChildren()

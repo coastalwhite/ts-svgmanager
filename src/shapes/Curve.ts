@@ -1,10 +1,11 @@
-import { SVGPathData, V2D } from '../helpers'
-import { SVGNode } from '../nodes'
+import { SVGPathData } from '@/helpers/PathData'
+import { V2D } from '@/helpers/V2D'
+import { SVGNode } from '@/nodes/Node'
 
 /**
  * Draws a curve from one point to another using a control point
  */
-export default function svgCurve(from: V2D, to: V2D, control: V2D): SVGNode {
+export function svgCurve(from: V2D, to: V2D, control: V2D): SVGNode {
     return new SVGNode('path')
         .set(
             'd',

@@ -1,14 +1,17 @@
-import { SVGManager } from '../..'
-import { V2D } from '../../helpers'
-import { DOMVectorToSVGVector } from '../../util/svg-coordinates/DOMToSVG'
-import { SVGNode } from '../../nodes'
-import { svgRect } from '../../shapes'
-import { alternatively } from '../../util/alternatively'
-import limit from '../../util/limit'
-import { ComponentInstance } from '../Instance'
-import { ComponentUtil } from '../Utility'
-import HightlightUtil from './Hightlight'
-import { utilRequirement } from './util'
+import { alternatively } from '@/util/alternatively'
+import { limit } from '@/util/limit'
+import { DOMVectorToSVGVector } from '@/util/svg-coordinates/DOMToSVG'
+import { ComponentEventedUtil } from '@/components/EventedUtil'
+import { HightlightUtil } from '@/components/component-utils/Hightlight'
+import { ComponentInstance } from '@/components/Instance'
+import { V2D } from '@/helpers/V2D'
+import { SVGManager } from '@/Manager'
+import { SVGNode } from '@/nodes/Node'
+import { svgRect } from '@/shapes/Rectangle'
+import { componentUtilRequirement } from '@/util/requirements'
+
+export const resizing = (settings?: Partial<ResizeUtilSettings>): ResizeUtil =>
+    new ResizeUtil(settings)
 
 export interface ResizeUtilSettings {
     minWidth: number
@@ -17,10 +20,21 @@ export interface ResizeUtilSettings {
     maxHeight: number | null
 }
 
-export default class ResizeUtil extends ComponentUtil {
+export type ResizeUtilEventName = 'resizeStart' | 'resizeEnd'
+
+export class ResizeUtil extends ComponentEventedUtil<
+    ResizeUtilEventName,
+    (
+        instance: ComponentInstance,
+        oldSize: V2D,
+        oldPosition: V2D,
+        newSize: V2D,
+        newPosition: V2D,
+    ) => void
+> {
     protected readonly UTIL_IDENTIFIER = 'component-resize'
     protected readonly requirements = [
-        utilRequirement(() => new HightlightUtil()),
+        componentUtilRequirement(() => new HightlightUtil()),
     ]
 
     public settings: ResizeUtilSettings
@@ -28,11 +42,19 @@ export default class ResizeUtil extends ComponentUtil {
     private _direction: ResizeDirection
     private _initialPosition: V2D
 
+    private startSizes: {
+        instance: ComponentInstance
+        startSize: V2D
+        startPosition: V2D
+    }[]
+
     constructor(settings?: Partial<ResizeUtilSettings>) {
         super()
 
         this._direction = 0
         this._initialPosition = new V2D(0, 0)
+
+        this.startSizes = []
 
         const givenSettings = settings === undefined ? {} : settings
 
@@ -50,8 +72,22 @@ export default class ResizeUtil extends ComponentUtil {
         initial: V2D,
     ): void {
         this.startHandling(instance)
+        this.startSizes.push({
+            instance,
+            startSize: instance.size.clone(),
+            startPosition: instance.position.clone(),
+        })
         this._initialPosition = initial
         this._direction = direction
+
+        this.trigger(
+            'resizeStart',
+            instance,
+            instance.size,
+            instance.position,
+            instance.size,
+            instance.position,
+        )
     }
 
     private resize(event: MouseEvent, manager: SVGManager): void {
@@ -77,13 +113,38 @@ export default class ResizeUtil extends ComponentUtil {
         })
     }
 
+    public stopResizing(): void {
+        this.stopHandlingAll()
+        this.startSizes.forEach((startSize) => {
+            const newSize = startSize.instance.size.clone()
+            const newPosition = startSize.instance.position.clone()
+
+            this.trigger(
+                'resizeEnd',
+                startSize.instance,
+                startSize.startSize,
+                startSize.startPosition,
+                newSize,
+                newPosition,
+            )
+        })
+        this.startSizes = []
+    }
+
+    public transformRelativePoints(
+        _instance: ComponentInstance,
+        point: V2D,
+    ): V2D {
+        return point
+    }
+
     public useInit(manager: SVGManager): void {
         manager.on('mousemove', (e: Event) =>
             this.resize(e as MouseEvent, manager),
         )
 
-        document.addEventListener('mouseup', this.stopHandlingAll.bind(this))
-        document.addEventListener('mouseleave', this.stopHandlingAll.bind(this))
+        document.addEventListener('mouseup', this.stopResizing.bind(this))
+        document.addEventListener('mouseleave', this.stopResizing.bind(this))
     }
 
     public applyTo(manager: SVGManager, instance: ComponentInstance): void {

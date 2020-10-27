@@ -1,5 +1,6 @@
-import { SVGNode } from '../nodes'
-import { SVGTagName, SVGAttribute } from '../declarations'
+import { SVGAttribute } from '@/declarations/Attributes'
+import { SVGTagName } from '@/declarations/TagNames'
+import { SVGNode } from '@/nodes/Node'
 
 /** Parse html element into node */
 function svgXMLtoNode(elem: HTMLElement): SVGNode {

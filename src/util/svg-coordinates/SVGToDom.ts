@@ -1,6 +1,6 @@
-import { SVGManager } from '../..'
-import { V2D } from '../../helpers'
-import { getViewBoxScale } from '../../manager-utils/util'
+import { SVGManager } from '@/Manager'
+import { V2D } from '@/helpers/V2D'
+import { getViewBoxScale } from '@/manager-utils/util'
 
 export function SVGVectorToDOMVector(SVGVector: V2D, manager: SVGManager): V2D {
     const adjustedPosition = SVGVector.sca(getViewBoxScale(manager))

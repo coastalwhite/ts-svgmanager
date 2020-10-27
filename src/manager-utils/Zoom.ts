@@ -1,10 +1,13 @@
-import { SVGManager } from '..'
-import { V2D } from '../helpers'
-import { alternatively } from '../util/alternatively'
-import limit from '../util/limit'
-import { ManagerUtil } from '../Utility'
-import { DOMVectorToSVGVector } from '../util/svg-coordinates/DOMToSVG'
-import { getViewBoxScale, readViewBox } from './util'
+import { alternatively } from '@/util/alternatively'
+import { limit } from '@/util/limit'
+import { DOMVectorToSVGVector } from '@/util/svg-coordinates/DOMToSVG'
+import ManagerEventedUtil from '@/manager-utils/EventedUtil'
+import { getViewBoxScale, readViewBox } from '@/manager-utils/util'
+import { SVGManager } from '@/Manager'
+import { V2D } from '@/helpers/V2D'
+
+export const zooming = (settings?: Partial<ZoomUtilSettings>): ZoomUtil =>
+    new ZoomUtil(settings)
 
 export interface ZoomUtilSettings {
     zoomConstant: number
@@ -12,7 +15,12 @@ export interface ZoomUtilSettings {
     zoomMaxScale: number
 }
 
-export default class ZoomUtil extends ManagerUtil {
+export type ZoomUtilEventName = 'zooming'
+
+export default class ZoomUtil extends ManagerEventedUtil<
+    ZoomUtilEventName,
+    (manager: SVGManager) => void
+> {
     public settings: ZoomUtilSettings
 
     constructor(settings?: Partial<ZoomUtilSettings>) {
@@ -30,6 +38,7 @@ export default class ZoomUtil extends ManagerUtil {
     private wheel(): (event: WheelEvent) => void {
         return (event: WheelEvent): void => {
             event.preventDefault()
+
             svgZoom(
                 this.manager,
                 1 - event.deltaY * this.settings.zoomConstant,
@@ -37,6 +46,8 @@ export default class ZoomUtil extends ManagerUtil {
                 this.settings.zoomMinScale,
                 this.settings.zoomMaxScale,
             )
+
+            this.trigger('zooming', this.manager)
 
             this.manager.updateUtils()
         }

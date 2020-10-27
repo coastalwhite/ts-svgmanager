@@ -1,5 +1,5 @@
 /** See [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) */
-type SVGAttribute =
+export type SVGAttribute =
     | 'accent-height'
     | 'accumulate'
     | 'additive'
@@ -255,5 +255,3 @@ type SVGAttribute =
     | 'yChannelSelector'
     | 'z'
     | 'zoomAndPan'
-
-export default SVGAttribute

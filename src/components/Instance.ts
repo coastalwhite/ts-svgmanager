@@ -1,12 +1,13 @@
-import { SVGManager } from '..'
-import { V2D } from '../helpers'
-import { SVGLinkedNode } from '../nodes'
-import Id from '../util/Id'
-import Component from './Component'
-import { v4 as uuidv4 } from 'uuid'
-import { svgGroup } from '../shapes'
-import { COMPONENT_SHAPE_TAG } from './constants'
-import { DOMDistanceToSVGDistance } from '../util/svg-coordinates/DOMToSVG'
+import { SVGManager } from '@/Manager'
+import { nanoid } from 'nanoid'
+import { Component } from '@/components/Component'
+import { SVGLinkedNode } from '@/nodes/Node'
+import { Id } from '@/util/Id'
+import { V2D } from '@/helpers/V2D'
+import { svgGroup } from '@/shapes/Group'
+import { COMPONENT_SHAPE_TAG } from '@/constants'
+import { DOMDistanceToSVGDistance } from '@/util/svg-coordinates/DOMToSVG'
+import { setTransform } from '@/util/transform'
 
 export class ComponentInstance {
     private _manager: SVGManager
@@ -21,17 +22,21 @@ export class ComponentInstance {
         component: Component,
         position?: V2D,
         points?: V2D[],
+        containerTag?: string,
     ) {
         this._manager = manager
         this._component = component
-        this._id = new Id(uuidv4())
+        this._id = new Id(nanoid())
 
         this._points = [new V2D(0, 0)]
         const shape = component.shape(this)
 
-        this._container = manager.render(
-            svgGroup(svgGroup(shape).tag(COMPONENT_SHAPE_TAG)),
-        )
+        const container = svgGroup(svgGroup(shape).tag(COMPONENT_SHAPE_TAG))
+
+        if (containerTag === undefined)
+            this._container = manager.render(container)
+        else
+            this._container = manager.tagged(containerTag)[0]?.render(container)
 
         if (points === undefined)
             this._container
@@ -106,12 +111,22 @@ export class ComponentInstance {
     }
 
     public get position(): V2D {
-        return this._position.clone()
+        return this._position
     }
 
     public set position(p: V2D) {
-        this._position = p.clone()
+        this._position = p
         this.update()
+    }
+
+    public relativePoint(point: V2D): V2D {
+        let p = point
+
+        this.component.utils.forEach(
+            (util) => (p = util.transformRelativePoints(this, p)),
+        )
+
+        return p
     }
 
     public update(): void {
@@ -122,9 +137,11 @@ export class ComponentInstance {
                 shapeContainter.render(this.component.shape(this))
             })
 
-        this._container.set(
-            'transform',
-            `translate(${this.position.x},${this.position.y})`,
+        setTransform(
+            this.container,
+            'translate',
+            this.position.x,
+            this.position.y,
         )
 
         this.component.utils.forEach((util) => util.update(this._manager, this))

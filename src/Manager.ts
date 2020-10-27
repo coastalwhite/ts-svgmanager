@@ -1,12 +1,15 @@
-import { v4 as uuidv4 } from 'uuid'
-import { SVGLinkedNode, SVGManagerDefinition, SVGNode } from '.'
-import Component from './components/Component'
-import { ComponentInstance } from './components/Instance'
-import { SVGAttribute, SVGManagerEventDefinition } from './declarations'
-import { SVGViewBox, V2D } from './helpers'
-import { AttributeValue } from './nodes'
-import { SVGUse } from './nodes'
-import { ManagerUtil } from './Utility'
+import { nanoid } from 'nanoid'
+import { ManagerUtil } from '@/Utility'
+import { SVGLinkedNode, SVGNode } from '@/nodes/Node'
+import { Id } from '@/util/Id'
+import { SVGAttribute } from '@/declarations/Attributes'
+import { SVGManagerEventDefinition } from '@/types/EventHandlers'
+import { Component } from '@/components/Component'
+import { ComponentInstance } from '@/components/Instance'
+import { AttributeValue } from '@/nodes/types'
+import { SVGUse } from '@/nodes/Use'
+import { SVGViewBox } from '@/helpers/ViewBox'
+import { V2D } from '@/helpers/V2D'
 
 /** @hidden */
 const DEFINITION_PREFIX = 'figure-'
@@ -78,12 +81,12 @@ const DEFINITION_PREFIX = 'figure-'
  * })
  * ```
  */
-export default class SVGManager extends SVGLinkedNode {
+export class SVGManager extends SVGLinkedNode {
     /** @hidden Manager identifier */
     private _managerid: string
 
     /** @hidden Saved definitions */
-    private _definitions: SVGManagerDefinition[]
+    private _definitions: Id<SVGNode>[]
     private _utils: ManagerUtil[]
 
     private _components: {
@@ -106,22 +109,22 @@ export default class SVGManager extends SVGLinkedNode {
     }
 
     /** @hidden Turns a hash into a SVGManagerDefinition */
-    private toDefId(hash: string): SVGManagerDefinition {
+    private toDefId(hash: string): Id<SVGNode> {
         // Prefix the managerId and the Std Def Prefix
-        return `${this._managerid}-${DEFINITION_PREFIX}${hash}` as SVGManagerDefinition
+        return new Id(`${this._managerid}-${DEFINITION_PREFIX}${hash}`)
     }
 
     /** @hidden Returns whether a definition already exists or not */
-    private doesDefExist(definition: SVGManagerDefinition): boolean {
+    private doesDefExist(definition: Id<SVGNode>): boolean {
         return this._definitions.includes(definition)
     }
 
     /** @hidden Adds a definition and returns the SVGManagerDefinition */
     private addDefinition(
         node: SVGNode,
-    ): { id: SVGManagerDefinition; link: SVGLinkedNode } {
+    ): { id: Id<SVGNode>; link: SVGLinkedNode } {
         // Fetch definition string
-        const definition = this.toDefId(uuidv4())
+        const definition = this.toDefId(nanoid())
 
         // Add definition to saved defs
         this._definitions.push(definition)
@@ -136,7 +139,7 @@ export default class SVGManager extends SVGLinkedNode {
 
     /** @hidden Add a use of a definition to the SVGManager */
     private addUse(
-        definition: SVGManagerDefinition,
+        definition: Id<SVGNode>,
         args?: {
             tags?: string[]
             attributes?: { attrName: SVGAttribute; attrValue: AttributeValue }[]
@@ -176,7 +179,7 @@ export default class SVGManager extends SVGLinkedNode {
         super(new SVGNode('svg').toHTML())
         this._element = null
 
-        this._managerid = uuidv4()
+        this._managerid = nanoid()
 
         this._definitions = []
         this._utils = []
@@ -209,9 +212,7 @@ export default class SVGManager extends SVGLinkedNode {
      *
      * This will be used in [[renderDef]], [[SVGNode.fillDef]] and [[SVGNode.strokeDef]]
      */
-    public define(
-        node: SVGNode,
-    ): { id: SVGManagerDefinition; link: SVGLinkedNode } {
+    public define(node: SVGNode): { id: Id<SVGNode>; link: SVGLinkedNode } {
         return this.addDefinition(node)
     }
 
@@ -324,6 +325,7 @@ export default class SVGManager extends SVGLinkedNode {
         componentName: string,
         position: V2D,
         points?: V2D[],
+        containerTag?: string,
     ): ComponentInstance {
         const ci = this._components.find(
             (c) => c.component.name === componentName,
@@ -336,6 +338,7 @@ export default class SVGManager extends SVGLinkedNode {
             ci.component,
             position,
             points,
+            containerTag,
         )
         ci.instances.push(instance)
 
