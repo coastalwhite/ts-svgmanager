@@ -7,6 +7,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
+        "refresh": "npx snowpack",
         "start": "snowpack dev",
         "build": "snowpack build"
     },
@@ -19,7 +20,7 @@
         "typescript": "^4.0.0"
     },
     "dependencies": {
-        "@coastalwhite/ts-svgmanager": "^0.1.1",
+        "@coastalwhite/ts-svgmanager": "file:../dist",
         "nanoid": "^3.1.9"
     }
 }

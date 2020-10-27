@@ -40,7 +40,7 @@ import {
 const manager = new SVGManager()
     .init('svg-root')
     .set('viewBox', new SVGViewBox(0, 0, 100, 50))
-    .styleSet('border', '1px solid #000')
+    .style('border', '1px solid #000')
 
 manager.utilize(panning(), bgPattern({ patternType: 'dotted' }), zooming())
 
@@ -83,7 +83,7 @@ manager.declare(variableComponent)
 //     new V2D(20, 0),
 // ])
 
-manager.create('variable', new V2D(15, 15), [new V2D(10, 10)])
+manager.create('variable', new V2D(15, 15), [new V2D(10, 10)], 501)
 
 manager.create('static', new V2D(20, 30))
 // manager.create('static', new V2D(60, 30))
