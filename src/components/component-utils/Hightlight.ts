@@ -44,11 +44,11 @@ export class HightlightUtil extends ComponentEventedUtil<
     }
 
     private hide(instance: ComponentInstance): void {
-        this.container(instance)?.styleSet('visibility', 'hidden')
+        this.container(instance)?.style('visibility', 'hidden')
     }
 
     private show(instance: ComponentInstance): void {
-        this.container(instance)?.styleSet('visibility', 'visible')
+        this.container(instance)?.style('visibility', 'visible')
     }
 
     private shape(instance: ComponentInstance): SVGNode {
@@ -93,8 +93,8 @@ export class HightlightUtil extends ComponentEventedUtil<
     }
 
     public applyTo(_manager: SVGManager, instance: ComponentInstance): void {
-        instance.container.render(
-            this.createContainer(this.shape(instance)).styleSet(
+        instance.container.append(
+            this.createContainer(this.shape(instance)).style(
                 'visibility',
                 'hidden',
             ),

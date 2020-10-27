@@ -68,7 +68,7 @@ export default class PanUtil extends ManagerEventedUtil<
         this.trigger('startPan', this.manager, viewBox, viewBox)
         this._panningStart = viewBox
         this._isPanning = true
-        this.manager.styleSet('cursor', this.settings.activeCursor)
+        this.manager.style('cursor', this.settings.activeCursor)
     }
 
     private mouseUp(): void {
@@ -80,14 +80,14 @@ export default class PanUtil extends ManagerEventedUtil<
         )
 
         this._isPanning = false
-        this.manager.styleSet('cursor', this.settings.cursor)
+        this.manager.style('cursor', this.settings.cursor)
     }
 
     public useInit(): void {
         this.manager.on('mousemove', (e) => this.mouseMove()(e as MouseEvent))
         this.manager.on('mousedown', this.mouseDown.bind(this))
         this.manager.on('mouseup', this.mouseUp.bind(this))
-        this.manager.styleSet('cursor', this.settings.cursor)
+        this.manager.style('cursor', this.settings.cursor)
     }
 
     public update(): void {

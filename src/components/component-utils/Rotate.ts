@@ -102,7 +102,7 @@ export class RotateUtil extends ComponentEventedUtil<
     public applyTo(_manager: SVGManager, instance: ComponentInstance): void {
         this.required('component-hightlight')
             .container(instance)
-            ?.render(
+            ?.append(
                 this.createContainer(
                     ...turnButtons(instance, this.clickTurn.bind(this)),
                 ),
@@ -116,7 +116,7 @@ export class RotateUtil extends ComponentEventedUtil<
 
         this.required('component-hightlight')
             .container(instance)
-            ?.render(
+            ?.append(
                 this.createContainer(
                     ...turnButtons(instance, this.clickTurn.bind(this)),
                 ),

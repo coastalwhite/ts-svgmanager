@@ -36,7 +36,7 @@ export class ComponentInstance {
         if (containerTag === undefined)
             this._container = manager.render(container)
         else
-            this._container = manager.tagged(containerTag)[0]?.render(container)
+            this._container = manager.tagged(containerTag)[0]?.append(container)
 
         if (points === undefined)
             this._container
@@ -134,7 +134,7 @@ export class ComponentInstance {
             .tagged(COMPONENT_SHAPE_TAG)
             .forEach((shapeContainter) => {
                 shapeContainter.removeChildren()
-                shapeContainter.render(this.component.shape(this))
+                shapeContainter.append(this.component.shape(this))
             })
 
         setTransform(

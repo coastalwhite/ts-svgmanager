@@ -150,7 +150,7 @@ export class ResizeUtil extends ComponentEventedUtil<
     public applyTo(manager: SVGManager, instance: ComponentInstance): void {
         this.required('component-hightlight')
             .container(instance)
-            ?.render(
+            ?.append(
                 this.createContainer(
                     ...resizeIndicators(
                         manager,
@@ -168,7 +168,7 @@ export class ResizeUtil extends ComponentEventedUtil<
 
         this.required('component-hightlight')
             .container(instance)
-            ?.render(
+            ?.append(
                 this.createContainer(
                     ...resizeIndicators(
                         manager,

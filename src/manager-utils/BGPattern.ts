@@ -70,9 +70,9 @@ export default class BGPatternUtil extends ManagerUtil {
 
         this._bgPatternLink = patternDefinition.link
 
-        this._bgLink = this.manager.renderBefore(
+        this._bgLink = this.manager.returnPrepend(
             new SVGNode('rect')
-                .styleSet('pointer-events', 'none')
+                .style('pointer-events', 'none')
                 .fillDef(patternDefinition.id)
                 .stroke('none'),
         )

@@ -26,7 +26,7 @@ import { panning } from './manager-utils/Pan'
 import { zooming } from './manager-utils/Zoom'
 import { SVGGroup } from './nodes/Group'
 import { SVGNode, SVGLinkedNode } from './nodes/Node'
-import { AttributeValue, AttributeMap, SVGManagerTag } from './nodes/types'
+import { AttributeValue, AttributeMap } from './nodes/types'
 import { SVGUse } from './nodes/Use'
 import { svgCircle } from './shapes/Circle'
 import { svgCurve } from './shapes/Curve'
@@ -46,7 +46,6 @@ export {
     SVGGroup,
     AttributeValue,
     AttributeMap,
-    SVGManagerTag,
     SVGAnimate,
     SVGAnimateMotion,
     SVGLinGradient,
